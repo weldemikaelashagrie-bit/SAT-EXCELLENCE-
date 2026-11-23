@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#172554">
+<meta name="description" content="SAT EXCELLENCE — offline Ethiopian ESSLCE SAT practice and question bank">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>SAT EXCELLENCE v2.26</title>
+<style>
+:root{--navy:#172554;--blue:#2563eb;--bg:#f4f6fb;--card:#fff;--ink:#172033;--muted:#475569;--line:#d7deea;--green:#15803d;--red:#b91c1c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:var(--navy);color:white;padding:20px 16px 16px}header h1{margin:0;font-size:23px;letter-spacing:.2px}header p{margin:3px 0 0;color:#dbeafe;font-size:13px}
+nav{display:flex;overflow:auto;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+nav button{border:0;background:none;padding:13px 15px;color:#475569;font-weight:700;white-space:nowrap}nav button.active{color:#1d4ed8;border-bottom:3px solid #2563eb;background:#eff6ff}
+nav button.active{color:var(--blue);border-bottom:3px solid var(--blue)}
+main{max-width:850px;margin:auto;padding:16px}
+.panel{display:none}.panel.active{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:0 0 14px;box-shadow:0 1px 2px #1018280a}
+h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:0 0 8px}
+label{display:block;font-weight:650;font-size:13px;margin:11px 0 5px}
+input,select,textarea{width:100%;border:1px solid #cfd5df;border-radius:9px;padding:11px;font:inherit;background:white;color:var(--ink)}
+textarea{min-height:80px;resize:vertical}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button.primary,.action{background:var(--blue);color:#fff;border:0;border-radius:9px;padding:11px 14px;font:inherit;font-weight:650}
+button.secondary{background:#dbeafe;color:#1e3a8a;border:1px solid #93c5fd;border-radius:9px;padding:10px 13px;font:inherit;font-weight:600}
+.mode-button.active{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 0 0 2px #bfdbfe}
+button.danger{background:#fff1f2;color:#be123c;border:1px solid #fecdd3;border-radius:9px;padding:9px 12px;font:inherit}
+button:disabled{opacity:.45}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.muted{color:var(--muted);font-size:13px}.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.stat{background:#f8fafc;border:1px solid var(--line);border-radius:11px;padding:12px}.stat strong{display:block;font-size:23px}
+.progress-chart{display:flex;align-items:flex-end;gap:10px;min-height:190px;padding:18px 8px 4px;border-bottom:1px solid var(--line);overflow-x:auto}.progress-point{flex:1;min-width:42px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:7px;height:160px}.progress-value{font-size:11px;font-weight:700;color:var(--text)}.progress-bar-wrap{height:120px;width:100%;display:flex;align-items:flex-end;justify-content:center}.progress-bar{width:min(34px,75%);min-height:3px;background:var(--blue);border-radius:6px 6px 0 0}.progress-date{font-size:10px;color:var(--muted);white-space:nowrap}.chart-empty{padding:22px;text-align:center;color:var(--muted);font-size:13px}
+.question{border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0;background:#fff}
+.qmeta{color:var(--muted);font-size:12px;margin-bottom:7px}.qhead{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}.qnumber{flex:0 0 34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#dbeafe;color:#1d4ed8;font-weight:800;font-size:15px}.qbody{flex:1;min-width:0}.option{display:block;padding:10px;border:1px solid var(--line);border-radius:9px;margin:8px 0;font-weight:400}
+.option input{width:auto;margin:0 0 0 9px;vertical-align:middle}.option input[type="radio"]{accent-color:#16a34a}.option-letter{display:inline;font-weight:800;font-size:14px;color:var(--text);margin-right:0;vertical-align:middle}.option.exam-selected{background:transparent;border:1px solid var(--line);color:inherit;font-weight:400}.correct{border-color:#86efac;background:#f0fdf4}.incorrect{border-color:#fda4af;background:#fff1f2}
+.notice{padding:11px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;color:#1e40af;font-size:13px}
+.explanation-block{margin:12px 0 0;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#f8fafc}.explanation-block h4{font-size:13px;margin:0 0 5px;color:#1e40af}.explanation-block p{margin:0;white-space:pre-wrap;line-height:1.6}.explanation-section{margin-top:10px}.explanation-section:first-child{margin-top:0}
+.empty{text-align:center;padding:25px;color:var(--muted)}
+.smallbtn{border:1px solid var(--line);background:white;border-radius:8px;padding:7px 9px;font:inherit}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}.filter-chip{border:1px solid #bfdbfe;background:#eff6ff;color:#1e40af;border-radius:999px;padding:9px 13px;font:inherit;font-weight:700}.filter-chip.selected{background:#1d4ed8;color:#fff;border-color:#1d4ed8}.filter-chip span{opacity:.8;font-weight:500}.filter-backdrop{display:none;position:fixed;inset:0;background:#0f172a88;z-index:30;align-items:flex-end;justify-content:center}.filter-backdrop.open{display:flex}.filter-sheet{background:#fff;width:100%;max-width:650px;height:52vh;min-height:300px;max-height:560px;border-radius:22px 22px 0 0;padding:16px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -12px 35px #0f172a33;display:flex;flex-direction:column;animation:sheetUp .18s ease-out}.filter-backdrop.practice-filter-open{align-items:center;justify-content:flex-start}.filter-backdrop.practice-filter-open .filter-sheet{width:min(55vw,420px);min-width:190px;max-width:55vw;height:auto;min-height:260px;max-height:82vh;overflow:hidden;border-radius:0 18px 18px 0;padding:14px 12px;box-shadow:8px 0 30px #0f172a33;animation:drawerFromLeft .18s ease-out}.filter-backdrop.practice-filter-open .sheet-handle{display:none}.filter-backdrop.practice-filter-open .sheet-footer{flex-wrap:wrap}.filter-backdrop.practice-filter-open .sheet-footer button{flex:1 1 100%;padding:8px;font-size:13px}@keyframes drawerFromLeft{from{transform:translateX(-28px);opacity:.7}to{transform:translateX(0);opacity:1}}.sheet-handle{width:42px;height:5px;border-radius:9px;background:#cbd5e1;margin:0 auto 13px}.sheet-options{overflow:auto;display:flex;flex-direction:column;gap:9px;padding:6px 2px;min-height:0}.sheet-option{width:100%;flex:0 0 auto;border:1px solid #dbeafe;background:#f0f9ff;color:#075985;border-radius:12px;padding:12px;text-align:left;font:inherit;font-weight:650}.sheet-option.active{background:#dbeafe;border:2px solid #2563eb;color:#1e40af}.sheet-footer{display:flex;justify-content:space-between;gap:10px;margin-top:auto;padding-top:10px}@keyframes sheetUp{from{transform:translateY(35px);opacity:.7}to{transform:translateY(0);opacity:1}}.bookmark-btn{border:1px solid #fcd34d;background:#fffbeb;color:#92400e;border-radius:9px;padding:8px 11px;font:inherit;font-weight:700}.bookmark-btn.on{background:#fef3c7;border-color:#f59e0b}.exam-nav{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}.exam-nav button{width:40px;height:40px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;color:#334155;font-weight:750}.exam-nav button.unanswered{background:#fff1f2;border:2px solid #fb7185;color:#9f1239}.exam-nav button.answered{background:#86efac;border:2px solid #16a34a;color:#14532d}.exam-nav button.flagged{background:#fef08a;border-color:#eab308;color:#713f12}.exam-nav button.answered.flagged{background:#fde047;border:2px solid #ca8a04;color:#713f12}.exam-review-list{display:flex;flex-wrap:wrap;gap:8px;margin:9px 0 16px}.exam-review-list button{min-width:42px;height:42px;border-radius:10px;border:1px solid #cbd5e1;background:#fff;font-weight:750}.exam-review-list button.unanswered{background:#fff1f2;border:2px solid #fb7185;color:#9f1239}.exam-review-list button.answered{background:#86efac;border:2px solid #16a34a;color:#14532d}.exam-review-list button.flagged{box-shadow:inset 0 0 0 3px #eab308}.exam-nav button.current{outline:3px solid #93c5fd;border-color:#2563eb}.exam-nav-legend{display:flex;gap:13px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.exam-nav-legend span{display:inline-flex;align-items:center;gap:5px}.legend-dot{width:10px;height:10px;border-radius:3px;background:#fff;border:1px solid #cbd5e1}.legend-dot.answered{background:#86efac;border:2px solid #16a34a}.legend-dot.unanswered{background:#fff1f2;border:2px solid #fb7185}
+ .exam-timer-sticky{position:sticky;top:48px;z-index:6;background:#fff;border:1px solid var(--line);box-shadow:0 3px 10px #0f172a18;margin-bottom:12px}.exam-timer-sticky h2{margin-bottom:4px}.exam-timer-sticky p{margin:0}.timer-warning{color:#b45309;background:#fffbeb;border-radius:6px;padding:2px 7px}.timer-danger{color:#b91c1c;background:#fee2e2;border-radius:6px;padding:2px 7px;animation:timerPulse 1s infinite;font-size:1.08em}@keyframes timerPulse{50%{opacity:.55}}.timer-alert{display:none;margin-left:7px;color:#b45309;font-weight:800;font-size:12px}.timer-alert.danger{color:#b91c1c}
+hr{border:0;border-top:1px solid var(--line);margin:15px 0}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.statgrid{grid-template-columns:repeat(3,1fr)}main{padding:12px}.card{padding:13px}}
+</style>
+</head>
+<body>
+<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.26 PWA</p></header>
+<nav>
+<button class="active" data-tab="home">Home</button>
+<button data-tab="library">Question bank</button>
+<button data-tab="duplicates">Duplicate manager</button>
+<button data-tab="practice">Practice</button>
+<button data-tab="scoreboard">Scoreboard</button>
+<button data-tab="mistakes">Mistake notebook</button>
+<button data-tab="bookmarks">Bookmarks</button>
+<button data-tab="saved">Difficult</button>
+<button data-tab="add">Add question</button>
+<button data-tab="submissions">Submission</button>
+</nav>
+
+<main>
+<section id="home" class="panel active">
+ <div class="card">
+  <h2>Your aptitude practice space</h2>
+  <p class="muted">Keep your questions organized by topic and examination year. Your question bank stays on this device.</p>
+  <div class="statgrid">
+   <div class="stat"><strong id="totalStat">0</strong><span class="muted">Questions</span></div>
+   <div class="stat"><strong id="topicStat">0</strong><span class="muted">Topics</span></div>
+   <div class="stat"><strong id="savedStat">0</strong><span class="muted">Difficult</span></div>
+  </div>
+ </div>
+ <div class="card">
+  <h3>Getting started</h3>
+  <ol>
+   <li>Add a question manually, or import a JSON/CSV file.</li>
+   <li>Choose a topic and examination year for each question.</li>
+   <li>Open Practice to answer questions and check explanations.</li>
+   <li>Export a JSON backup regularly so you don't lose your collection.</li>
+  </ol>
+  <div class="notice">Acode preview may not preserve browser storage when reopened. After every change, prepare a fresh backup and update your JSON file in QuickEdit before closing.</div>
+ </div>
+ <div class="card">
+  <h3>Backup and restore</h3>
+  <p class="muted">Create a copyable JSON backup of your question bank, or restore questions from a JSON/CSV file.</p>
+  <div class="actions"><button class="primary" onclick="exportJSON()">Create backup text</button><button class="secondary" onclick="document.getElementById('importFile').click()">Import file</button></div>
+ </div>
+</section>
+
+<section id="library" class="panel">
+ <div class="card">
+  <h2>Question bank</h2>
+  <p class="muted">Choose an examination year to browse its questions. Years are arranged from newest to oldest, with English before Mathematics.</p>
+  <label for="searchBox">Search question text</label><input id="searchBox" placeholder="Search questions…">
+  <p class="muted" id="libraryCount">0 questions</p>
+ </div>
+ <div id="questionList"></div>
+</section>
+
+<section id="add" class="panel">
+ <div class="card">
+  <h2 id="addFormTitle">Add a question</h2>
+  <form id="questionForm">
+   <label for="qPart">Part *</label><select id="qPart" required><option value="">Choose part</option><option>English</option><option>Maths</option></select>
+   <label for="qTopic">Topic *</label><input id="qTopic" required placeholder="e.g. Analogies, Number patterns">
+   <div class="grid">
+    <div><label for="qYear">Examination year *</label><input id="qYear" required placeholder="e.g. 2018 E.C."></div>
+   </div>
+   <label for="qDifficulty">Difficulty level</label><select id="qDifficulty"><option value="">Not classified</option><option value="Easy">Easy</option><option value="Medium">Medium</option><option value="Hard">Hard</option> <option value="Very hard">Very hard</option></select>
+   <label for="qText">Question *</label><textarea id="qText" required placeholder="Enter the complete question"></textarea>
+   <label>Answer choices * (at least 2)</label><div id="officialOptions"></div>
+   <div class="actions"><button type="button" class="secondary" onclick="addOfficialOption()">+ Add option</button><button type="button" class="secondary" onclick="removeOfficialOption()">− Remove last option</button></div>
+   <label for="qAnswer">Correct answer *</label><select id="qAnswer" required></select>
+   <hr><h3>Question explanation</h3>
+   <p class="muted">Write each part separately. Main concept and step-by-step explanation are strongly recommended.</p>
+   <label for="qConcept">Main concept</label><textarea id="qConcept" placeholder="What concept or principle does this question test?"></textarea>
+   <label for="qSteps">Step-by-step explanation</label><textarea id="qSteps" placeholder="Explain how to reach the correct answer, step by step."></textarea>
+   <label for="qOther">Why are the other choices wrong? (optional)</label><textarea id="qOther" placeholder="Explain why the other options are incorrect."></textarea>
+   <label for="qTrick">Examiner's trick (optional)</label><textarea id="qTrick" placeholder="What trap or misconception might the examiner be testing?"></textarea>
+   <label for="qTakeaway">Important lesson (optional)</label><textarea id="qTakeaway" placeholder="What should the student remember from this question?"></textarea>
+   <div class="actions"><button class="primary" id="saveQuestionBtn" type="submit">Save question</button><button class="secondary" type="reset">Clear form</button><button class="secondary" id="cancelEditBtn" type="button" onclick="cancelEdit()" style="display:none">Cancel edit</button></div>
+  </form>
+ </div>
+ <div class="card">
+  <h3>Import questions from a file</h3>
+  <p class="muted">Select a JSON or CSV file. Imported questions are added to your existing bank.</p>
+  <button class="secondary" onclick="document.getElementById('importFile').click()">Choose JSON / CSV file</button>
+  <p class="muted" id="importStatus"></p>
+  <hr>
+  <h3>File format</h3>
+  <p class="muted">JSON question fields: part, topic, year, question, options (at least two choices), answer (letter or zero-based index), explanation. Variable option counts are supported. CSV headers: part, topic, year, question, A, B, C, D, answer, explanation.</p>
+ </div>
+</section>
+
+<section id="duplicates" class="panel">
+ <div class="card">
+  <h2>Duplicate manager</h2>
+  <p class="muted">Scan your question bank for repeated questions. A duplicate means the same examination year, question wording, and answer choices, even if its topic, difficulty, or option order differs.</p>
+  <div class="actions"><button class="primary" onclick="renderDuplicateManager()">Scan question bank</button><button class="danger" id="removeAllDuplicatesBtn" onclick="removeAllDuplicateGroups()" disabled>Remove all detected duplicates</button></div>
+  <p id="duplicateSummary" class="notice" style="margin-top:12px" aria-live="polite">Tap Scan question bank to check your saved questions.</p>
+ </div>
+ <div id="duplicateGroupsList"></div>
+</section>
+
+<section id="submissions" class="panel">
+ <div class="card">
+  <h2>Submit a question</h2>
+  <p class="muted">Student submissions are kept separate from the official Question Bank until an administrator verifies and approves them.</p>
+  <form id="submissionForm">
+   <label for="sBy">Your name or student ID (optional)</label><input id="sBy" placeholder="e.g. Student name">
+   <label for="sPart">Part *</label><select id="sPart" required><option value="">Choose part</option><option>English</option><option>Maths</option></select>
+   <label for="sTopic">Topic *</label><input id="sTopic" required placeholder="e.g. Analogies, Number patterns">
+   <label for="sYear">Examination year *</label><input id="sYear" required placeholder="e.g. 2018 E.C.">
+   <label for="sText">Question *</label><textarea id="sText" required placeholder="Enter the complete question"></textarea>
+   <label>Answer choices * (at least 2)</label><div id="submissionOptions"></div>
+   <div class="actions"><button type="button" class="secondary" onclick="addSubmissionOption()">+ Add option</button><button type="button" class="secondary" onclick="removeSubmissionOption()">− Remove last option</button></div>
+   <label for="sAnswer">Proposed correct answer (optional)</label><select id="sAnswer"><option value="">I don't know / leave for administrator</option></select>
+   <label for="sExplanation">Explanation or notes (optional)</label><textarea id="sExplanation" placeholder="How did you solve it? Write how you solved it or add helpful notes."></textarea>
+   <div class="actions"><button class="primary" type="submit">Submit for review</button><button class="secondary" type="reset">Clear form</button></div>
+  </form>
+ </div>
+ <div class="card"><h2>Administrator review workspace</h2><p class="muted">Review and editing controls in this prototype are local and are not protected by real accounts. Secure student/admin permissions will be enforced later by the shared server.</p><div id="reviewEditor" style="display:none"></div></div>
+ <div class="card"><h2>Pending and rejected submissions</h2><p class="muted">Approved questions are moved out of this list and kept in submission history and backups. Submissions are stored on this device; sharing across phones requires the later server and synchronization stage.</p><div id="submissionList"></div></div>
+</section>
+
+<section id="practice" class="panel">
+ <div id="practiceSetup"></div>
+ <div id="practiceArea"></div>
+</section>
+
+<section id="scoreboard" class="panel">
+ <div class="card">
+  <h2>Practice scoreboard</h2>
+  <p class="muted">Your completed practice sessions are saved here on this device. Create a fresh JSON backup to keep them if Acode preview clears its storage.</p>
+  <div class="statgrid">
+   <div class="stat"><strong id="scoreSessions">0</strong><span class="muted">Sessions</span></div>
+   <div class="stat"><strong id="scoreBest">—</strong><span class="muted">Best score</span></div>
+   <div class="stat"><strong id="scoreAverage">—</strong><span class="muted">Average</span></div>
+  </div>
+ </div>
+ <div class="card">
+  <h3>Score progress</h3>
+  <p class="muted">Your latest 10 completed sessions, shown from oldest to newest.</p>
+  <div id="scoreProgressChart" class="progress-chart" aria-label="Practice score progress chart"></div>
+ </div>
+ <div id="scoreHistory"></div>
+ <div class="card"><button class="danger" onclick="clearScoreboard()">Clear scoreboard history</button></div>
+</section>
+
+<section id="saved" class="panel">
+ <div class="card"><h2>Difficult questions</h2><p class="muted">Questions you mark for another review appear here.</p></div>
+ <div id="savedList"></div>
+</section>
+<section id="bookmarks" class="panel"><div class="card"><h2>Bookmarks</h2><p class="muted">Questions you bookmark for future review. Remove bookmarks whenever you wish; the original questions remain in the Question Bank.</p><strong id="bookmarkCount">0 bookmarked question(s)</strong></div><div id="bookmarkList"></div></section>
+<section id="mistakes" class="panel">
+ <div class="card"><h2>Mistake notebook</h2><p class="muted">Questions you answer incorrectly are added automatically. Remove any question whenever you no longer need it here; it remains in the official Question Bank.</p><strong id="mistakeCount">0 saved question(s)</strong></div>
+ <div id="mistakeList"></div>
+</section>
+<div id="backupPanel" class="card" style="display:none;margin-top:14px">
+ <h3 id="backupPanelTitle">Your latest backup text</h3>
+ <p class="muted" id="backupPanelHint">Copy this text, paste it into a file in QuickEdit, and save it with a .json extension. This is the reliable way to keep your questions if Acode preview loses its browser storage.</p>
+ <textarea id="backupText" rows="10" readonly style="min-height:180px;font-family:monospace;font-size:12px"></textarea>
+ <div class="actions"><button class="primary" onclick="copyBackup()">Copy backup</button><button class="secondary" onclick="closeBackup()">Close</button></div>
+ <p id="backupStatus" class="muted" aria-live="polite"></p>
+</div>
+</main>
+<div class="filter-backdrop" id="filterBackdrop" onclick="if(event.target===this)closeFilterSheet()"><div class="filter-sheet" role="dialog" aria-modal="true" aria-labelledby="filterSheetTitle"><div class="sheet-handle"></div><h2 id="filterSheetTitle">Choose filter</h2><p class="muted" id="filterSheetHint">Tap one option</p><div class="sheet-options" id="filterSheetOptions"></div><div class="sheet-footer"><button class="secondary" onclick="clearCurrentFilter()">Clear selection</button><button class="primary" onclick="closeFilterSheet()">Done</button></div></div></div>
+<input id="importFile" type="file" accept=".json,.csv,application/json,text/csv" hidden>
+<script>
+const ACTIVE_EXAM_KEY='sat_excellence_active_exam_v1';
+const KEY='sat_excellence_questions_v1', SCORE_KEY='sat_excellence_scores_v1', SUB_KEY='sat_excellence_submissions_v1', MISTAKE_KEY='sat_excellence_mistakes_v1', MISTAKE_STATS_KEY='sat_excellence_mistake_stats_v1', BOOKMARK_KEY='sat_excellence_bookmarks_v1';
+let questions=loadQuestions(), scoreHistory=loadScores(), submissions=loadSubmissions(), mistakeIds=loadMistakes(), mistakeStats=loadMistakeStats(), bookmarkIds=loadBookmarks(), duplicateGroups=[], selectedMistakeYear=null, selectedMistakePriority=null, filterState={library:{part:'',topic:'',year:''},practice:{part:'',topic:'',year:''}}, activeFilterContext=null, selectedLibraryYear=null, selectedPracticeYear=null, session=[], sessionIndex=0, score=0, timer=null, secondsLeft=0, elapsedSeconds=0, sessionAnswers=[], editingId=null, sessionMode='immediate', resultReviewItems=[], resultReviewFilter='all';
+function loadQuestions(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
+function loadScores(){try{return JSON.parse(localStorage.getItem(SCORE_KEY)||'[]')}catch(e){return []}}
+function loadSubmissions(){try{return JSON.parse(localStorage.getItem(SUB_KEY)||'[]')}catch(e){return []}}
+function loadMistakes(){try{return JSON.parse(localStorage.getItem(MISTAKE_KEY)||'[]')}catch(e){return []}}
+function loadMistakeStats(){try{return JSON.parse(localStorage.getItem(MISTAKE_STATS_KEY)||'{}')}catch(e){return {}}}
+function saveMistakeStats(){try{localStorage.setItem(MISTAKE_STATS_KEY,JSON.stringify(mistakeStats));return true}catch(e){alert('Mistake statistics could not be saved. Please create a backup.');return false}}
+function loadBookmarks(){try{return JSON.parse(localStorage.getItem(BOOKMARK_KEY)||'[]')}catch(e){return []}}
+function saveBookmarks(){try{bookmarkIds=[...new Set(bookmarkIds)].filter(id=>questions.some(q=>q.id===id));localStorage.setItem(BOOKMARK_KEY,JSON.stringify(bookmarkIds));renderBookmarks();return true}catch(e){alert('Bookmarks could not be saved. Please create a backup.');return false}}
+function toggleBookmark(id){bookmarkIds=bookmarkIds.includes(id)?bookmarkIds.filter(x=>x!==id):[...bookmarkIds,id];saveBookmarks();renderLibrary();renderSaved()}
+function removeBookmark(id){bookmarkIds=bookmarkIds.filter(x=>x!==id);saveBookmarks();}
+function saveMistakes(){try{mistakeIds=[...new Set(mistakeIds)].filter(id=>questions.some(q=>q.id===id));localStorage.setItem(MISTAKE_KEY,JSON.stringify(mistakeIds));renderMistakes();return true}catch(e){alert('Mistake Notebook could not be saved. Please create a backup.');return false}}
+function addMistake(id){if(!id||!questions.some(q=>q.id===id))return;let now=new Date().toISOString(),stat=mistakeStats[id]||{count:0,lastMistake:null};stat.count=(Number(stat.count)||0)+1;stat.lastMistake=now;mistakeStats[id]=stat;saveMistakeStats();if(!mistakeIds.includes(id)){mistakeIds.push(id);saveMistakes()}else renderMistakes()}
+function removeMistake(id){mistakeIds=mistakeIds.filter(x=>x!==id);saveMistakes()}
+function saveSubmissions(){try{localStorage.setItem(SUB_KEY,JSON.stringify(submissions));renderSubmissions();return true}catch(e){alert('Could not save submissions. Please create a backup.');return false}}
+function saveScores(){try{localStorage.setItem(SCORE_KEY,JSON.stringify(scoreHistory));return true}catch(e){alert('Score history could not be saved in this browser storage. Please create a backup.');return false}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(questions));renderAll();return true}catch(e){alert('Could not save to this browser storage. Your latest change may not be saved. Create a backup if possible. Error: '+e.message);return false}}
+function uid(){return 'q'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function explanationDetailsFromForm(){return {concept:val('qConcept').trim(),steps:val('qSteps').trim(),otherChoices:val('qOther').trim(),examinerTrick:val('qTrick').trim(),takeaway:val('qTakeaway').trim()}}
+function renderExplanation(q){let d=q.explanationDetails||{};let parts=[['Main concept',d.concept],['Step-by-step explanation',d.steps],['Why other choices are wrong',d.otherChoices], ["Examiner's trick",d.examinerTrick],['Important lesson',d.takeaway]].filter(x=>String(x[1]||'').trim());if(!parts.length&&q.explanation)parts=[['Explanation',q.explanation]];if(!parts.length)return '';return '<div class="explanation-block">'+parts.map(x=>'<section class="explanation-section"><h4>'+esc(x[0])+'</h4><p>'+esc(x[1])+'</p></section>').join('')+'</div>'}
+function normalizeAnswer(a,count=4){if(a===null||a===undefined||a==='')return -1;if(typeof a==='number')return Number.isInteger(a)&&a>=0&&a<count?a:-1;let s=String(a).trim().toUpperCase();if(/^[A-Z]$/.test(s)){let n=s.charCodeAt(0)-65;return n<count?n:-1}let n=Number(s);return Number.isInteger(n)&&n>=0&&n<count?n:-1}
+function optionInputs(containerId,values=['','']){let el=document.getElementById(containerId);el.innerHTML=values.map((v,i)=>'<div class="grid" style="grid-template-columns:42px 1fr;align-items:center;margin-top:7px"><strong>'+String.fromCharCode(65+i)+'.</strong><input class="choice-input" data-index="'+i+'" value="'+esc(v)+'" placeholder="Option '+String.fromCharCode(65+i)+'" required></div>').join('');}
+function getOptions(containerId){return [...document.querySelectorAll('#'+containerId+' .choice-input')].map(x=>x.value.trim())}
+function updateAnswerSelect(selectId,options,selected=''){let el=document.getElementById(selectId);el.innerHTML='<option value="">'+(selectId==='sAnswer'?"I don't know / leave for administrator":'Select correct answer')+'</option>'+options.map((o,i)=>'<option value="'+i+'">'+String.fromCharCode(65+i)+'</option>').join('');el.value=selected}
+function addOfficialOption(){let a=getOptions('officialOptions');if(a.length>=26){alert('Maximum 26 options (A–Z).');return}a.push('');optionInputs('officialOptions',a);updateAnswerSelect('qAnswer',a,document.getElementById('qAnswer').value)}
+function removeOfficialOption(){let a=getOptions('officialOptions');if(a.length<=2){alert('A question needs at least two options.');return}a.pop();optionInputs('officialOptions',a);updateAnswerSelect('qAnswer',a)}
+function addSubmissionOption(){let a=getOptions('submissionOptions');if(a.length>=26){alert('Maximum 26 options (A–Z).');return}a.push('');optionInputs('submissionOptions',a);updateAnswerSelect('sAnswer',a,document.getElementById('sAnswer').value)}
+function removeSubmissionOption(){let a=getOptions('submissionOptions');if(a.length<=2){alert('A question needs at least two options.');return}a.pop();optionInputs('submissionOptions',a);updateAnswerSelect('sAnswer',a)}
+function switchTab(id){if(sessionMode==='timed'&&session.length&&document.getElementById('practiceArea')?.querySelector('#clock')&&id!=='practice'){if(!confirm('Your timed exam is still active. Leave this exam? Your progress will be saved so you can resume it.'))return;}document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));if(id==='library'){selectedLibraryYear=null;renderLibrary();}if(id==='practice'){selectedPracticeYear=null;renderPracticeSetup();}if(id==='saved')renderSaved();if(id==='mistakes'){selectedMistakeYear=null;selectedMistakePriority=null;renderMistakes();}if(id==='bookmarks')renderBookmarks();if(id==='scoreboard')renderScoreboard();if(id==='submissions')renderSubmissions();if(id==='duplicates')renderDuplicateManager()}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+document.getElementById('questionForm').addEventListener('submit',e=>{
+ e.preventDefault();let existing=editingId?questions.find(x=>x.id===editingId):null,opts=getOptions('officialOptions'),ans=val('qAnswer');
+ let details=explanationDetailsFromForm();let q={id:existing?existing.id:uid(),part:val('qPart'),topic:val('qTopic').trim(),year:val('qYear').trim(),difficulty:val('qDifficulty'),question:val('qText').trim(),options:opts,answer:ans===''?-1:Number(ans),explanationDetails:details,explanation:[details.concept,details.steps,details.otherChoices,details.examinerTrick,details.takeaway].filter(Boolean).join('\n\n'),saved:existing?existing.saved:false,status:'Verified'};
+ if(!q.topic||!q.year||!q.question||q.options.length<2||q.options.some(x=>!x)){alert('Please complete the topic, year, question and at least two answer choices.');return}
+ if(existing){let index=questions.findIndex(x=>x.id===editingId);questions[index]=q;}else{questions.push(q)}
+ let wasEditing=!!existing;editingId=null;save();e.target.reset();optionInputs('officialOptions',['','']);updateAnswerSelect('qAnswer',getOptions('officialOptions'));resetEditForm();alert(wasEditing?'Question updated.':'Question saved to the official bank.');switchTab('library');
+});
+document.getElementById('questionForm').addEventListener('reset',()=>{setTimeout(()=>{if(!editingId)resetEditForm()},0)});
+
+function initEntryForms(){optionInputs('officialOptions',['','','','']);updateAnswerSelect('qAnswer',getOptions('officialOptions'));optionInputs('submissionOptions',['','','','']);updateAnswerSelect('sAnswer',getOptions('submissionOptions'));}
+document.getElementById('submissionForm').addEventListener('submit',e=>{
+ e.preventDefault();let opts=getOptions('submissionOptions'),ans=val('sAnswer');
+ if(opts.length<2||opts.some(x=>!x)){alert('Please provide at least two complete answer choices.');return}
+ let item={submissionId:'S'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),submittedBy:val('sBy').trim()||'Anonymous',submittedAt:new Date().toISOString(),reviewStatus:'Pending',reviewNote:'',questionData:{id:uid(),part:val('sPart'),topic:val('sTopic').trim(),year:val('sYear').trim(),question:val('sText').trim(),options:opts,answer:ans===''?-1:Number(ans),explanation:val('sExplanation').trim(),saved:false,status:'Pending'}};
+ submissions.unshift(item);saveSubmissions();e.target.reset();optionInputs('submissionOptions',['','','','']);updateAnswerSelect('sAnswer',getOptions('submissionOptions'));alert('Your question was submitted for administrator review.');
+});
+document.getElementById('submissionForm').addEventListener('reset',()=>setTimeout(()=>{optionInputs('submissionOptions',['','','','']);updateAnswerSelect('sAnswer',getOptions('submissionOptions'))},0));
+function renderSubmissions(){
+ let el=document.getElementById('submissionList');if(!el)return;
+ let visibleSubmissions=submissions.filter(x=>x.reviewStatus!=='Approved');
+ if(!visibleSubmissions.length){el.innerHTML='<p class="muted">No pending or rejected submissions. Approved questions have been moved to the official Question Bank.</p>';return}
+ el.innerHTML=visibleSubmissions.map(x=>{let q=x.questionData||{};let opts=(q.options||[]).map((o,j)=>`<div class="muted">${String.fromCharCode(65+j)}. ${esc(o)}</div>`).join('');let actions=x.reviewStatus==='Pending'?`<div class="actions"><button class="primary" data-review="review" data-id="${esc(x.submissionId)}">Review and approve</button><button class="danger" data-review="reject" data-id="${esc(x.submissionId)}">Reject with reason</button></div>`:x.reviewStatus==='Rejected'?`<div class="actions"><button class="secondary" data-review="resubmit" data-id="${esc(x.submissionId)}">Edit and resubmit</button></div>`:'';return `<article class="question"><div class="qmeta">${esc(x.submissionId)} • ${esc(x.submittedBy)} • ${esc(new Date(x.submittedAt).toLocaleString())}</div><div class="actions"><strong>${esc(x.reviewStatus)}</strong></div><p><strong>${esc(q.question||'')}</strong></p><p class="muted">${esc(q.topic||'')} • ${esc(q.year||'')}</p>${opts}<p class="muted">Proposed answer: ${q.answer>=0?String.fromCharCode(65+q.answer):'Not provided'}</p>${q.explanation?`<p>${esc(q.explanation)}</p>`:''}${x.reviewNote?`<div class="notice">Administrator note: ${esc(x.reviewNote)}</div>`:''}${actions}</article>`}).join('');
+ el.querySelectorAll('[data-review]').forEach(btn=>btn.addEventListener('click',()=>{let id=btn.dataset.id; if(btn.dataset.review==='review')openReviewEditor(id);if(btn.dataset.review==='reject')rejectSubmission(id);if(btn.dataset.review==='resubmit')resubmitSubmission(id)}));
+}
+function openReviewEditor(id){
+ let x=submissions.find(z=>z.submissionId===id);if(!x||x.reviewStatus!=='Pending')return;
+ let q=x.questionData||{},box=document.getElementById('reviewEditor');
+ box.style.display='block';
+ box.innerHTML=`<h3>Review submission ${esc(x.submissionId)}</h3><p class="muted">Submitted by ${esc(x.submittedBy)}. You may correct the question and choices before approval.</p>
+ <form id="reviewForm"><label for="rPart">Part *</label><select id="rPart" required><option value="">Choose part</option><option>English</option><option>Maths</option></select>
+ <label for="rTopic">Topic *</label><input id="rTopic" required value="${esc(q.topic||'')}">
+ <div class="grid"><div><label for="rYear">Examination year *</label><input id="rYear" required value="${esc(q.year||'')}"></div><div><label for="rDifficulty">Difficulty level</label><select id="rDifficulty"><option value="">Not classified</option><option value="Easy" ${q.difficulty==='Easy'?'selected':''}>Easy</option><option value="Medium" ${q.difficulty==='Medium'?'selected':''}>Medium</option><option value="Hard" ${q.difficulty==='Hard'?'selected':''}>Hard</option><option value="Very hard" ${q.difficulty==='Very hard'?'selected':''}>Very hard</option></select></div></div>
+ <label for="rQuestion">Question text *</label><textarea id="rQuestion" required>${esc(q.question||'')}</textarea>
+ <label>Answer choices * (2–26)</label><div id="reviewOptions"></div><div class="actions"><button type="button" class="secondary" id="rAddOption">+ Add option</button><button type="button" class="secondary" id="rRemoveOption">− Remove last option</button></div>
+ <label for="rAnswer">Verified correct answer *</label><select id="rAnswer" required></select>
+ <hr><h3>Required explanation</h3><label for="rConcept">Main concept *</label><textarea id="rConcept" required placeholder="What concept or principle does this question test?">${esc((q.explanationDetails||{}).concept||'')}</textarea>
+ <label for="rSteps">Step-by-step explanation *</label><textarea id="rSteps" required placeholder="Explain how to reach the correct answer.">${esc((q.explanationDetails||{}).steps||q.explanation||'')}</textarea>
+ <h3>Additional explanation (optional)</h3><label for="rOther">Why are the other choices wrong?</label><textarea id="rOther">${esc((q.explanationDetails||{}).otherChoices||'')}</textarea>
+ <label for="rTrick">Examiner's trick</label><textarea id="rTrick">${esc((q.explanationDetails||{}).examinerTrick||'')}</textarea>
+ <label for="rTakeaway">Important lesson</label><textarea id="rTakeaway">${esc((q.explanationDetails||{}).takeaway||'')}</textarea>
+ <div class="actions"><button class="primary" type="submit">Save edits and approve</button><button class="secondary" type="button" id="rCancel">Cancel</button></div></form>`;
+ document.getElementById('rPart').value=q.part||'';
+ let opts=[...(q.options||['',''])];if(opts.length<2)opts=['',''];
+ function draw(){optionInputs('reviewOptions',opts);updateAnswerSelect('rAnswer',opts,q.answer>=0?String(q.answer):'')}
+ draw();
+ document.getElementById('rAddOption').onclick=()=>{opts=getOptions('reviewOptions');if(opts.length>=26){alert('Maximum 26 options (A–Z).');return}opts.push('');draw()};
+ document.getElementById('rRemoveOption').onclick=()=>{opts=getOptions('reviewOptions');if(opts.length<=2){alert('A question needs at least two options.');return}opts.pop();draw()};
+ document.getElementById('rCancel').onclick=()=>{box.style.display='none';box.innerHTML=''};
+ document.getElementById('reviewForm').onsubmit=e=>{
+  e.preventDefault();let choices=getOptions('reviewOptions'),answer=val('rAnswer');
+  if(choices.length<2||choices.length>26||choices.some(v=>!v)){alert('Complete every answer choice.');return}
+  if(answer===''){alert('Select the verified correct answer.');return}
+  let concept=val('rConcept').trim(),steps=val('rSteps').trim();if(!concept||!steps){alert('Main concept and step-by-step explanation are required before approval.');return}
+  if(!x.originalQuestionData)x.originalQuestionData=JSON.parse(JSON.stringify(x.questionData||{}));
+  let details={concept,steps,otherChoices:val('rOther').trim(),examinerTrick:val('rTrick').trim(),takeaway:val('rTakeaway').trim()};
+  let explanation='Main concept: '+concept+'\n\nStep-by-step explanation: '+steps+(details.otherChoices?'\n\nWhy other choices are wrong: '+details.otherChoices:'')+(details.examinerTrick?'\n\nExaminer\'s trick: '+details.examinerTrick:'')+(details.takeaway?'\n\nImportant lesson: '+details.takeaway:'');
+  let reviewed={...x.questionData,part:val('rPart'),topic:val('rTopic').trim(),year:val('rYear').trim(),difficulty:val('rDifficulty'),question:val('rQuestion').trim(),options:choices,answer:Number(answer),explanation,explanationDetails:details,status:'Verified',saved:false};
+  if(!reviewed.part||!reviewed.topic||!reviewed.year||!reviewed.question){alert('Complete topic, year and question text.');return}
+  x.questionData=reviewed;x.reviewStatus='Approved';x.reviewNote='Reviewed, edited if needed, and approved into the official Question Bank.';
+  questions.push({...reviewed,id:uid()});save();saveSubmissions();box.style.display='none';box.innerHTML='';alert('Approved. The reviewed question and explanation have been added to the official Question Bank.');switchTab('library');
+ };
+ box.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function rejectSubmission(id){let x=submissions.find(z=>z.submissionId===id);if(!x)return;let reason=prompt('Enter a clear reason so the student can correct the submission:');if(reason===null)return;if(!reason.trim()){alert('A rejection reason is required.');return}x.reviewStatus='Rejected';x.reviewNote=reason.trim();saveSubmissions()}
+function resubmitSubmission(id){let x=submissions.find(z=>z.submissionId===id);if(!x)return;let q=x.questionData||{};document.getElementById('sBy').value=x.submittedBy==='Anonymous'?'':x.submittedBy;document.getElementById('sPart').value=q.part||'';document.getElementById('sTopic').value=q.topic||'';document.getElementById('sYear').value=q.year||'';document.getElementById('sText').value=q.question||'';optionInputs('submissionOptions',q.options||['','']);updateAnswerSelect('sAnswer',getOptions('submissionOptions'),q.answer>=0?String(q.answer):'');document.getElementById('sExplanation').value=q.explanation||'';saveSubmissions();switchTab('submissions');window.scrollTo(0,0)}
+
+function val(id){return document.getElementById(id).value}
+function refreshFilterLabels(){
+ ['library','practice'].forEach(ctx=>{let f=filterState[ctx],prefix=ctx==='library'?'lib':'prac';[['part','Part'],['topic','Topic'],['year','Year']].forEach(([k,label])=>{let el=document.getElementById(prefix+label+'Label');if(el)el.textContent=f[k]||'All';let b=document.getElementById(prefix+label+'Btn');if(b)b.classList.toggle('selected',!!f[k]);});});
+}
+function filterOptions(ctx,key){let f=filterState[ctx],base=questions.filter(q=>(key==='part'||!f.part||q.part===f.part)&&(key==='topic'||!f.topic||q.topic===f.topic)&&(key==='year'||!f.year||q.year===f.year));if(key==='part')return ['English','Maths'].filter(x=>questions.some(q=>q.part===x));if(key==='topic')return [...new Set(base.map(q=>q.topic).filter(Boolean))].sort((a,b)=>a.localeCompare(b));if(key==='year')return [...new Set(base.map(q=>q.year).filter(Boolean))].sort(compareExamYearsNewest);return [];
+}
+function openFilterSheet(ctx,key){activeFilterContext={ctx,key};let titles={part:'Choose a Part',topic:'Choose a Topic',year:'Choose an Examination Year'},current=filterState[ctx][key],opts=filterOptions(ctx,key);document.getElementById('filterSheetTitle').textContent=titles[key];document.getElementById('filterSheetHint').textContent=key==='part'?'Select English or Maths.':key==='topic'?'Topics available for the selected Part.':'Examination years available for this selection.';document.getElementById('filterSheetOptions').innerHTML='<button class="sheet-option '+(!current?'active':'')+'" onclick="selectSheetFilter(\'\')">All '+(key==='year'?'years':key==='topic'?'topics':'parts')+'</button>'+opts.map(x=>'<button class="sheet-option '+(current===x?'active':'')+'" onclick="selectSheetFilter(\''+esc(x).replace(/\\/g,'\\\\').replace(/'/g,"\\'")+'\')">'+esc(x)+'</button>').join('');document.getElementById('filterBackdrop').classList.toggle('practice-filter-open',ctx==='practice');document.getElementById('filterBackdrop').classList.add('open');}
+function selectSheetFilter(value){if(!activeFilterContext)return;let {ctx,key}=activeFilterContext;filterState[ctx][key]=value;if(key==='part'){filterState[ctx].topic='';filterState[ctx].year=''}if(key==='topic')filterState[ctx].year='';refreshFilterLabels();closeFilterSheet();if(ctx==='library')renderLibrary();if(ctx==='practice'&&selectedPracticeYear)renderPracticeSetup();}
+function clearCurrentFilter(){selectSheetFilter('')}
+function closeFilterSheet(){document.getElementById('filterBackdrop').classList.remove('open','practice-filter-open');activeFilterContext=null}
+function unique(field){return [...new Set(questions.map(q=>q[field]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}))}
+function fillSelect(id,items,first){let el=document.getElementById(id),old=el.value;el.innerHTML='<option value="">'+first+'</option>'+items.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join('');if(items.includes(old))el.value=old}
+function renderAll(){
+ questions.forEach(q=>{if(!q.part||q.part==='Unassigned')q.part='';delete q.source});
+ submissions.forEach(x=>{if(x.questionData){if(x.questionData.part==='Unassigned')x.questionData.part='';delete x.questionData.source}});
+ document.getElementById('totalStat').textContent=questions.length;
+ document.getElementById('topicStat').textContent=unique('topic').length;
+ document.getElementById('savedStat').textContent=questions.filter(q=>q.saved).length;
+ refreshFilterLabels();
+ renderLibrary();renderSaved();renderMistakes();renderBookmarks();renderScoreboard();refreshFilterLabels();
+}
+function compareExamYearsNewest(a,b){return String(b).localeCompare(String(a),undefined,{numeric:true,sensitivity:'base'});}
+function questionMatchesSearch(q,search){return !search||[q.question,q.part,q.topic,q.year,q.difficulty,...(q.options||[]),q.explanation].join(' ').toLowerCase().includes(search);}
+function selectLibraryYear(year){selectedLibraryYear=year;renderLibrary();}
+function selectLibraryYearFromButton(button){selectLibraryYear(button.dataset.year);}
+function showLibraryYears(){selectedLibraryYear=null;renderLibrary();}
+function renderLibrary(){
+ let search=val('searchBox').toLowerCase(),list=document.getElementById('questionList');
+ if(!selectedLibraryYear){
+  let years=[...new Set(questions.map(q=>q.year).filter(Boolean))].sort(compareExamYearsNewest);
+  let visible=years.map(year=>({year,items:questions.filter(q=>q.year===year&&questionMatchesSearch(q,search))})).filter(x=>x.items.length);
+  let total=visible.reduce((n,x)=>n+x.items.length,0);
+  document.getElementById('libraryCount').textContent=visible.length+' examination year(s) • '+total+' matching question(s)';
+  list.innerHTML=visible.length?visible.map(x=>'<button type="button" class="secondary" style="width:100%;text-align:left;margin-bottom:10px;padding:16px" data-year="'+esc(x.year)+'" onclick="selectLibraryYearFromButton(this)"><strong>'+esc(x.year)+'</strong><span class="muted" style="display:block;margin-top:4px">'+x.items.length+' question(s) • English and Mathematics</span></button>').join(''):'<div class="card empty">No matching examination years. Add or import questions to begin.</div>';
+  return;
+ }
+ let arr=questions.filter(q=>q.year===selectedLibraryYear&&questionMatchesSearch(q,search));
+ let partOrder={English:0,Maths:1};arr=arr.map((q,i)=>({q,i})).sort((a,b)=>(partOrder[a.q.part]??2)-(partOrder[b.q.part]??2)||a.i-b.i).map(x=>x.q);
+let html=`<div class="card"><button type="button" class="secondary" onclick="showLibraryYears()">← All examination years</button><h3 style="margin-top:12px">${esc(selectedLibraryYear)}</h3><p class="muted">English questions first, followed by Mathematics.</p><div class="actions"><button type="button" class="primary" onclick="exportSelectedLibraryYearJSON();copyBackup()">Copy ${esc(selectedLibraryYear)} JSON backup</button></div></div>`;
+ let number=0;
+ ['English','Maths'].forEach(part=>{let group=arr.filter(q=>q.part===part);if(group.length){html+='<div class="card"><h3>'+part+'</h3><p class="muted">'+group.length+' question(s)</p></div>'+group.map(q=>questionCard(q,true,++number)).join('');}});
+ let other=arr.filter(q=>!['English','Maths'].includes(q.part));if(other.length){html+='<div class="card"><h3>Other</h3></div>'+other.map(q=>questionCard(q,true,++number)).join('');}
+ document.getElementById('libraryCount').textContent=arr.length+' question(s) in '+selectedLibraryYear;
+ list.innerHTML=arr.length?html:html+'<div class="card empty">No matching questions in this year.</div>';
+}
+function questionCard(q,showDelete,number){
+ return '<article class="question"><div class="qhead">'+(number?'<span class="qnumber">'+number+'</span>':'')+'<div class="qbody"><div class="qmeta">'+(q.part?esc(q.part)+' • ':'')+esc(q.topic)+' • '+esc(q.year)+(q.difficulty?' • '+esc(q.difficulty):'')+'</div><strong>'+esc(q.question)+'</strong></div></div><div style="margin-top:9px">'+q.options.map((o,i)=>'<div class="muted">'+String.fromCharCode(65+i)+'. '+esc(o)+'</div>').join('')+'</div><div class="actions"><button class="bookmark-btn '+(bookmarkIds.includes(q.id)?'on':'')+'" onclick="toggleBookmark(\''+q.id+'\')">'+(bookmarkIds.includes(q.id)?'★ Bookmarked':'☆ Bookmark')+'</button><button class="smallbtn" onclick="toggleSaved(\''+q.id+'\')">'+(q.saved?'★ Saved':'☆ Mark difficult')+'</button>'+(showDelete?'<button class="smallbtn" onclick="editQuestion(\''+q.id+'\')">Edit</button><button class="danger" onclick="deleteQuestion(\''+q.id+'\')">Delete</button>':'')+'</div>'+(renderExplanation(q)?'<details style="margin-top:9px"><summary>Explanation</summary>'+renderExplanation(q)+'</details>':'')+'</article>';
+}
+
+function editQuestion(id){
+ let q=questions.find(x=>x.id===id);if(!q)return;
+ editingId=id;
+ document.getElementById('qPart').value=q.part||'';
+ document.getElementById('qTopic').value=q.topic||'';
+ document.getElementById('qYear').value=q.year||'';
+ document.getElementById('qDifficulty').value=q.difficulty||'';
+ 
+ document.getElementById('qText').value=q.question||'';
+ optionInputs('officialOptions',q.options||['','']);updateAnswerSelect('qAnswer',getOptions('officialOptions'),q.answer>=0?String(q.answer):'');
+ let d=q.explanationDetails||{};document.getElementById('qConcept').value=d.concept||'';document.getElementById('qSteps').value=d.steps||(!d.concept?q.explanation||'':'');document.getElementById('qOther').value=d.otherChoices||'';document.getElementById('qTrick').value=d.examinerTrick||'';document.getElementById('qTakeaway').value=d.takeaway||'';
+ document.getElementById('addFormTitle').textContent='Edit question';
+ document.getElementById('saveQuestionBtn').textContent='Update question';
+ document.getElementById('cancelEditBtn').style.display='inline-block';
+ switchTab('add');window.scrollTo(0,0);
+}
+function resetEditForm(){
+ document.getElementById('addFormTitle').textContent='Add a question';
+ document.getElementById('saveQuestionBtn').textContent='Save question';
+ document.getElementById('cancelEditBtn').style.display='none';
+}
+function cancelEdit(){editingId=null;document.getElementById('questionForm').reset();resetEditForm();switchTab('library')}
+
+function toggleSaved(id){let q=questions.find(x=>x.id===id);if(q){q.saved=!q.saved;save()}}
+function deleteQuestion(id){if(confirm('Delete this question?')){questions=questions.filter(q=>q.id!==id);mistakeIds=mistakeIds.filter(x=>x!==id);bookmarkIds=bookmarkIds.filter(x=>x!==id);saveMistakes();saveBookmarks();save()}}
+function duplicateNormalize(value){
+ return String(value??'').normalize('NFKC').toLocaleLowerCase().replace(/[\u200B-\u200D\uFEFF]/g,'').replace(/[‘’]/g,"'").replace(/[“”]/g,'"').replace(/[‐‑‒–—]/g,'-').replace(/\s+/g,' ').trim();
+}
+function duplicateFingerprint(q,yearFallback){
+ if(!q)return '';
+ const question=duplicateNormalize(q.question||q.text||'');
+ const options=Array.isArray(q.options)?q.options.map(duplicateNormalize):[];
+ if(!question||options.length<2||options.some(x=>!x))return '';
+ const year=duplicateNormalize(q.year||yearFallback||'Not specified');
+ return JSON.stringify([year,question,options.slice().sort()]);
+}
+function findDuplicateGroups(){
+ const map=new Map();
+ questions.forEach((q,index)=>{
+  const fingerprint=duplicateFingerprint(q);
+  const key=fingerprint||('id:'+String(q?.id??'missing-'+index));
+  if(!map.has(key))map.set(key,[]);
+  map.get(key).push({q,index});
+ });
+ return [...map.entries()].filter(([,items])=>items.length>1).map(([key,items])=>({key,items}));
+}
+function renderDuplicateManager(){
+ duplicateGroups=findDuplicateGroups();
+ const summary=document.getElementById('duplicateSummary'),list=document.getElementById('duplicateGroupsList'),allBtn=document.getElementById('removeAllDuplicatesBtn');
+ const copies=duplicateGroups.reduce((n,g)=>n+g.items.length-1,0);
+ if(summary)summary.textContent=duplicateGroups.length?duplicateGroups.length+' duplicate group(s) found, containing '+copies+' extra copy/copies. Review each group and choose which copy to keep.':'No duplicate questions found. Your current question bank has '+questions.length+' question(s).';
+ if(allBtn)allBtn.disabled=!copies;
+ if(!list)return;
+ if(!duplicateGroups.length){list.innerHTML='<div class="card empty">No duplicates to review. New imports will also be checked automatically.</div>';return;}
+ list.innerHTML=duplicateGroups.map((group,gi)=>{
+  const first=group.items[0].q;
+  const records=group.items.map((item,ri)=>{
+   const q=item.q;
+   const meta=[q.part,q.topic,q.year].filter(Boolean).map(esc).join(' • ');
+   return '<div class="question"><div class="qmeta">Copy '+(ri+1)+(meta?' • '+meta:'')+'</div><strong>'+esc(q.question||'(Question text missing)')+'</strong><div style="margin-top:7px">'+(q.options||[]).map((o,i)=>'<div class="muted">'+String.fromCharCode(65+i)+'. '+esc(o)+'</div>').join('')+'</div><p class="muted">Correct answer: '+(Number.isInteger(Number(q.answer))&&Number(q.answer)>=0?String.fromCharCode(65+Number(q.answer)):'Not set')+'</p><button class="secondary" onclick="keepDuplicateCopy('+gi+','+ri+')">Keep this copy and remove the others</button></div>';
+  }).join('');
+  return '<div class="card"><h3>Duplicate group '+(gi+1)+' — '+group.items.length+' copies</h3><p class="muted">'+esc(first.year||'Not specified')+' • '+esc(first.part||'Part not specified')+'</p>'+records+'</div>';
+ }).join('');
+}
+function mergeDuplicateMetadata(keepQ,removeQuestions){
+ const idsToMerge=removeQuestions.map(q=>q.id).filter(id=>id!=null&&String(id)!==String(keepQ.id));
+ const allIds=[keepQ.id,...idsToMerge].filter(id=>id!=null);
+ keepQ.saved=!!(keepQ.saved||removeQuestions.some(q=>q.saved));
+ keepQ.explanation=keepQ.explanation||removeQuestions.find(q=>q.explanation)?.explanation||'';
+ keepQ.explanationDetails=keepQ.explanationDetails||{};
+ for(const q of removeQuestions){
+  if(q.explanationDetails&&typeof q.explanationDetails==='object'){
+   for(const [k,v] of Object.entries(q.explanationDetails))if(!String(keepQ.explanationDetails[k]||'').trim()&&String(v||'').trim())keepQ.explanationDetails[k]=v;
+  }
+ }
+ if(allIds.some(id=>mistakeIds.some(x=>String(x)===String(id))))mistakeIds.push(keepQ.id);
+ mistakeIds=mistakeIds.filter((id,i,arr)=>arr.findIndex(x=>String(x)===String(id))===i&&!idsToMerge.some(x=>String(x)===String(id)));
+ const stats=allIds.map(id=>mistakeStats[id]).filter(x=>x&&typeof x==='object');
+ if(stats.length){
+  const latest=stats.map(x=>x.lastMistake).filter(Boolean).sort((a,b)=>new Date(b).getTime()-new Date(a).getTime())[0]||null;
+  mistakeStats[keepQ.id]={count:Math.max(1,...stats.map(x=>Number(x.count)||1)),lastMistake:latest};
+ }
+ if(allIds.some(id=>bookmarkIds.some(x=>String(x)===String(id))))bookmarkIds.push(keepQ.id);
+ bookmarkIds=bookmarkIds.filter((id,i,arr)=>arr.findIndex(x=>String(x)===String(id))===i&&!idsToMerge.some(x=>String(x)===String(id)));
+ for(const id of idsToMerge){if(String(id)!==String(keepQ.id))delete mistakeStats[id];}
+}
+function keepDuplicateCopy(groupIndex,keepItemIndex){
+ const group=duplicateGroups[groupIndex];if(!group)return;
+ const keepItem=group.items[keepItemIndex];if(!keepItem)return;
+ const keepQ=keepItem.q,removeQuestions=group.items.filter((item,i)=>i!==keepItemIndex).map(item=>item.q);
+ if(!confirm('Keep this copy and remove '+removeQuestions.length+' duplicate copy/copies? Mistake and bookmark records will be transferred to the copy you keep.'))return;
+ mergeDuplicateMetadata(keepQ,removeQuestions);
+ const removeSet=new Set(removeQuestions);
+ questions=questions.filter(q=>!removeSet.has(q));
+ save();saveMistakes();saveMistakeStats();saveBookmarks();renderDuplicateManager();
+}
+function removeAllDuplicateGroups(){
+ duplicateGroups=findDuplicateGroups();
+ const copies=duplicateGroups.reduce((n,g)=>n+g.items.length-1,0);
+ if(!copies)return;
+ if(!confirm('Remove '+copies+' extra duplicate question(s)? The first copy in each group will be kept, and mistake/bookmark records will be transferred. This cannot be undone unless you have a backup.'))return;
+ for(const group of duplicateGroups){const keepQ=group.items[0].q,removeQuestions=group.items.slice(1).map(item=>item.q);mergeDuplicateMetadata(keepQ,removeQuestions);const removeSet=new Set(removeQuestions);questions=questions.filter(q=>!removeSet.has(q));}
+ save();saveMistakes();saveMistakeStats();saveBookmarks();renderDuplicateManager();
+}
+function renderSaved(){let arr=questions.filter(q=>q.saved);document.getElementById('savedList').innerHTML=arr.length?arr.map((q,i)=>questionCard(q,false,i+1)).join(''):'<div class="card empty">No difficult questions saved yet.</div>'}
+function renderBookmarks(){let arr=bookmarkIds.map(id=>questions.find(q=>q.id===id)).filter(Boolean);let count=document.getElementById('bookmarkCount'),list=document.getElementById('bookmarkList');if(count)count.textContent=arr.length+' bookmarked question(s)';if(!list)return;list.innerHTML=arr.length?arr.map((q,i)=>'<article class="question"><div class="qmeta">'+(q.part?esc(q.part)+' • ':'')+esc(q.topic)+' • '+esc(q.year)+'</div><strong>'+esc(q.question)+'</strong><div class="actions"><button class="danger" onclick="removeBookmark(\''+q.id+'\')">Remove bookmark</button></div>'+(renderExplanation(q)||'')+'</article>').join(''):'<div class="card empty">No bookmarked questions yet. Tap the ☆ Bookmark button on any question to save it here.</div>'}
+function mistakePriority(count){return count>=3?'High':count===2?'Medium':'Normal'}
+function selectMistakeYear(year){selectedMistakeYear=year;selectedMistakePriority=null;renderMistakes()}
+function selectMistakeYearFromButton(button){selectMistakeYear(button.dataset.year)}
+function selectMistakePriority(priority){selectedMistakePriority=priority;renderMistakes()}
+function showMistakeYears(){selectedMistakeYear=null;selectedMistakePriority=null;renderMistakes()}
+function showMistakePriorities(){selectedMistakePriority=null;renderMistakes()}
+function renderMistakes(){
+ const arr=mistakeIds.map(id=>questions.find(q=>q.id===id)).filter(Boolean);
+ const count=document.getElementById('mistakeCount'),list=document.getElementById('mistakeList');
+ if(count)count.textContent=arr.length+' saved question(s)';if(!list)return;
+ if(!arr.length){list.innerHTML='<div class="card empty">Your Mistake Notebook is empty. Questions you answer incorrectly will appear here automatically.</div>';return}
+ const years=[...new Set(arr.map(q=>q.year||'Not specified'))].sort(compareExamYearsNewest);
+ if(!selectedMistakeYear){
+  list.innerHTML=years.map(year=>{const total=arr.filter(q=>(q.year||'Not specified')===year).length;return `<button type="button" class="secondary" data-year="${esc(year)}" style="width:100%;text-align:left;margin-bottom:10px;padding:16px" onclick="selectMistakeYearFromButton(this)"><strong>${esc(year)}</strong><span class="muted" style="display:block;margin-top:4px">${total} mistaken question(s)</span></button>`}).join('');return;
+ }
+ const yearItems=arr.filter(q=>(q.year||'Not specified')===selectedMistakeYear);
+ if(!yearItems.length){selectedMistakeYear=null;renderMistakes();return}
+ if(!selectedMistakePriority){
+  const priorities=['Normal','Medium','High'];
+  list.innerHTML=`<div class="card"><button type="button" class="secondary" onclick="showMistakeYears()">← All examination years</button><h3 style="margin-top:12px">${esc(selectedMistakeYear)}</h3><p class="muted">Choose a review priority.</p><div class="filter-row">${priorities.map(priority=>{const n=yearItems.filter(q=>mistakePriority(Number(mistakeStats[q.id]?.count)||1)===priority).length;return `<button type="button" class="filter-chip" onclick="selectMistakePriority('${priority}')">${priority} <span>(${n})</span></button>`}).join('')}</div></div>`;return;
+ }
+ const priorityItems=yearItems.filter(q=>mistakePriority(Number(mistakeStats[q.id]?.count)||1)===selectedMistakePriority).sort((a,b)=>(Number(mistakeStats[b.id]?.count)||1)-(Number(mistakeStats[a.id]?.count)||1));
+ let html=`<div class="card"><button type="button" class="secondary" onclick="showMistakeYears()">← All years</button> <button type="button" class="secondary" onclick="showMistakePriorities()">← Priorities</button><h3 style="margin-top:12px">${esc(selectedMistakeYear)} — ${selectedMistakePriority} priority</h3><p class="muted">${priorityItems.length} question(s)</p></div>`;
+ html+=priorityItems.map((q,i)=>{const st=mistakeStats[q.id]||{count:1,lastMistake:null},n=Number(st.count)||1,d=st.lastMistake?new Date(st.lastMistake).toLocaleString():'Not recorded';return `<article class="question"><div class="qhead"><span class="qnumber">${i+1}</span><div class="qbody"><div class="qmeta">${q.part?esc(q.part)+' • ':''}${esc(q.topic)} • ${esc(q.year)}${q.difficulty?' • '+esc(q.difficulty):''}</div><strong>${esc(q.question)}</strong></div></div><div class="card" style="margin-top:10px;padding:10px"><div><strong>Times missed:</strong> ${n}</div><div><strong>Last mistake:</strong> ${esc(d)}</div><div><strong>Review priority:</strong> ${selectedMistakePriority}</div></div><div style="margin-top:9px">${(q.options||[]).map((o,j)=>`<div class="muted">${String.fromCharCode(65+j)}. ${esc(o)}</div>`).join('')}</div><p><strong>Correct answer: ${q.answer>=0?String.fromCharCode(65+q.answer):'Not set'}</strong></p>${renderExplanation(q)||''}<div class="actions"><button class="danger" onclick="removeMistake('${q.id}')">Remove from Mistake Notebook</button></div></article>`}).join('');
+ list.innerHTML=html+(priorityItems.length?'':'<div class="card empty">No questions in this priority for this year.</div>');
+}
+document.getElementById('searchBox').addEventListener('input',renderLibrary);
+function selectPracticeYear(year){
+ selectedPracticeYear=year;
+ filterState.practice.year=year==='__ALL__'?'':year;
+ refreshFilterLabels();
+ renderPracticeSetup();
+}
+function showPracticeYears(){
+ selectedPracticeYear=null;
+ renderPracticeSetup();
+}
+function renderPracticeSetup(){
+ const host=document.getElementById('practiceSetup');if(!host)return;
+ refreshFilterLabels();
+ if(!selectedPracticeYear){
+  const years=[...new Set(questions.map(q=>q.year).filter(Boolean))].sort(compareExamYearsNewest);
+  const buttons=years.map(year=>'<button type="button" class="secondary" style="width:100%;text-align:left;margin-bottom:10px;padding:16px" onclick="selectPracticeYear(\''+esc(year).replace(/\\/g,'\\\\').replace(/\'/g,"\\'")+'\')"><strong>'+esc(year)+'</strong><span class="muted" style="display:block;margin-top:4px">'+questions.filter(q=>q.year===year).length+' question(s)</span></button>').join('');
+  host.innerHTML='<div class="card"><h2>Choose an examination year</h2><p class="muted">Select a year first. Then choose Exam Mode or Study Mode.</p>'+buttons+'<button type="button" class="secondary" style="width:100%;text-align:left;padding:14px" onclick="selectPracticeYear(\'__ALL__\')"><strong>All years</strong><span class="muted" style="display:block;margin-top:4px">Practice across all available years</span></button></div>';
+  return;
+ }
+ const yearTitle=selectedPracticeYear==='__ALL__'?'All examination years':esc(selectedPracticeYear);
+ host.innerHTML='<div class="card"><button type="button" class="secondary" onclick="showPracticeYears()">← All examination years</button><h2 style="margin-top:12px">'+yearTitle+'</h2><p class="muted">Choose your filters, then select a practice mode.</p><div class="filter-row"><button class="filter-chip" id="pracPartBtn" onclick="openFilterSheet(\'practice\',\'part\')">1. Part <span id="pracPartLabel">'+esc(filterState.practice.part||'All')+'</span></button><button class="filter-chip" id="pracTopicBtn" onclick="openFilterSheet(\'practice\',\'topic\')">2. Topic <span id="pracTopicLabel">'+esc(filterState.practice.topic||'All')+'</span></button><button class="filter-chip" id="pracYearBtn" onclick="openFilterSheet(\'practice\',\'year\')">3. Exam year <span id="pracYearLabel">'+esc(filterState.practice.year||'All')+'</span></button></div><div id="timerSetting"><label for="timerMinutes">Exam time limit (minutes)</label><input id="timerMinutes" type="number" min="1" value="15"></div><p class="muted">Study Mode shows feedback and explanations immediately. Exam Mode hides feedback until you submit.</p><div class="actions" style="margin-top:14px"><button type="button" id="examModeBtn" class="secondary mode-button" aria-pressed="false" onclick="startPractice(\'timed\')">Exam Mode</button><button type="button" id="studyModeBtn" class="secondary mode-button active" aria-pressed="true" onclick="startPractice(\'immediate\')">Study Mode</button></div></div>';
+ updatePracticeModeButtons();
+}
+
+function updatePracticeModeButtons(){
+ const exam=document.getElementById('examModeBtn'),study=document.getElementById('studyModeBtn');
+ if(!exam||!study)return;
+ const examSelected=sessionMode==='timed';
+ exam.classList.toggle('active',examSelected);study.classList.toggle('active',!examSelected);
+ exam.setAttribute('aria-pressed',String(examSelected));study.setAttribute('aria-pressed',String(!examSelected));
+}
+function saveActiveExam(){
+ if(sessionMode!=='timed'||!session.length||!document.getElementById('clock'))return;
+ try{localStorage.setItem(ACTIVE_EXAM_KEY,JSON.stringify({session,examCurrent,examFlags,examResponses,examReviewOpen,secondsLeft,elapsedSeconds,filterState,selectedPracticeYear,savedAt:Date.now()}));}catch(e){}
+}
+function clearActiveExam(){try{localStorage.removeItem(ACTIVE_EXAM_KEY)}catch(e){}}
+function restoreActiveExam(){
+ let raw;try{raw=localStorage.getItem(ACTIVE_EXAM_KEY)}catch(e){return}
+ if(!raw)return;
+ let data;try{data=JSON.parse(raw)}catch(e){clearActiveExam();return}
+ if(!data||!Array.isArray(data.session)||!data.session.length){clearActiveExam();return}
+ if(confirm('An unfinished Exam Mode session was found. Resume it from where you left off?')){
+  session=data.session;sessionMode='timed';examCurrent=Math.max(0,Math.min(session.length-1,Number(data.examCurrent)||0));examFlags=Array.isArray(data.examFlags)?data.examFlags:Array(session.length).fill(false);examResponses=data.examResponses||{};examReviewOpen=!!data.examReviewOpen;secondsLeft=Math.max(0,Number(data.secondsLeft)||0);elapsedSeconds=Math.max(0,Number(data.elapsedSeconds)||0);filterState=data.filterState||filterState;selectedPracticeYear=data.selectedPracticeYear||selectedPracticeYear;
+  switchTab('practice');renderExamScreen();if(secondsLeft<=0){finishPractice(true);return}timer=setInterval(tick,1000);saveActiveExam();
+ }else clearActiveExam();
+}
+window.addEventListener('beforeunload',function(e){if(sessionMode==='timed'&&session.length&&document.getElementById('clock')){saveActiveExam();e.preventDefault();e.returnValue='';}});
+function startPractice(chosenMode){
+ let f=filterState.practice,topic=f.topic,year=f.year,part=f.part;
+ let pool=questions.filter(q=>(!part||q.part===part)&&(!topic||q.topic===topic)&&(!year||q.year===year));
+ if(!pool.length){alert('There are no questions for this selection yet. Add or import some first.');return}
+ const partOrder={English:0,Maths:1};pool=pool.map((q,i)=>({q,i})).sort((a,b)=>compareExamYearsNewest(a.q.year,b.q.year)||(partOrder[a.q.part]??2)-(partOrder[b.q.part]??2)||a.i-b.i).map(x=>x.q);session=pool;
+ sessionIndex=0;score=0;sessionAnswers=[];elapsedSeconds=0;
+ sessionMode=chosenMode||sessionMode||'immediate';
+ updatePracticeModeButtons();
+ secondsLeft=sessionMode==='timed'?Math.max(1,Number(val('timerMinutes'))||15)*60:0;
+ if(timer)clearInterval(timer);timer=null;
+ renderPracticeSession();
+ if(sessionMode==='timed'&&secondsLeft>0){saveActiveExam();timer=setInterval(tick,1000);}else if(sessionMode==='immediate'){timer=setInterval(tick,1000);}
+}
+function tick(){elapsedSeconds++;if(sessionMode!=='timed')return;secondsLeft--;let el=document.getElementById('clock');if(el){el.textContent=formatTime(secondsLeft);el.className=secondsLeft<=60?'timer-danger':secondsLeft<=300?'timer-warning':'';let badge=document.getElementById('timerAlert');if(badge){badge.textContent=secondsLeft<=60?'⚠ Time almost over!':secondsLeft<=300?'⚠ 5 minutes or less remaining':'';badge.style.display=secondsLeft<=300?'inline-flex':'none';}}saveActiveExam();if(secondsLeft<=0){clearInterval(timer);timer=null;finishPractice(true)}}
+function formatTime(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function renderPracticeSession(){
+ let area=document.getElementById('practiceArea');
+ if(sessionMode==='timed'){
+  examCurrent=0;examFlags=Array(session.length).fill(false);examResponses={};examReviewOpen=false;
+  renderExamScreen();return;
+ }
+ let intro='<div class="card"><h2>Study Mode</h2><p class="muted">'+session.length+' questions • Choose an option to see the answer and explanation immediately.</p></div>';
+ let cards=session.map((q,i)=>'<article class="question" id="practiceQ'+i+'"><div class="qhead"><span class="qnumber">'+(i+1)+'</span><div class="qbody"><div class="qmeta">Question '+(i+1)+' of '+session.length+' • '+(q.part?esc(q.part)+' • ':'')+esc(q.topic)+' • '+esc(q.year)+(q.difficulty?' • '+esc(q.difficulty):'')+'</div><strong>'+esc(q.question)+'</strong></div></div><div style="margin-top:9px">'+q.options.map((o,j)=>'<label class="option"><span class="option-letter">'+String.fromCharCode(65+j)+'.</span><input type="radio" name="practiceAnswer'+i+'" value="'+j+'" onchange="checkImmediate('+i+')"> '+esc(o)+'</label>').join('')+'</div><p class="muted" id="feedback'+i+'"></p></article>').join('');
+ area.innerHTML=intro+cards+'<div class="card"><p id="immediateProgress" class="muted">Answered: 0 of '+session.length+'</p><button class="secondary" onclick="finishPractice(false)">Finish practice and see score</button></div>';
+}
+function renderExamScreen(){
+ let area=document.getElementById('practiceArea');if(!area)return;
+ const savedScrollY=window.scrollY;
+ if(examReviewOpen){renderExamReview();return}
+ let q=session[examCurrent], chosen=examResponses[examCurrent];
+ let nums=session.map((q,i)=>'<button type="button" id="examNav'+i+'" class="'+(examResponses[i]!==undefined?'answered ':'unanswered ')+(examFlags[i]?'flagged':'')+'" onclick="navigatePractice('+i+')">'+(i+1)+'</button>').join('');
+ let options=q.options.map((o,j)=>'<label class="option '+(chosen===j?'exam-selected':'')+'"><span class="option-letter">'+String.fromCharCode(65+j)+'.</span><input type="radio" name="examAnswer" value="'+j+'" '+(chosen===j?'checked':'')+' '+(chosen!==undefined?'disabled':'')+' onchange="recordExamAnswer('+j+')"> '+esc(o)+'</label>').join('');
+ area.innerHTML='<div class="card exam-timer-sticky"><h2>Exam Mode</h2><p class="muted">Question '+(examCurrent+1)+' of '+session.length+' • Time remaining: <strong id="clock" class="'+(secondsLeft<=60?'timer-danger':secondsLeft<=300?'timer-warning':'')+'">'+(secondsLeft>0?formatTime(secondsLeft):'Untimed')+'</strong><span id="timerAlert" class="timer-alert '+(secondsLeft<=60?'danger':'')+'" style="display:'+(secondsLeft<=300?'inline-flex':'none')+'">'+(secondsLeft<=60?'⚠ Time almost over!':secondsLeft<=300?'⚠ 5 minutes or less remaining':'')+'</span></p></div><div class="card"><h3>Question navigator</h3><div class="exam-nav">'+nums+'</div><div class="exam-nav-legend"><span><i class="legend-dot unanswered"></i> Unanswered</span><span><i class="legend-dot answered"></i> Answered</span><span>🟨 Flagged for review</span></div></div><article class="question"><div class="qmeta">Question '+(examCurrent+1)+' of '+session.length+' • '+(q.part?esc(q.part)+' • ':'')+esc(q.topic)+' • '+esc(q.year)+'</div><h3>'+esc(q.question)+'</h3><div style="margin-top:12px">'+options+'</div><div class="actions"><button type="button" class="secondary" onclick="toggleExamFlag()">'+(examFlags[examCurrent]?'⚑ Unflag question':'⚐ Flag for review')+'</button>'+(chosen!==undefined?'<button type="button" class="secondary" onclick="clearExamChoice()">Clear My Choice</button>':'')+'</div></article><div class="card"><div class="actions"><button type="button" class="secondary" '+(examCurrent===0?'disabled':'')+' onclick="navigatePractice(examCurrent-1)">Previous</button><button type="button" class="secondary" '+(examCurrent===session.length-1?'disabled':'')+' onclick="navigatePractice(examCurrent+1)">Next</button><button type="button" class="primary" onclick="openExamReview()">Submit</button></div></div>';
+ requestAnimationFrame(()=>window.scrollTo(0,savedScrollY));
+}
+function recordExamAnswer(value){if(examResponses[examCurrent]!==undefined)return;examResponses[examCurrent]=Number(value);saveActiveExam();renderExamScreen()}
+function clearExamChoice(){delete examResponses[examCurrent];saveActiveExam();renderExamScreen()}
+function toggleExamFlag(){examFlags[examCurrent]=!examFlags[examCurrent];saveActiveExam();renderExamScreen()}
+function updateExamNavigation(){if(sessionMode==='timed'&&!examReviewOpen)renderExamScreen()}
+function navigatePractice(index){if(sessionMode!=='timed')return;examCurrent=Math.max(0,Math.min(session.length-1,Number(index)||0));examReviewOpen=false;saveActiveExam();renderExamScreen()}
+function openExamReview(){if(sessionMode!=='timed')return;examReviewOpen=true;saveActiveExam();renderExamReview();}
+function renderExamReview(){
+ let area=document.getElementById('practiceArea');if(!area)return;
+ let answered=session.filter((q,i)=>examResponses[i]!==undefined).length,unanswered=session.length-answered,flagged=examFlags.filter(Boolean).length;
+ let makeList=(kind,indices)=>'<h3>'+kind+' ('+indices.length+')</h3><div class="exam-review-list">'+(indices.length?indices.map(i=>'<button type="button" class="'+(examResponses[i]!==undefined?'answered ':'unanswered ')+(examFlags[i]?'flagged':'')+'" onclick="navigatePractice('+i+')">'+(i+1)+'</button>').join(''):'<span class="muted">None</span>')+'</div>';
+ let ans=session.map((q,i)=>i).filter(i=>examResponses[i]!==undefined),unans=session.map((q,i)=>i).filter(i=>examResponses[i]===undefined),flags=session.map((q,i)=>i).filter(i=>examFlags[i]);
+ area.innerHTML='<div class="card"><h2>Review before submission</h2><p class="muted">Check your answers and flagged questions. Select any number to return to that question.</p><div class="statgrid"><div class="stat"><strong>'+answered+'</strong><span class="muted">Answered</span></div><div class="stat"><strong>'+unanswered+'</strong><span class="muted">Unanswered</span></div><div class="stat"><strong>'+flagged+'</strong><span class="muted">Flagged</span></div></div></div><div class="card">'+makeList('Answered questions',ans)+makeList('Unanswered questions',unans)+makeList('Flagged questions',flags)+'<div class="actions"><button type="button" class="secondary" onclick="examReviewOpen=false;renderExamScreen()">Return to exam</button><button type="button" class="primary" onclick="finishPractice(false)">Confirm final submission</button></div></div>';
+}
+function checkImmediate(i){
+ if(sessionAnswers.some(a=>a.index===i))return;
+ let chosen=document.querySelector('input[name="practiceAnswer'+i+'"]:checked');if(!chosen)return;
+ let q=session[i],n=Number(chosen.value),correct=q.answer>=0&&n===q.answer;chosen.closest('label.option')?.classList.add('selected');if(correct)score++;
+ sessionAnswers.push({index:i,id:q.id,chosen:n,correct});if(!correct)addMistake(q.id);
+ let fb=document.getElementById('feedback'+i);if(fb)fb.innerHTML=(correct?'<span style="color:var(--green);font-weight:700">Correct.</span>':'<span style="color:var(--red);font-weight:700">Incorrect. Correct answer: '+String.fromCharCode(65+q.answer)+'.</span>')+renderExplanation(q);
+ document.querySelectorAll('input[name="practiceAnswer'+i+'"]').forEach(x=>x.disabled=true);
+ let progress=document.getElementById('immediateProgress');if(progress)progress.textContent='Answered: '+sessionAnswers.length+' of '+session.length;
+}
+function finishPractice(timeUp){
+ clearActiveExam();
+ if(timer){clearInterval(timer);timer=null}
+ if(sessionMode==='timed'){
+  score=0;sessionAnswers=[];
+  session.forEach((q,i)=>{if(examResponses[i]!==undefined){let n=examResponses[i],correct=q.answer>=0&&n===q.answer;if(correct)score++;else addMistake(q.id);sessionAnswers.push({index:i,id:q.id,chosen:n,correct})}});
+ }
+ let area=document.getElementById('practiceArea');if(!area)return;
+ let pct=session.length?Math.round(score/session.length*100):0;
+ let pf=filterState.practice||{},topicLabel=pf.topic||'All topics',yearLabel=pf.year||'All years';
+ scoreHistory.unshift({id:uid(),date:new Date().toISOString(),mode:sessionMode,score:score,total:session.length,percent:pct,answered:sessionAnswers.length,topic:topicLabel,year:yearLabel,timeUp:!!timeUp,elapsedSeconds:Math.max(0,Number(elapsedSeconds)||0)});
+ if(scoreHistory.length>100)scoreHistory=scoreHistory.slice(0,100);
+ saveScores();renderScoreboard();
+ resultReviewItems=session.map((q,i)=>{let a=sessionAnswers.find(x=>x.index===i);let hasAnswer=sessionMode==='timed'?examResponses[i]!==undefined:!!a;let chosen=hasAnswer?String.fromCharCode(65+(sessionMode==='timed'?examResponses[i]:a.chosen)):'Not answered';let isCorrect=hasAnswer&&(sessionMode==='timed'?Number(examResponses[i])===Number(q.answer):!!a.correct);let status=!hasAnswer?'unanswered':(isCorrect?'correct':'incorrect');let statusLabel=status==='unanswered'?'<span style="color:#9f1239;font-weight:700">Unanswered</span>':(isCorrect?'<span style="color:var(--green);font-weight:700">Correct</span>':'<span style="color:var(--red);font-weight:700">Incorrect</span>');return {html:'<article class="question"><div class="qhead"><span class="qnumber">'+(i+1)+'</span><div class="qbody"><div class="qmeta">Question '+(i+1)+' of '+session.length+(sessionMode==='timed'&&examFlags[i]?' • Flagged':'')+'</div><strong>'+esc(q.question)+'</strong></div></div><p class="muted">Your answer: '+chosen+' • Correct answer: '+(q.answer>=0?String.fromCharCode(65+q.answer):'Not set')+' • '+statusLabel+'</p>'+(renderExplanation(q)||'<p class="muted">No explanation was provided for this question.</p>')+'</article>',status};});
+ resultReviewFilter='all';renderFinishedReview(timeUp,pct,sessionAnswers.length);
+}
+function setResultReviewFilter(filter){resultReviewFilter=filter;renderFinishedReview(false);}
+function renderFinishedReview(timeUp=false,pct=null,answeredCount=null){
+ let area=document.getElementById('practiceArea');if(!area)return;
+ let correctCount=resultReviewItems.filter(x=>x.status==='correct').length,incorrectCount=resultReviewItems.filter(x=>x.status==='incorrect').length,unansweredCount=resultReviewItems.filter(x=>x.status==='unanswered').length;
+ let shown=resultReviewItems.filter(x=>resultReviewFilter==='all'||x.status===resultReviewFilter).map(x=>x.html).join('');
+ let pctValue=pct===null?(resultReviewItems.length?Math.round(correctCount/resultReviewItems.length*100):0):pct;
+ let answeredValue=answeredCount===null?correctCount+incorrectCount:answeredCount;
+ let filters=[['all','All',resultReviewItems.length],['correct','Correct',correctCount],['incorrect','Incorrect',incorrectCount],['unanswered','Unanswered',unansweredCount]];
+ let chips=filters.map(([key,label,count])=>'<button type="button" class="filter-chip '+(resultReviewFilter===key?'selected':'')+'" onclick="setResultReviewFilter(\''+key+'\')">'+label+' <span>('+count+')</span></button>').join('');
+ area.innerHTML='<div class="card"><h2>'+(sessionMode==='timed'?'Exam Mode':'Study Mode')+' complete</h2><div class="statgrid"><div class="stat"><strong>'+correctCount+'</strong><span class="muted">Correct</span></div><div class="stat"><strong>'+incorrectCount+'</strong><span class="muted">Incorrect</span></div><div class="stat"><strong>'+unansweredCount+'</strong><span class="muted">Unanswered</span></div></div><p>'+((timeUp)?'Time is up. ':'')+'You answered '+answeredValue+' of '+resultReviewItems.length+' question(s). Score: '+pctValue+'%.</p><button class="primary" onclick="startPractice()">Practice again</button></div><div class="card"><h3>Review questions</h3><div class="filter-row">'+chips+'</div></div>'+(shown||'<div class="card empty">No questions in this category.</div>');
+}
+function formatDuration(totalSeconds){let s=Math.max(0,Math.floor(Number(totalSeconds)||0)),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),r=s%60;return h? h+' hr '+m+' min '+r+' sec':m?m+' min '+r+' sec':r+' sec'}
+function renderScoreboard(){
+ let sessions=document.getElementById('scoreSessions');if(!sessions)return;
+ sessions.textContent=scoreHistory.length;
+ let best=scoreHistory.length?Math.max(...scoreHistory.map(x=>Number(x.percent)||0)):null;
+ let average=scoreHistory.length?Math.round(scoreHistory.reduce((sum,x)=>sum+(Number(x.percent)||0),0)/scoreHistory.length):null;
+ document.getElementById('scoreBest').textContent=best===null?'—':best+'%';
+ document.getElementById('scoreAverage').textContent=average===null?'—':average+'%';
+ renderScoreProgressChart();
+ let list=document.getElementById('scoreHistory');
+ if(!scoreHistory.length){list.innerHTML='<div class="card empty">No completed practice sessions yet. Complete a practice session to see your score here.</div>';return}
+ list.innerHTML=scoreHistory.map((r,i)=>'<article class="card"><div class="qhead"><span class="qnumber">'+(i+1)+'</span><div class="qbody"><strong>'+Number(r.percent||0)+'% — '+Number(r.score||0)+' / '+Number(r.total||0)+' correct</strong><div class="qmeta">'+esc(new Date(r.date).toLocaleString())+' • '+(['timed','exam'].includes(r.mode)?'Exam Mode':'Study Mode')+'</div></div></div><p class="muted">Topic: '+esc(r.topic||'All topics')+' • Year: '+esc(r.year||'All years')+' • Answered: '+Number(r.answered||0)+' / '+Number(r.total||0)+' • Time spent: '+(Number.isFinite(Number(r.elapsedSeconds))?formatDuration(r.elapsedSeconds):'Not recorded')+'</p></article>').join('');
+}
+
+function renderScoreProgressChart(){
+ const chart=document.getElementById('scoreProgressChart');
+ if(!chart)return;
+ if(!scoreHistory.length){chart.innerHTML='<div class=\"chart-empty\">Complete a practice session to begin tracking your progress.</div>';return}
+ const recent=scoreHistory.slice(0,10).reverse();
+ chart.innerHTML=recent.map((r,i)=>{
+  const pct=Math.max(0,Math.min(100,Number(r.percent)||0));
+  const d=new Date(r.date);
+  const dateLabel=Number.isNaN(d.getTime())?'Session '+(i+1):d.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+  return '<div class=\"progress-point\" title=\"'+pct+'% on '+esc(dateLabel)+'\"><span class=\"progress-value\">'+pct+'%</span><div class=\"progress-bar-wrap\"><div class=\"progress-bar\" style=\"height:'+Math.max(3,pct)+'%\"></div></div><span class=\"progress-date\">'+esc(dateLabel)+'</span></div>';
+ }).join('');
+}
+function clearScoreboard(){if(!scoreHistory.length)return;if(confirm('Delete all saved practice scores? This cannot be undone unless you have a backup.')){scoreHistory=[];saveScores();renderScoreboard();}}
+function openLatestBackup(){switchTab('home');exportJSON()}
+function exportJSON(){
+ const backup={app:'SAT EXCELLENCE',version:4,exported:new Date().toISOString(),questions,scores:scoreHistory,submissions,mistakes:mistakeIds,mistakeStats,bookmarks:bookmarkIds};
+ const text=JSON.stringify(backup,null,2);
+ const area=document.getElementById('backupText');
+ area.value=text;
+ document.getElementById('backupPanel').style.display='block';
+ document.getElementById('backupStatus').textContent=questions.length+' official question(s) and '+submissions.length+' submission(s) included. After copying, paste into your existing backup file in QuickEdit and save it.';
+ area.focus();area.select();
+}
+function exportSelectedLibraryYearJSON(){exportYearJSON(selectedLibraryYear)}
+function exportYearJSON(year){
+ const yearQuestions=questions.filter(q=>String(q.year||'Not specified')===String(year));
+ if(!yearQuestions.length){alert('There are no questions for '+year+'.');return}
+ const ids=new Set(yearQuestions.map(q=>q.id));
+ const backup={app:'SAT EXCELLENCE',version:5,backupType:'year-questions',year:String(year),exported:new Date().toISOString(),questions:yearQuestions,mistakes:mistakeIds.filter(id=>ids.has(id)),mistakeStats:Object.fromEntries(Object.entries(mistakeStats).filter(([id])=>ids.has(id))),bookmarks:bookmarkIds.filter(id=>ids.has(id))};
+ const area=document.getElementById('backupText');
+ area.value=JSON.stringify(backup,null,2);
+ document.getElementById('backupPanelTitle').textContent=String(year)+' year backup (JSON)';
+ document.getElementById('backupPanelHint').textContent='The year-specific JSON is ready. Tap Copy backup if it was not copied automatically, then paste it into a new file in QuickEdit and save it as sat-excellence-'+String(year).replace(/[^a-z0-9_-]+/gi,'-')+'-backup.json. You can later restore it using Import file.';
+ document.getElementById('backupStatus').textContent=yearQuestions.length+' question(s) from '+year+' are ready to copy. No other years are included.';
+ document.getElementById('backupPanel').style.display='block';
+ area.focus();area.select();
+ document.getElementById('backupPanel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+async function copyBackup(){
+ const area=document.getElementById('backupText');
+ const status=document.getElementById('backupStatus');
+ try{
+  if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(area.value);status.textContent='JSON backup copied. Open QuickEdit, paste it into a new file, and save it with the .json extension.';}
+  else{area.focus();area.select();status.textContent='Text selected. Use your phone menu or long-press and choose Copy, then paste it into a text file.';}
+ }catch(err){area.focus();area.select();status.textContent='Automatic copy was unavailable. Long-press the selected text and choose Copy.';}
+}
+function closeBackup(){document.getElementById('backupPanel').style.display='none'}
+document.getElementById('importFile').addEventListener('change',async e=>{
+ let file=e.target.files[0];if(!file)return;
+ try{
+  let raw=await file.text(),items,backupData=null;
+  if(file.name.toLowerCase().endsWith('.csv'))items=parseCSV(raw);
+  else{backupData=JSON.parse(raw);items=Array.isArray(backupData)?backupData:backupData.questions}
+  if(!Array.isArray(items))throw new Error('The file must contain a list of questions.');
+
+  // Refresh from persistent storage before comparing. All formats now use the same
+  // duplicate detector, including year backups, full backups, JSON lists and CSV.
+  const stored=loadQuestions();if(Array.isArray(stored))questions=stored;
+  let added=0,duplicates=0,invalid=0;
+  const importedIdMap={},knownIds=new Map(),knownKeys=new Map();
+  for(const q of questions){
+   if(q&&q.id!=null)knownIds.set(String(q.id),q.id);
+   const key=duplicateFingerprint(q);if(key&&!knownKeys.has(key))knownKeys.set(key,q.id);
+  }
+
+  for(const source of items){
+   if(!source||typeof source!=='object'){invalid++;continue;}
+   const options=Array.isArray(source.options)?source.options:[source.A,source.B,source.C,source.D].filter(v=>v!==undefined&&String(v).trim()!=='');
+   const question=String(source.question||source.text||'').trim();
+   const year=String(source.year||((backupData&&!Array.isArray(backupData)&&backupData.year)?backupData.year:'Not specified'));
+   const answer=normalizeAnswer(source.answer??source.correct,options.length);
+   if(!question||options.length<2||!options.every(v=>String(v??'').trim())||answer<0){invalid++;continue;}
+   const candidate={...source,question,year,options:options.map(v=>String(v)),answer,part:['English','Maths'].includes(String(source.part||''))?String(source.part):'',topic:String(source.topic||'Uncategorized')};
+   const key=duplicateFingerprint(candidate,year);
+   let existingId;
+   if(source.id!=null&&knownIds.has(String(source.id)))existingId=knownIds.get(String(source.id));
+   else if(key&&knownKeys.has(key))existingId=knownKeys.get(key);
+   if(existingId!==undefined){
+    duplicates++;if(source.id!=null)importedIdMap[String(source.id)]=existingId;continue;
+   }
+   const newId=source.id!=null&&!knownIds.has(String(source.id))?source.id:uid();
+   const q={...candidate,id:newId,status:'Verified',saved:!!source.saved};
+   questions.push(q);knownIds.set(String(newId),newId);if(key)knownKeys.set(key,newId);if(source.id!=null)importedIdMap[String(source.id)]=newId;added++;
+  }
+
+  const mappedId=id=>importedIdMap[String(id)]||(questions.find(q=>String(q.id)===String(id))?.id??null);
+  const isYearBackup=!!(backupData&&!Array.isArray(backupData)&&backupData.backupType==='year-questions');
+  if(backupData&&!Array.isArray(backupData)){
+   if(Array.isArray(backupData.scores)){scoreHistory=backupData.scores.filter(x=>x&&Number.isFinite(Number(x.percent))).slice(0,100);saveScores();renderScoreboard();}
+   if(Array.isArray(backupData.submissions)){submissions=backupData.submissions;saveSubmissions();}
+   if(Array.isArray(backupData.mistakes)){
+    const mapped=backupData.mistakes.map(mappedId).filter(Boolean);
+    mistakeIds=isYearBackup?[...mistakeIds,...mapped]:mapped;
+    mistakeIds=[...new Map(mistakeIds.map(id=>[String(id),id])).values()];
+   }
+   if(backupData.mistakeStats&&typeof backupData.mistakeStats==='object'){
+    for(const [sourceId,st] of Object.entries(backupData.mistakeStats)){
+     const target=mappedId(sourceId);if(!target||!st||typeof st!=='object')continue;
+     const old=mistakeStats[target]||{count:0,lastMistake:null};
+     const oldDate=old.lastMistake?new Date(old.lastMistake).getTime():0,newDate=st.lastMistake?new Date(st.lastMistake).getTime():0;
+     mistakeStats[target]={count:Math.max(Number(old.count)||0,Number(st.count)||1),lastMistake:newDate>oldDate?st.lastMistake:old.lastMistake||st.lastMistake||null};
+    }
+   }
+   if(Array.isArray(backupData.bookmarks)){
+    const mapped=backupData.bookmarks.map(mappedId).filter(Boolean);
+    bookmarkIds=isYearBackup?[...bookmarkIds,...mapped]:mapped;
+    bookmarkIds=[...new Map(bookmarkIds.map(id=>[String(id),id])).values()];
+   }
+  }
+
+  const saved=save();
+  if(!saved)throw new Error('The question bank could not be saved in this browser storage. Please make space or create a backup, then try again.');
+  saveMistakes();saveMistakeStats();saveBookmarks();renderDuplicateManager();renderMistakes();
+  const label=added+' new question(s) imported; '+duplicates+' duplicate(s) skipped; '+invalid+' invalid row(s) ignored.';
+  document.getElementById('importStatus').textContent=label;
+  alert(label+' Duplicate checks were applied to this import.');
+ }catch(err){alert('Import failed: '+err.message)}
+ e.target.value='';
+});
+function parseCSV(s){
+ let rows=[],row=[],cell='',quoted=false;
+ for(let i=0;i<s.length;i++){let c=s[i];if(c==='"'&&quoted&&s[i+1]==='"'){cell+='"';i++}else if(c==='"'){quoted=!quoted}else if(c===','&&!quoted){row.push(cell);cell=''}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&s[i+1]==='\n')i++;row.push(cell);if(row.some(v=>v.trim()))rows.push(row);row=[];cell=''}else cell+=c}
+ row.push(cell);if(row.some(v=>v.trim()))rows.push(row);
+ if(rows.length<2)return [];
+ let headers=rows.shift().map(h=>h.trim().toLowerCase());
+ return rows.map(r=>{let o={};headers.forEach((h,i)=>o[h]=(r[i]||'').trim());return o});
+}
+initEntryForms();updatePracticeModeButtons();renderAll();restoreActiveExam();
+
+// Register the offline app service worker when served from HTTPS or localhost.
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+ navigator.serviceWorker.register('./sw.js').catch(err => console.warn('Offline support could not be enabled:', err));
+}
+</script>
+</body>
+</html>
