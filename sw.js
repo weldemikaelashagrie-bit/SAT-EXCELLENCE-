@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sat-excellence-shell-v226';
+const CACHE_NAME = 'sat-excellence-shell-v229';
 const APP_SHELL = [
   './',
   './index.html',

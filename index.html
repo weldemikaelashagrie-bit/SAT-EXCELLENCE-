@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>SAT EXCELLENCE v2.26</title>
+<title>SAT EXCELLENCE v2.29</title>
 <style>
 :root{--navy:#172554;--blue:#2563eb;--bg:#f4f6fb;--card:#fff;--ink:#172033;--muted:#475569;--line:#d7deea;--green:#15803d;--red:#b91c1c}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -44,10 +44,33 @@ button:disabled{opacity:.45}
  .exam-timer-sticky{position:sticky;top:48px;z-index:6;background:#fff;border:1px solid var(--line);box-shadow:0 3px 10px #0f172a18;margin-bottom:12px}.exam-timer-sticky h2{margin-bottom:4px}.exam-timer-sticky p{margin:0}.timer-warning{color:#b45309;background:#fffbeb;border-radius:6px;padding:2px 7px}.timer-danger{color:#b91c1c;background:#fee2e2;border-radius:6px;padding:2px 7px;animation:timerPulse 1s infinite;font-size:1.08em}@keyframes timerPulse{50%{opacity:.55}}.timer-alert{display:none;margin-left:7px;color:#b45309;font-weight:800;font-size:12px}.timer-alert.danger{color:#b91c1c}
 hr{border:0;border-top:1px solid var(--line);margin:15px 0}
 @media(max-width:520px){.grid{grid-template-columns:1fr}.statgrid{grid-template-columns:repeat(3,1fr)}main{padding:12px}.card{padding:13px}}
+
+.auth-screen{display:none;max-width:520px;margin:28px auto;padding:16px}
+body.auth-locked .auth-screen{display:block}
+body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-locked .filter-backdrop,body.auth-locked #importFile{display:none!important}
+.auth-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 8px 25px #17255412}
+.auth-card h2{margin-bottom:6px}.auth-card .muted{line-height:1.6}
+.auth-tabs{display:flex;gap:8px;margin:16px 0}.auth-tabs button{flex:1}
+.auth-message{display:none;margin:12px 0;padding:11px;border-radius:9px;font-size:13px;white-space:pre-wrap}
+.auth-message.info{display:block;background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.auth-message.error{display:block;background:#fff1f2;border:1px solid #fecdd3;color:#9f1239}
+.auth-message.success{display:block;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
+.auth-userbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 14px;background:#eaf0ff;border-bottom:1px solid var(--line);font-size:13px}
 </style>
 </head>
-<body>
-<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.26 PWA</p></header>
+<body class="auth-locked">
+
+<div class="auth-screen" id="authScreen"><div class="auth-card">
+ <h2>Welcome to SAT EXCELLENCE</h2>
+ <p class="muted">Sign in to continue, or create a student account. New student accounts must be approved by the Main Admin before accessing the practice area.</p>
+ <div class="auth-tabs"><button class="primary" id="showLoginBtn" type="button" onclick="showAuthMode('login')">Sign in</button><button class="secondary" id="showRegisterBtn" type="button" onclick="showAuthMode('register')">Create account</button></div>
+ <div id="authMessage" class="auth-message" role="status" aria-live="polite"></div>
+ <form id="loginForm"><label for="loginEmail">Email address</label><input id="loginEmail" type="email" autocomplete="email" required><label for="loginPassword">Password</label><input id="loginPassword" type="password" autocomplete="current-password" required><div class="actions"><button class="primary" type="submit" id="loginSubmit">Sign in</button></div></form>
+ <form id="registerForm" style="display:none"><label for="registerName">Full name</label><input id="registerName" autocomplete="name" required maxlength="100"><label for="registerUsername">Username</label><input id="registerUsername" autocomplete="username" required minlength="3" maxlength="30" pattern="[A-Za-z0-9_]+" placeholder="Letters, numbers, underscore"><label for="registerEmail">Email address</label><input id="registerEmail" type="email" autocomplete="email" required><label for="registerPassword">Create password</label><input id="registerPassword" type="password" autocomplete="new-password" minlength="8" required><label for="registerPassword2">Confirm password</label><input id="registerPassword2" type="password" autocomplete="new-password" minlength="8" required><div class="actions"><button class="primary" type="submit" id="registerSubmit">Create student account</button></div><p class="muted">Registration creates a student account with pending approval. You cannot register as an administrator.</p></form>
+ </div></div>
+
+<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.29 PWA</p></header>
+<div class="auth-userbar" id="authUserBar" style="display:none"><span id="signedInLabel"></span><button class="secondary" type="button" onclick="satSignOut()">Sign out</button></div>
 <nav>
 <button class="active" data-tab="home">Home</button>
 <button data-tab="library">Question bank</button>
@@ -202,12 +225,13 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
  <h3 id="backupPanelTitle">Your latest backup text</h3>
  <p class="muted" id="backupPanelHint">Copy this text, paste it into a file in QuickEdit, and save it with a .json extension. This is the reliable way to keep your questions if Acode preview loses its browser storage.</p>
  <textarea id="backupText" rows="10" readonly style="min-height:180px;font-family:monospace;font-size:12px"></textarea>
- <div class="actions"><button class="primary" onclick="copyBackup()">Copy backup</button><button class="secondary" onclick="closeBackup()">Close</button></div>
+ <div class="actions"><button class="primary" onclick="downloadBackupFile()">Download JSON backup</button><button class="secondary" onclick="copyBackup()">Copy backup (alternative)</button><button class="secondary" onclick="closeBackup()">Close</button></div>
  <p id="backupStatus" class="muted" aria-live="polite"></p>
 </div>
 </main>
 <div class="filter-backdrop" id="filterBackdrop" onclick="if(event.target===this)closeFilterSheet()"><div class="filter-sheet" role="dialog" aria-modal="true" aria-labelledby="filterSheetTitle"><div class="sheet-handle"></div><h2 id="filterSheetTitle">Choose filter</h2><p class="muted" id="filterSheetHint">Tap one option</p><div class="sheet-options" id="filterSheetOptions"></div><div class="sheet-footer"><button class="secondary" onclick="clearCurrentFilter()">Clear selection</button><button class="primary" onclick="closeFilterSheet()">Done</button></div></div></div>
 <input id="importFile" type="file" accept=".json,.csv,application/json,text/csv" hidden>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const ACTIVE_EXAM_KEY='sat_excellence_active_exam_v1';
 const KEY='sat_excellence_questions_v1', SCORE_KEY='sat_excellence_scores_v1', SUB_KEY='sat_excellence_submissions_v1', MISTAKE_KEY='sat_excellence_mistakes_v1', MISTAKE_STATS_KEY='sat_excellence_mistake_stats_v1', BOOKMARK_KEY='sat_excellence_bookmarks_v1';
@@ -347,15 +371,15 @@ function renderLibrary(){
  }
  let arr=questions.filter(q=>q.year===selectedLibraryYear&&questionMatchesSearch(q,search));
  let partOrder={English:0,Maths:1};arr=arr.map((q,i)=>({q,i})).sort((a,b)=>(partOrder[a.q.part]??2)-(partOrder[b.q.part]??2)||a.i-b.i).map(x=>x.q);
-let html=`<div class="card"><button type="button" class="secondary" onclick="showLibraryYears()">← All examination years</button><h3 style="margin-top:12px">${esc(selectedLibraryYear)}</h3><p class="muted">English questions first, followed by Mathematics.</p><div class="actions"><button type="button" class="primary" onclick="exportSelectedLibraryYearJSON();copyBackup()">Copy ${esc(selectedLibraryYear)} JSON backup</button></div></div>`;
+let html=`<div class="card"><button type="button" class="secondary" onclick="showLibraryYears()">← All examination years</button><h3 style="margin-top:12px">${esc(selectedLibraryYear)}</h3><p class="muted">English questions first, followed by Mathematics.</p><div class="actions"><button type="button" class="primary" onclick="exportSelectedLibraryYearJSON();downloadBackupFile()">Copy ${esc(selectedLibraryYear)} JSON backup</button></div></div>`;
  let number=0;
- ['English','Maths'].forEach(part=>{let group=arr.filter(q=>q.part===part);if(group.length){html+='<div class="card"><h3>'+part+'</h3><p class="muted">'+group.length+' question(s)</p></div>'+group.map(q=>questionCard(q,true,++number)).join('');}});
- let other=arr.filter(q=>!['English','Maths'].includes(q.part));if(other.length){html+='<div class="card"><h3>Other</h3></div>'+other.map(q=>questionCard(q,true,++number)).join('');}
+ ['English','Maths'].forEach(part=>{let group=arr.filter(q=>q.part===part);if(group.length){html+='<div class="card"><h3>'+part+'</h3><p class="muted">'+group.length+' question(s)</p></div>'+group.map(q=>questionCard(q,satCan('edit_questions'),satCan('delete_questions'),++number)).join('');}});
+ let other=arr.filter(q=>!['English','Maths'].includes(q.part));if(other.length){html+='<div class="card"><h3>Other</h3></div>'+other.map(q=>questionCard(q,satCan('edit_questions'),satCan('delete_questions'),++number)).join('');}
  document.getElementById('libraryCount').textContent=arr.length+' question(s) in '+selectedLibraryYear;
  list.innerHTML=arr.length?html:html+'<div class="card empty">No matching questions in this year.</div>';
 }
-function questionCard(q,showDelete,number){
- return '<article class="question"><div class="qhead">'+(number?'<span class="qnumber">'+number+'</span>':'')+'<div class="qbody"><div class="qmeta">'+(q.part?esc(q.part)+' • ':'')+esc(q.topic)+' • '+esc(q.year)+(q.difficulty?' • '+esc(q.difficulty):'')+'</div><strong>'+esc(q.question)+'</strong></div></div><div style="margin-top:9px">'+q.options.map((o,i)=>'<div class="muted">'+String.fromCharCode(65+i)+'. '+esc(o)+'</div>').join('')+'</div><div class="actions"><button class="bookmark-btn '+(bookmarkIds.includes(q.id)?'on':'')+'" onclick="toggleBookmark(\''+q.id+'\')">'+(bookmarkIds.includes(q.id)?'★ Bookmarked':'☆ Bookmark')+'</button><button class="smallbtn" onclick="toggleSaved(\''+q.id+'\')">'+(q.saved?'★ Saved':'☆ Mark difficult')+'</button>'+(showDelete?'<button class="smallbtn" onclick="editQuestion(\''+q.id+'\')">Edit</button><button class="danger" onclick="deleteQuestion(\''+q.id+'\')">Delete</button>':'')+'</div>'+(renderExplanation(q)?'<details style="margin-top:9px"><summary>Explanation</summary>'+renderExplanation(q)+'</details>':'')+'</article>';
+function questionCard(q,showEdit,showDelete,number){
+ return '<article class="question"><div class="qhead">'+(number?'<span class="qnumber">'+number+'</span>':'')+'<div class="qbody"><div class="qmeta">'+(q.part?esc(q.part)+' • ':'')+esc(q.topic)+' • '+esc(q.year)+(q.difficulty?' • '+esc(q.difficulty):'')+'</div><strong>'+esc(q.question)+'</strong></div></div><div style="margin-top:9px">'+q.options.map((o,i)=>'<div class="muted">'+String.fromCharCode(65+i)+'. '+esc(o)+'</div>').join('')+'</div><div class="actions"><button class="bookmark-btn '+(bookmarkIds.includes(q.id)?'on':'')+'" onclick="toggleBookmark(\''+q.id+'\')">'+(bookmarkIds.includes(q.id)?'★ Bookmarked':'☆ Bookmark')+'</button><button class="smallbtn" onclick="toggleSaved(\''+q.id+'\')">'+(q.saved?'★ Saved':'☆ Mark difficult')+'</button>'+(showEdit?'<button class="smallbtn" onclick="editQuestion(\''+q.id+'\')">Edit</button>':'')+(showDelete?'<button class="danger" onclick="deleteQuestion(\''+q.id+'\')">Delete</button>':'')+'</div>'+(renderExplanation(q)?'<details style="margin-top:9px"><summary>Explanation</summary>'+renderExplanation(q)+'</details>':'')+'</article>';
 }
 
 function editQuestion(id){
@@ -462,7 +486,7 @@ function removeAllDuplicateGroups(){
  for(const group of duplicateGroups){const keepQ=group.items[0].q,removeQuestions=group.items.slice(1).map(item=>item.q);mergeDuplicateMetadata(keepQ,removeQuestions);const removeSet=new Set(removeQuestions);questions=questions.filter(q=>!removeSet.has(q));}
  save();saveMistakes();saveMistakeStats();saveBookmarks();renderDuplicateManager();
 }
-function renderSaved(){let arr=questions.filter(q=>q.saved);document.getElementById('savedList').innerHTML=arr.length?arr.map((q,i)=>questionCard(q,false,i+1)).join(''):'<div class="card empty">No difficult questions saved yet.</div>'}
+function renderSaved(){let arr=questions.filter(q=>q.saved);document.getElementById('savedList').innerHTML=arr.length?arr.map((q,i)=>questionCard(q,false,false,i+1)).join(''):'<div class="card empty">No difficult questions saved yet.</div>'}
 function renderBookmarks(){let arr=bookmarkIds.map(id=>questions.find(q=>q.id===id)).filter(Boolean);let count=document.getElementById('bookmarkCount'),list=document.getElementById('bookmarkList');if(count)count.textContent=arr.length+' bookmarked question(s)';if(!list)return;list.innerHTML=arr.length?arr.map((q,i)=>'<article class="question"><div class="qmeta">'+(q.part?esc(q.part)+' • ':'')+esc(q.topic)+' • '+esc(q.year)+'</div><strong>'+esc(q.question)+'</strong><div class="actions"><button class="danger" onclick="removeBookmark(\''+q.id+'\')">Remove bookmark</button></div>'+(renderExplanation(q)||'')+'</article>').join(''):'<div class="card empty">No bookmarked questions yet. Tap the ☆ Bookmark button on any question to save it here.</div>'}
 function mistakePriority(count){return count>=3?'High':count===2?'Medium':'Normal'}
 function selectMistakeYear(year){selectedMistakeYear=year;selectedMistakePriority=null;renderMistakes()}
@@ -674,6 +698,24 @@ function exportYearJSON(year){
  area.focus();area.select();
  document.getElementById('backupPanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
+function downloadBackupFile(){
+ const area=document.getElementById('backupText');
+ const content=area.value;
+ if(!content){alert('Create a backup first.');return;}
+ try{
+  const blob=new Blob([content],{type:'application/json;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const title=document.getElementById('backupPanelTitle').textContent||'SAT EXCELLENCE backup';
+  const safeName=title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'sat-excellence-backup';
+  a.href=url;a.download=safeName+'.json';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+  document.getElementById('backupStatus').textContent='Backup download started. Open the downloaded .json file to check that it contains the complete question list.';
+ }catch(err){
+  document.getElementById('backupStatus').textContent='Download was blocked by this preview. Try opening the app in Chrome and use Download JSON backup there.';
+ }
+}
 async function copyBackup(){
  const area=document.getElementById('backupText');
  const status=document.getElementById('backupStatus');
@@ -683,77 +725,126 @@ async function copyBackup(){
  }catch(err){area.focus();area.select();status.textContent='Automatic copy was unavailable. Long-press the selected text and choose Copy.';}
 }
 function closeBackup(){document.getElementById('backupPanel').style.display='none'}
-document.getElementById('importFile').addEventListener('change',async e=>{
- let file=e.target.files[0];if(!file)return;
+let pendingImportPlan=null;
+function buildImportPlan(items,backupData){
+ const stored=loadQuestions();
+ const baseQuestions=Array.isArray(stored)?stored:[];
+ const nextQuestions=baseQuestions.slice();
+ const importedIdMap={},knownIds=new Map(),knownKeys=new Map();
+ for(const q of baseQuestions){
+  if(q&&q.id!=null)knownIds.set(String(q.id),q.id);
+  const key=duplicateFingerprint(q);if(key&&!knownKeys.has(key))knownKeys.set(key,q.id);
+ }
+ let added=0,duplicates=0,invalid=0;
+ for(const source of items){
+  if(!source||typeof source!=='object'||Array.isArray(source)){invalid++;continue;}
+  const options=Array.isArray(source.options)?source.options:[source.A,source.B,source.C,source.D].filter(v=>v!==undefined&&String(v).trim()!=='');
+  const question=String(source.question||source.text||'').trim();
+  const year=String(source.year||((backupData&&!Array.isArray(backupData)&&backupData.year)?backupData.year:'Not specified'));
+  const answer=normalizeAnswer(source.answer??source.correct,options.length);
+  if(!question||options.length<2||!options.every(v=>String(v??'').trim())||answer<0){invalid++;continue;}
+  const candidate={...source,question,year,options:options.map(v=>String(v)),answer,part:['English','Maths'].includes(String(source.part||''))?String(source.part):'',topic:String(source.topic||'Uncategorized')};
+  const key=duplicateFingerprint(candidate,year);
+  let existingId;
+  if(source.id!=null&&knownIds.has(String(source.id)))existingId=knownIds.get(String(source.id));
+  else if(key&&knownKeys.has(key))existingId=knownKeys.get(key);
+  if(existingId!==undefined){duplicates++;if(source.id!=null)importedIdMap[String(source.id)]=existingId;continue;}
+  const newId=source.id!=null&&!knownIds.has(String(source.id))?source.id:uid();
+  const q={...candidate,id:newId,status:'Verified',saved:!!source.saved};
+  nextQuestions.push(q);knownIds.set(String(newId),newId);if(key)knownKeys.set(key,newId);if(source.id!=null)importedIdMap[String(source.id)]=newId;added++;
+ }
+ return {items,backupData,baseQuestions,nextQuestions,importedIdMap,added,duplicates,invalid};
+}
+function mergeUniqueRecords(existing,incoming,keyFn,limit=Infinity){
+ const out=Array.isArray(existing)?existing.slice():[],seen=new Set(out.map(keyFn));
+ for(const item of (Array.isArray(incoming)?incoming:[])){const key=keyFn(item);if(!seen.has(key)){seen.add(key);out.push(item);}}
+ return out.slice(-limit);
+}
+function showImportPreview(plan,fileName){
+ const b=plan.backupData&&!Array.isArray(plan.backupData)?plan.backupData:{};
+ const extras=[];
+ if(Array.isArray(b.scores))extras.push(`${b.scores.length} score record(s)`);
+ if(Array.isArray(b.submissions))extras.push(`${b.submissions.length} submission record(s)`);
+ if(Array.isArray(b.mistakes))extras.push(`${b.mistakes.length} mistake link(s)`);
+ if(Array.isArray(b.bookmarks))extras.push(`${b.bookmarks.length} bookmark link(s)`);
+ const details=[
+  `File: ${fileName}`,
+  `Questions in file: ${plan.items.length}`,
+  `New questions to add: ${plan.added}`,
+  `Duplicates to skip: ${plan.duplicates}`,
+  `Invalid rows to ignore: ${plan.invalid}`,
+  `Questions currently saved: ${plan.baseQuestions.length}`,
+  `Questions after import: ${plan.nextQuestions.length}`,
+  extras.length?`Other backup data: ${extras.join(', ')}`:'No additional backup records found.',
+  '',
+  'Existing question, score, submission, mistake and bookmark records will be preserved. Backup records will be merged where possible.',
+  '',
+  'Choose OK to import or Cancel to leave everything unchanged.'
+ ].join('\n');
+ return confirm(details);
+}
+function applyImportPlan(plan){
+ const backupData=plan.backupData;
+ const isYearBackup=!!(backupData&&!Array.isArray(backupData)&&backupData.backupType==='year-questions');
+ const importedIdMap=plan.importedIdMap;
+ const mappedId=id=>importedIdMap[String(id)]||(plan.nextQuestions.find(q=>String(q.id)===String(id))?.id??null);
+ let nextScores=scoreHistory.slice(),nextSubmissions=submissions.slice(),nextMistakes=mistakeIds.slice(),nextMistakeStats={...mistakeStats},nextBookmarks=bookmarkIds.slice();
+ if(backupData&&!Array.isArray(backupData)){
+  if(Array.isArray(backupData.scores))nextScores=mergeUniqueRecords(nextScores,backupData.scores,x=>JSON.stringify(x),100);
+  if(Array.isArray(backupData.submissions))nextSubmissions=mergeUniqueRecords(nextSubmissions,backupData.submissions,x=>String(x?.id??JSON.stringify(x)));
+  if(Array.isArray(backupData.mistakes)){
+   const mapped=backupData.mistakes.map(mappedId).filter(Boolean);
+   nextMistakes=[...new Map([...nextMistakes,...mapped].map(id=>[String(id),id])).values()];
+  }
+  if(backupData.mistakeStats&&typeof backupData.mistakeStats==='object'){
+   for(const [sourceId,st] of Object.entries(backupData.mistakeStats)){
+    const target=mappedId(sourceId);if(!target||!st||typeof st!=='object')continue;
+    const old=nextMistakeStats[target]||{count:0,lastMistake:null};
+    const oldDate=old.lastMistake?new Date(old.lastMistake).getTime():0,newDate=st.lastMistake?new Date(st.lastMistake).getTime():0;
+    nextMistakeStats[target]={count:Math.max(Number(old.count)||0,Number(st.count)||1),lastMistake:newDate>oldDate?st.lastMistake:old.lastMistake||st.lastMistake||null};
+   }
+  }
+  if(Array.isArray(backupData.bookmarks)){
+   const mapped=backupData.bookmarks.map(mappedId).filter(Boolean);
+   nextBookmarks=[...new Map([...nextBookmarks,...mapped].map(id=>[String(id),id])).values()];
+  }
+ }
+ // Commit all related records together. If storage rejects any write, restore every prior value.
+ const keys=[KEY,SCORE_KEY,SUB_KEY,MISTAKE_KEY,MISTAKE_STATS_KEY,BOOKMARK_KEY];
+ const before=Object.fromEntries(keys.map(k=>[k,localStorage.getItem(k)]));
  try{
-  let raw=await file.text(),items,backupData=null;
+  localStorage.setItem(KEY,JSON.stringify(plan.nextQuestions));
+  localStorage.setItem(SCORE_KEY,JSON.stringify(nextScores));
+  localStorage.setItem(SUB_KEY,JSON.stringify(nextSubmissions));
+  localStorage.setItem(MISTAKE_KEY,JSON.stringify(nextMistakes));
+  localStorage.setItem(MISTAKE_STATS_KEY,JSON.stringify(nextMistakeStats));
+  localStorage.setItem(BOOKMARK_KEY,JSON.stringify(nextBookmarks));
+ }catch(err){
+  for(const k of keys){try{if(before[k]===null)localStorage.removeItem(k);else localStorage.setItem(k,before[k]);}catch(restoreErr){}}
+  throw new Error('The browser could not save the complete import. Existing saved data was restored where storage allowed. Free some device storage and try again. '+err.message);
+ }
+ questions=plan.nextQuestions;scoreHistory=nextScores;submissions=nextSubmissions;mistakeIds=nextMistakes;mistakeStats=nextMistakeStats;bookmarkIds=nextBookmarks;
+ renderAll();renderDuplicateManager();renderMistakes();renderScoreboard();renderSubmissions();renderBookmarks();
+ const label=plan.added+' new question(s) imported; '+plan.duplicates+' duplicate(s) skipped; '+plan.invalid+' invalid row(s) ignored.';
+ document.getElementById('importStatus').textContent=label+' Existing records were preserved and backup records were merged.';
+ alert(label+' Existing records were preserved.');
+}
+document.getElementById('importFile').addEventListener('change',async e=>{
+ const file=e.target.files[0];if(!file)return;
+ try{
+  const raw=await file.text();let items,backupData=null;
   if(file.name.toLowerCase().endsWith('.csv'))items=parseCSV(raw);
-  else{backupData=JSON.parse(raw);items=Array.isArray(backupData)?backupData:backupData.questions}
+  else{backupData=JSON.parse(raw);items=Array.isArray(backupData)?backupData:backupData.questions;}
   if(!Array.isArray(items))throw new Error('The file must contain a list of questions.');
-
-  // Refresh from persistent storage before comparing. All formats now use the same
-  // duplicate detector, including year backups, full backups, JSON lists and CSV.
-  const stored=loadQuestions();if(Array.isArray(stored))questions=stored;
-  let added=0,duplicates=0,invalid=0;
-  const importedIdMap={},knownIds=new Map(),knownKeys=new Map();
-  for(const q of questions){
-   if(q&&q.id!=null)knownIds.set(String(q.id),q.id);
-   const key=duplicateFingerprint(q);if(key&&!knownKeys.has(key))knownKeys.set(key,q.id);
+  const plan=buildImportPlan(items,backupData);
+  if(!plan.items.length)throw new Error('No question rows were found in this file.');
+  if(!showImportPreview(plan,file.name)){
+   document.getElementById('importStatus').textContent='Import cancelled. No saved data was changed.';
+   return;
   }
-
-  for(const source of items){
-   if(!source||typeof source!=='object'){invalid++;continue;}
-   const options=Array.isArray(source.options)?source.options:[source.A,source.B,source.C,source.D].filter(v=>v!==undefined&&String(v).trim()!=='');
-   const question=String(source.question||source.text||'').trim();
-   const year=String(source.year||((backupData&&!Array.isArray(backupData)&&backupData.year)?backupData.year:'Not specified'));
-   const answer=normalizeAnswer(source.answer??source.correct,options.length);
-   if(!question||options.length<2||!options.every(v=>String(v??'').trim())||answer<0){invalid++;continue;}
-   const candidate={...source,question,year,options:options.map(v=>String(v)),answer,part:['English','Maths'].includes(String(source.part||''))?String(source.part):'',topic:String(source.topic||'Uncategorized')};
-   const key=duplicateFingerprint(candidate,year);
-   let existingId;
-   if(source.id!=null&&knownIds.has(String(source.id)))existingId=knownIds.get(String(source.id));
-   else if(key&&knownKeys.has(key))existingId=knownKeys.get(key);
-   if(existingId!==undefined){
-    duplicates++;if(source.id!=null)importedIdMap[String(source.id)]=existingId;continue;
-   }
-   const newId=source.id!=null&&!knownIds.has(String(source.id))?source.id:uid();
-   const q={...candidate,id:newId,status:'Verified',saved:!!source.saved};
-   questions.push(q);knownIds.set(String(newId),newId);if(key)knownKeys.set(key,newId);if(source.id!=null)importedIdMap[String(source.id)]=newId;added++;
-  }
-
-  const mappedId=id=>importedIdMap[String(id)]||(questions.find(q=>String(q.id)===String(id))?.id??null);
-  const isYearBackup=!!(backupData&&!Array.isArray(backupData)&&backupData.backupType==='year-questions');
-  if(backupData&&!Array.isArray(backupData)){
-   if(Array.isArray(backupData.scores)){scoreHistory=backupData.scores.filter(x=>x&&Number.isFinite(Number(x.percent))).slice(0,100);saveScores();renderScoreboard();}
-   if(Array.isArray(backupData.submissions)){submissions=backupData.submissions;saveSubmissions();}
-   if(Array.isArray(backupData.mistakes)){
-    const mapped=backupData.mistakes.map(mappedId).filter(Boolean);
-    mistakeIds=isYearBackup?[...mistakeIds,...mapped]:mapped;
-    mistakeIds=[...new Map(mistakeIds.map(id=>[String(id),id])).values()];
-   }
-   if(backupData.mistakeStats&&typeof backupData.mistakeStats==='object'){
-    for(const [sourceId,st] of Object.entries(backupData.mistakeStats)){
-     const target=mappedId(sourceId);if(!target||!st||typeof st!=='object')continue;
-     const old=mistakeStats[target]||{count:0,lastMistake:null};
-     const oldDate=old.lastMistake?new Date(old.lastMistake).getTime():0,newDate=st.lastMistake?new Date(st.lastMistake).getTime():0;
-     mistakeStats[target]={count:Math.max(Number(old.count)||0,Number(st.count)||1),lastMistake:newDate>oldDate?st.lastMistake:old.lastMistake||st.lastMistake||null};
-    }
-   }
-   if(Array.isArray(backupData.bookmarks)){
-    const mapped=backupData.bookmarks.map(mappedId).filter(Boolean);
-    bookmarkIds=isYearBackup?[...bookmarkIds,...mapped]:mapped;
-    bookmarkIds=[...new Map(bookmarkIds.map(id=>[String(id),id])).values()];
-   }
-  }
-
-  const saved=save();
-  if(!saved)throw new Error('The question bank could not be saved in this browser storage. Please make space or create a backup, then try again.');
-  saveMistakes();saveMistakeStats();saveBookmarks();renderDuplicateManager();renderMistakes();
-  const label=added+' new question(s) imported; '+duplicates+' duplicate(s) skipped; '+invalid+' invalid row(s) ignored.';
-  document.getElementById('importStatus').textContent=label;
-  alert(label+' Duplicate checks were applied to this import.');
- }catch(err){alert('Import failed: '+err.message)}
- e.target.value='';
+  applyImportPlan(plan);
+ }catch(err){alert('Import failed: '+err.message);}
+ finally{e.target.value='';}
 });
 function parseCSV(s){
  let rows=[],row=[],cell='',quoted=false;
@@ -763,12 +854,43 @@ function parseCSV(s){
  let headers=rows.shift().map(h=>h.trim().toLowerCase());
  return rows.map(r=>{let o={};headers.forEach((h,i)=>o[h]=(r[i]||'').trim());return o});
 }
-initEntryForms();updatePracticeModeButtons();renderAll();restoreActiveExam();
+let satAppStarted=false;
+function startSATApp(){
+ if(satAppStarted)return;
+ satAppStarted=true;
+ initEntryForms();updatePracticeModeButtons();renderAll();restoreActiveExam();
+}
 
 // Register the offline app service worker when served from HTTPS or localhost.
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
  navigator.serviceWorker.register('./sw.js').catch(err => console.warn('Offline support could not be enabled:', err));
 }
 </script>
+
+<script>
+const SAT_SUPABASE_URL='https://wajqbceftdfufktqyauu.supabase.co';
+const SAT_SUPABASE_PUBLISHABLE_KEY='sb_publishable_VuakXINvqkF_3jb2uTNY3w_MhrgGBCb';
+let satSupabase=null,satCurrentUser=null,satCurrentProfile=null;
+function authMessage(message,type='info'){const el=document.getElementById('authMessage');el.className='auth-message '+type;el.textContent=message;}
+function showAuthMode(mode){document.getElementById('loginForm').style.display=mode==='login'?'block':'none';document.getElementById('registerForm').style.display=mode==='register'?'block':'none';document.getElementById('showLoginBtn').className=mode==='login'?'primary':'secondary';document.getElementById('showRegisterBtn').className=mode==='register'?'primary':'secondary';document.getElementById('authMessage').className='auth-message';}
+function lockSATApp(message,type='info'){document.body.classList.add('auth-locked');document.getElementById('authUserBar').style.display=satCurrentUser?'flex':'none';if(satCurrentUser)document.getElementById('signedInLabel').textContent=(satCurrentProfile?.full_name||satCurrentProfile?.Username||satCurrentUser.email)+' • awaiting access';if(message)authMessage(message,type);}
+function satCan(permission){if(!satCurrentProfile)return false;if(satCurrentProfile.role==='main_admin')return true;if(satCurrentProfile.role!=='additional_admin')return false;const perms=satCurrentProfile.Permissions||{};return perms[permission]===true;}
+function applySATRoleUI(profile){const isStudent=profile.role==='student';const addAllowed=satCan('add_questions');const editAllowed=satCan('edit_questions');const deleteAllowed=satCan('delete_questions');const reviewAllowed=satCan('review_submissions');const duplicateAllowed=profile.role==='main_admin'||(profile.role==='additional_admin'&&(addAllowed||editAllowed||deleteAllowed));
+ const setTab=(name,visible)=>{const b=document.querySelector('nav [data-tab="'+name+'"]');if(b)b.style.display=visible?'':'none';const panel=document.getElementById(name);if(panel)panel.style.display=visible?'':'none';};
+ setTab('add',addAllowed);setTab('duplicates',duplicateAllowed);
+ const submissionCards=document.querySelectorAll('#submissions > .card');if(submissionCards[1])submissionCards[1].style.display=reviewAllowed?'':'none';if(submissionCards[2])submissionCards[2].style.display=isStudent?'none':(reviewAllowed?'':'none');
+ const homeCards=document.querySelectorAll('#home > .card');if(homeCards[2])homeCards[2].style.display=isStudent?'none':'';
+ const exportAction=document.querySelector('#library .card .actions');if(exportAction)exportAction.style.display=isStudent?'none':'';
+}
+function unlockSATApp(profile,user){satCurrentUser=user;satCurrentProfile=profile;applySATRoleUI(profile);document.body.classList.remove('auth-locked');document.getElementById('authUserBar').style.display='flex';document.getElementById('signedInLabel').textContent=(profile.full_name||profile.Username||user.email)+' • '+profile.role;startSATApp();}
+async function loadSATProfile(user){const {data,error}=await satSupabase.from('profiles').select('id,Username,full_name,role,Status,Permissions').eq('id',user.id).maybeSingle();if(error)throw error;return data;}
+async function checkSATUser(user){if(!user){satCurrentUser=null;satCurrentProfile=null;lockSATApp();return;}satCurrentUser=user;try{const profile=await loadSATProfile(user);if(!profile){lockSATApp('Your account profile was not found. Please contact the Main Admin.','error');return;}if(profile.Status!=='approved'){const msg=profile.Status==='pending'?'Your student account is waiting for Main Admin approval. Please try signing in again after approval.':profile.Status==='rejected'?'Your registration was not approved. Please contact the Main Admin if you need help.':'Your account is not currently active. Please contact the Main Admin.';satCurrentUser=user;satCurrentProfile=profile;lockSATApp(msg,'info');return;}if(!['student','main_admin','additional_admin'].includes(profile.role)){lockSATApp('This account does not have an allowed SAT EXCELLENCE role. Contact the Main Admin.','error');return;}unlockSATApp(profile,user);}catch(err){console.error('Profile check failed:',err);lockSATApp('We could not verify your account profile. Check your internet connection and try again. Details: '+(err.message||'Unknown error'),'error');}}
+document.getElementById('loginForm').addEventListener('submit',async e=>{e.preventDefault();const btn=document.getElementById('loginSubmit');btn.disabled=true;btn.textContent='Signing in…';try{const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value;const {data,error}=await satSupabase.auth.signInWithPassword({email,password});if(error)throw error;await checkSATUser(data.user);}catch(err){authMessage(err.message||'Sign in failed. Please check your details.','error');}finally{btn.disabled=false;btn.textContent='Sign in';}});
+document.getElementById('registerForm').addEventListener('submit',async e=>{e.preventDefault();const btn=document.getElementById('registerSubmit');btn.disabled=true;btn.textContent='Creating account…';try{const full_name=document.getElementById('registerName').value.trim(),username=document.getElementById('registerUsername').value.trim(),email=document.getElementById('registerEmail').value.trim(),password=document.getElementById('registerPassword').value,password2=document.getElementById('registerPassword2').value;if(!/^[A-Za-z0-9_]{3,30}$/.test(username))throw new Error('Username must be 3–30 characters: letters, numbers, or underscore.');if(password!==password2)throw new Error('The two passwords do not match.');const {data,error}=await satSupabase.auth.signUp({email,password,options:{data:{username,full_name}}});if(error)throw error;if(data.session&&data.user){await checkSATUser(data.user);}else{showAuthMode('login');authMessage('Registration submitted. Check your email for confirmation if required. Your profile is pending Main Admin approval. After confirming your email, sign in to check your approval status.','success');}}catch(err){authMessage(err.message||'Registration failed. Please try again.','error');}finally{btn.disabled=false;btn.textContent='Create student account';}});
+async function satSignOut(){try{const {error}=await satSupabase.auth.signOut();if(error)throw error;}catch(err){alert('Sign out failed: '+(err.message||'Unknown error'));return;}satCurrentUser=null;satCurrentProfile=null;lockSATApp('You have signed out.','success');}
+async function initSATAuthentication(){try{if(!window.supabase||!window.supabase.createClient){lockSATApp('The sign-in service could not load. Check your internet connection and refresh this page.','error');return;}satSupabase=window.supabase.createClient(SAT_SUPABASE_URL,SAT_SUPABASE_PUBLISHABLE_KEY);const {data:{session},error}=await satSupabase.auth.getSession();if(error)throw error;await checkSATUser(session?.user||null);satSupabase.auth.onAuthStateChange((_event,newSession)=>{setTimeout(()=>checkSATUser(newSession?.user||null),0);});}catch(err){console.error('Authentication initialization failed:',err);lockSATApp('Could not initialize sign in. Check your connection and refresh. '+(err.message||''),'error');}}
+initSATAuthentication();
+</script>
+
 </body>
 </html>
