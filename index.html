@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>SAT EXCELLENCE v2.29</title>
+<title>SAT EXCELLENCE v2.30</title>
 <style>
 :root{--navy:#172554;--blue:#2563eb;--bg:#f4f6fb;--card:#fff;--ink:#172033;--muted:#475569;--line:#d7deea;--green:#15803d;--red:#b91c1c}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -56,6 +56,8 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
 .auth-message.error{display:block;background:#fff1f2;border:1px solid #fecdd3;color:#9f1239}
 .auth-message.success{display:block;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
 .auth-userbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 14px;background:#eaf0ff;border-bottom:1px solid var(--line);font-size:13px}
+
+.password-wrap{display:flex;align-items:stretch;gap:7px}.password-wrap input{flex:1;min-width:0}.password-toggle{flex:0 0 auto;min-width:66px;border:1px solid #cfd5df;border-radius:9px;background:#f8fafc;color:#1e3a8a;padding:8px 12px;font:inherit;font-weight:650}.password-toggle:focus-visible{outline:3px solid #93c5fd;outline-offset:2px}
 </style>
 </head>
 <body class="auth-locked">
@@ -65,11 +67,11 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
  <p class="muted">Sign in to continue, or create a student account. New student accounts must be approved by the Main Admin before accessing the practice area.</p>
  <div class="auth-tabs"><button class="primary" id="showLoginBtn" type="button" onclick="showAuthMode('login')">Sign in</button><button class="secondary" id="showRegisterBtn" type="button" onclick="showAuthMode('register')">Create account</button></div>
  <div id="authMessage" class="auth-message" role="status" aria-live="polite"></div>
- <form id="loginForm"><label for="loginEmail">Email address</label><input id="loginEmail" type="email" autocomplete="email" required><label for="loginPassword">Password</label><input id="loginPassword" type="password" autocomplete="current-password" required><div class="actions"><button class="primary" type="submit" id="loginSubmit">Sign in</button></div></form>
- <form id="registerForm" style="display:none"><label for="registerName">Full name</label><input id="registerName" autocomplete="name" required maxlength="100"><label for="registerUsername">Username</label><input id="registerUsername" autocomplete="username" required minlength="3" maxlength="30" pattern="[A-Za-z0-9_]+" placeholder="Letters, numbers, underscore"><label for="registerEmail">Email address</label><input id="registerEmail" type="email" autocomplete="email" required><label for="registerPassword">Create password</label><input id="registerPassword" type="password" autocomplete="new-password" minlength="8" required><label for="registerPassword2">Confirm password</label><input id="registerPassword2" type="password" autocomplete="new-password" minlength="8" required><div class="actions"><button class="primary" type="submit" id="registerSubmit">Create student account</button></div><p class="muted">Registration creates a student account with pending approval. You cannot register as an administrator.</p></form>
+ <form id="loginForm"><label for="loginEmail">Email address</label><input id="loginEmail" type="email" autocomplete="email" required><label for="loginPassword">Password</label><div class="password-wrap"><input id="loginPassword" type="password" autocomplete="current-password" required><button class="password-toggle" type="button" data-password-target="loginPassword" aria-label="Show password">Show</button></div><div class="actions"><button class="primary" type="submit" id="loginSubmit">Sign in</button></div></form>
+ <form id="registerForm" style="display:none"><label for="registerName">Full name</label><input id="registerName" autocomplete="name" required maxlength="100"><label for="registerUsername">Username</label><input id="registerUsername" autocomplete="username" required minlength="3" maxlength="30" pattern="[A-Za-z0-9_]+" placeholder="Letters, numbers, underscore"><label for="registerEmail">Email address</label><input id="registerEmail" type="email" autocomplete="email" required><label for="registerPassword">Create password</label><div class="password-wrap"><input id="registerPassword" type="password" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-target="registerPassword" aria-label="Show password">Show</button></div><label for="registerPassword2">Confirm password</label><div class="password-wrap"><input id="registerPassword2" type="password" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-target="registerPassword2" aria-label="Show password">Show</button></div><div class="actions"><button class="primary" type="submit" id="registerSubmit">Create student account</button></div><p class="muted">Registration creates a student account with pending approval. You cannot register as an administrator.</p></form>
  </div></div>
 
-<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.29 PWA</p></header>
+<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.30 PWA</p></header>
 <div class="auth-userbar" id="authUserBar" style="display:none"><span id="signedInLabel"></span><button class="secondary" type="button" onclick="satSignOut()">Sign out</button></div>
 <nav>
 <button class="active" data-tab="home">Home</button>
@@ -892,5 +894,17 @@ async function initSATAuthentication(){try{if(!window.supabase||!window.supabase
 initSATAuthentication();
 </script>
 
+
+<script>
+document.querySelectorAll('[data-password-target]').forEach(button=>{
+ button.addEventListener('click',()=>{
+  const field=document.getElementById(button.dataset.passwordTarget);
+  const show=field.type==='password';
+  field.type=show?'text':'password';
+  button.textContent=show?'Hide':'Show';
+  button.setAttribute('aria-label',show?'Hide password':'Show password');
+ });
+});
+</script>
 </body>
 </html>
