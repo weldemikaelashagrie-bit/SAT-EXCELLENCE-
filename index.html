@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>SAT EXCELLENCE v2.30</title>
+<title>SAT EXCELLENCE v2.31</title>
 <style>
 :root{--navy:#172554;--blue:#2563eb;--bg:#f4f6fb;--card:#fff;--ink:#172033;--muted:#475569;--line:#d7deea;--green:#15803d;--red:#b91c1c}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -71,10 +71,11 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
  <form id="registerForm" style="display:none"><label for="registerName">Full name</label><input id="registerName" autocomplete="name" required maxlength="100"><label for="registerUsername">Username</label><input id="registerUsername" autocomplete="username" required minlength="3" maxlength="30" pattern="[A-Za-z0-9_]+" placeholder="Letters, numbers, underscore"><label for="registerEmail">Email address</label><input id="registerEmail" type="email" autocomplete="email" required><label for="registerPassword">Create password</label><div class="password-wrap"><input id="registerPassword" type="password" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-target="registerPassword" aria-label="Show password">Show</button></div><label for="registerPassword2">Confirm password</label><div class="password-wrap"><input id="registerPassword2" type="password" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-target="registerPassword2" aria-label="Show password">Show</button></div><div class="actions"><button class="primary" type="submit" id="registerSubmit">Create student account</button></div><p class="muted">Registration creates a student account with pending approval. You cannot register as an administrator.</p></form>
  </div></div>
 
-<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.30 PWA</p></header>
+<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.31 PWA</p></header>
 <div class="auth-userbar" id="authUserBar" style="display:none"><span id="signedInLabel"></span><button class="secondary" type="button" onclick="satSignOut()">Sign out</button></div>
 <nav>
 <button class="active" data-tab="home">Home</button>
+<button data-tab="adminStudents" id="adminStudentsTab" style="display:none">Student approvals</button>
 <button data-tab="library">Question bank</button>
 <button data-tab="duplicates">Duplicate manager</button>
 <button data-tab="practice">Practice</button>
@@ -112,6 +113,21 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
   <p class="muted">Create a copyable JSON backup of your question bank, or restore questions from a JSON/CSV file.</p>
   <div class="actions"><button class="primary" onclick="exportJSON()">Create backup text</button><button class="secondary" onclick="document.getElementById('importFile').click()">Import file</button></div>
  </div>
+</section>
+
+<section id="adminStudents" class="panel">
+ <div class="card">
+  <h2>Student approvals</h2>
+  <p class="muted">Review student registrations stored in Supabase. Approving a student gives the account access to the practice area.</p>
+  <div class="statgrid">
+   <div class="stat"><strong id="adminPendingCount">—</strong><span class="muted">Pending</span></div>
+   <div class="stat"><strong id="adminApprovedCount">—</strong><span class="muted">Approved</span></div>
+   <div class="stat"><strong id="adminTotalCount">—</strong><span class="muted">Total students</span></div>
+  </div>
+  <div class="actions"><button class="primary" type="button" id="refreshAdminStudents">Refresh list</button></div>
+  <p class="muted" id="adminStudentsMessage" role="status" aria-live="polite">Loading student accounts…</p>
+ </div>
+ <div id="adminStudentsList"></div>
 </section>
 
 <section id="library" class="panel">
@@ -266,7 +282,7 @@ function addOfficialOption(){let a=getOptions('officialOptions');if(a.length>=26
 function removeOfficialOption(){let a=getOptions('officialOptions');if(a.length<=2){alert('A question needs at least two options.');return}a.pop();optionInputs('officialOptions',a);updateAnswerSelect('qAnswer',a)}
 function addSubmissionOption(){let a=getOptions('submissionOptions');if(a.length>=26){alert('Maximum 26 options (A–Z).');return}a.push('');optionInputs('submissionOptions',a);updateAnswerSelect('sAnswer',a,document.getElementById('sAnswer').value)}
 function removeSubmissionOption(){let a=getOptions('submissionOptions');if(a.length<=2){alert('A question needs at least two options.');return}a.pop();optionInputs('submissionOptions',a);updateAnswerSelect('sAnswer',a)}
-function switchTab(id){if(sessionMode==='timed'&&session.length&&document.getElementById('practiceArea')?.querySelector('#clock')&&id!=='practice'){if(!confirm('Your timed exam is still active. Leave this exam? Your progress will be saved so you can resume it.'))return;}document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));if(id==='library'){selectedLibraryYear=null;renderLibrary();}if(id==='practice'){selectedPracticeYear=null;renderPracticeSetup();}if(id==='saved')renderSaved();if(id==='mistakes'){selectedMistakeYear=null;selectedMistakePriority=null;renderMistakes();}if(id==='bookmarks')renderBookmarks();if(id==='scoreboard')renderScoreboard();if(id==='submissions')renderSubmissions();if(id==='duplicates')renderDuplicateManager()}
+function switchTab(id){if(sessionMode==='timed'&&session.length&&document.getElementById('practiceArea')?.querySelector('#clock')&&id!=='practice'){if(!confirm('Your timed exam is still active. Leave this exam? Your progress will be saved so you can resume it.'))return;}document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));if(id==='library'){selectedLibraryYear=null;renderLibrary();}if(id==='practice'){selectedPracticeYear=null;renderPracticeSetup();}if(id==='saved')renderSaved();if(id==='mistakes'){selectedMistakeYear=null;selectedMistakePriority=null;renderMistakes();}if(id==='bookmarks')renderBookmarks();if(id==='scoreboard')renderScoreboard();if(id==='submissions')renderSubmissions();if(id==='duplicates')renderDuplicateManager();if(id==='adminStudents')loadAdminStudents()}
 document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
 document.getElementById('questionForm').addEventListener('submit',e=>{
  e.preventDefault();let existing=editingId?questions.find(x=>x.id===editingId):null,opts=getOptions('officialOptions'),ans=val('qAnswer');
@@ -879,11 +895,64 @@ function lockSATApp(message,type='info'){document.body.classList.add('auth-locke
 function satCan(permission){if(!satCurrentProfile)return false;if(satCurrentProfile.role==='main_admin')return true;if(satCurrentProfile.role!=='additional_admin')return false;const perms=satCurrentProfile.Permissions||{};return perms[permission]===true;}
 function applySATRoleUI(profile){const isStudent=profile.role==='student';const addAllowed=satCan('add_questions');const editAllowed=satCan('edit_questions');const deleteAllowed=satCan('delete_questions');const reviewAllowed=satCan('review_submissions');const duplicateAllowed=profile.role==='main_admin'||(profile.role==='additional_admin'&&(addAllowed||editAllowed||deleteAllowed));
  const setTab=(name,visible)=>{const b=document.querySelector('nav [data-tab="'+name+'"]');if(b)b.style.display=visible?'':'none';const panel=document.getElementById(name);if(panel)panel.style.display=visible?'':'none';};
- setTab('add',addAllowed);setTab('duplicates',duplicateAllowed);
+ setTab('add',addAllowed);setTab('duplicates',duplicateAllowed);setTab('adminStudents',profile.role==='main_admin');
  const submissionCards=document.querySelectorAll('#submissions > .card');if(submissionCards[1])submissionCards[1].style.display=reviewAllowed?'':'none';if(submissionCards[2])submissionCards[2].style.display=isStudent?'none':(reviewAllowed?'':'none');
  const homeCards=document.querySelectorAll('#home > .card');if(homeCards[2])homeCards[2].style.display=isStudent?'none':'';
  const exportAction=document.querySelector('#library .card .actions');if(exportAction)exportAction.style.display=isStudent?'none':'';
 }
+function adminStudentsMessage(message,type='info'){
+ const el=document.getElementById('adminStudentsMessage');if(!el)return;
+ el.textContent=message;el.style.color=type==='error'?'#b91c1c':type==='success'?'#15803d':'';
+}
+function renderAdminStudents(rows){
+ const list=document.getElementById('adminStudentsList');if(!list)return;list.replaceChildren();
+ const pending=rows.filter(r=>r.Status==='pending').length;
+ const approved=rows.filter(r=>r.Status==='approved').length;
+ document.getElementById('adminPendingCount').textContent=String(pending);
+ document.getElementById('adminApprovedCount').textContent=String(approved);
+ document.getElementById('adminTotalCount').textContent=String(rows.length);
+ if(!rows.length){const empty=document.createElement('div');empty.className='card empty';empty.textContent='No student accounts were found.';list.append(empty);return;}
+ rows.forEach(student=>{
+  const card=document.createElement('div');card.className='card';
+  const heading=document.createElement('h3');heading.textContent=student.full_name||student.Username||'Unnamed student';card.append(heading);
+  const detail=document.createElement('p');detail.className='muted';detail.textContent='Username: '+(student.Username||'—')+' · Status: '+(student.Status||'unknown');card.append(detail);
+  const actions=document.createElement('div');actions.className='actions';
+  if(student.Status!=='approved'){
+   const approve=document.createElement('button');approve.className='primary';approve.type='button';approve.textContent='Approve';approve.addEventListener('click',()=>updateStudentStatus(student.id,'approved',approve));actions.append(approve);
+  }
+  if(student.Status!=='rejected'){
+   const reject=document.createElement('button');reject.className='danger';reject.type='button';reject.textContent='Reject';reject.addEventListener('click',()=>updateStudentStatus(student.id,'rejected',reject));actions.append(reject);
+  }
+  if(!actions.children.length){const done=document.createElement('span');done.className='muted';done.textContent='No action needed';actions.append(done);}
+  card.append(actions);list.append(card);
+ });
+}
+async function loadAdminStudents(){
+ if(!satSupabase||satCurrentProfile?.role!=='main_admin')return;
+ const refresh=document.getElementById('refreshAdminStudents');if(refresh)refresh.disabled=true;
+ adminStudentsMessage('Loading student accounts…');
+ try{
+  const {data,error}=await satSupabase.from('profiles').select('id,Username,full_name,role,Status').eq('role','student');
+  if(error)throw error;
+  const rows=(data||[]).sort((a,b)=>String(a.Status).localeCompare(String(b.Status))||String(a.Username||'').localeCompare(String(b.Username||'')));
+  renderAdminStudents(rows);adminStudentsMessage('Student list updated. Pending accounts are shown first.','success');
+ }catch(err){console.error('Could not load student accounts:',err);adminStudentsMessage('Could not load student accounts: '+(err.message||'Unknown error')+'. Check the profiles SELECT permission for Main Admin.','error');}
+ finally{if(refresh)refresh.disabled=false;}
+}
+async function updateStudentStatus(studentId,newStatus,button){
+ if(satCurrentProfile?.role!=='main_admin'){adminStudentsMessage('Only the Main Admin can approve or reject students.','error');return;}
+ const action=newStatus==='approved'?'approve':'reject';
+ if(!confirm('Are you sure you want to '+action+' this student account?'))return;
+ if(button)button.disabled=true;
+ try{
+  const {data,error}=await satSupabase.from('profiles').update({Status:newStatus}).eq('id',studentId).eq('role','student').select('id,Status').maybeSingle();
+  if(error)throw error;
+  if(!data)throw new Error('No profile was updated. Check the Main Admin UPDATE policy.');
+  adminStudentsMessage('Student account '+newStatus+'.','success');
+  await loadAdminStudents();
+ }catch(err){console.error('Student status update failed:',err);adminStudentsMessage('Could not '+action+' this student: '+(err.message||'Unknown error'),'error');if(button)button.disabled=false;}
+}
+document.getElementById('refreshAdminStudents')?.addEventListener('click',loadAdminStudents);
 function unlockSATApp(profile,user){satCurrentUser=user;satCurrentProfile=profile;applySATRoleUI(profile);document.body.classList.remove('auth-locked');document.getElementById('authUserBar').style.display='flex';document.getElementById('signedInLabel').textContent=(profile.full_name||profile.Username||user.email)+' • '+profile.role;startSATApp();}
 async function loadSATProfile(user){const {data,error}=await satSupabase.from('profiles').select('id,Username,full_name,role,Status,Permissions').eq('id',user.id).maybeSingle();if(error)throw error;return data;}
 async function checkSATUser(user){if(!user){satCurrentUser=null;satCurrentProfile=null;lockSATApp();return;}satCurrentUser=user;try{const profile=await loadSATProfile(user);if(!profile){lockSATApp('Your account profile was not found. Please contact the Main Admin.','error');return;}if(profile.Status!=='approved'){const msg=profile.Status==='pending'?'Your student account is waiting for Main Admin approval. Please try signing in again after approval.':profile.Status==='rejected'?'Your registration was not approved. Please contact the Main Admin if you need help.':'Your account is not currently active. Please contact the Main Admin.';satCurrentUser=user;satCurrentProfile=profile;lockSATApp(msg,'info');return;}if(!['student','main_admin','additional_admin'].includes(profile.role)){lockSATApp('This account does not have an allowed SAT EXCELLENCE role. Contact the Main Admin.','error');return;}unlockSATApp(profile,user);}catch(err){console.error('Profile check failed:',err);lockSATApp('We could not verify your account profile. Check your internet connection and try again. Details: '+(err.message||'Unknown error'),'error');}}
