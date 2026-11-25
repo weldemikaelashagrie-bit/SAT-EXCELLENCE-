@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>SAT EXCELLENCE v2.32</title>
+<title>SAT EXCELLENCE v2.33</title>
 <style>
 :root{--navy:#172554;--blue:#2563eb;--bg:#f4f6fb;--card:#fff;--ink:#172033;--muted:#475569;--line:#d7deea;--green:#15803d;--red:#b91c1c}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -71,7 +71,7 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
  <form id="registerForm" style="display:none"><label for="registerName">Full name</label><input id="registerName" autocomplete="name" required maxlength="100"><label for="registerUsername">Username</label><input id="registerUsername" autocomplete="username" required minlength="3" maxlength="30" pattern="[A-Za-z0-9_]+" placeholder="Letters, numbers, underscore"><label for="registerEmail">Email address</label><input id="registerEmail" type="email" autocomplete="email" required><label for="registerPassword">Create password</label><div class="password-wrap"><input id="registerPassword" type="password" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-target="registerPassword" aria-label="Show password">Show</button></div><label for="registerPassword2">Confirm password</label><div class="password-wrap"><input id="registerPassword2" type="password" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-target="registerPassword2" aria-label="Show password">Show</button></div><div class="actions"><button class="primary" type="submit" id="registerSubmit">Create student account</button></div><p class="muted">Registration creates a student account with pending approval. You cannot register as an administrator.</p></form>
  </div></div>
 
-<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.32 PWA</p></header>
+<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.33 PWA</p></header>
 <div class="auth-userbar" id="authUserBar" style="display:none"><span id="signedInLabel"></span><button class="secondary" type="button" onclick="satSignOut()">Sign out</button></div>
 <nav>
 <button class="active" data-tab="home">Home</button>
@@ -911,7 +911,7 @@ function lockSATApp(message,type='info'){document.body.classList.add('auth-locke
 function satCan(permission){if(!satCurrentProfile)return false;if(satCurrentProfile.role==='main_admin')return true;if(satCurrentProfile.role!=='additional_admin')return false;const perms=satCurrentProfile.Permissions||{};return perms[permission]===true;}
 function applySATRoleUI(profile){const isStudent=profile.role==='student';const addAllowed=satCan('add_questions');const editAllowed=satCan('edit_questions');const deleteAllowed=satCan('delete_questions');const reviewAllowed=satCan('review_submissions');const duplicateAllowed=profile.role==='main_admin'||(profile.role==='additional_admin'&&(addAllowed||editAllowed||deleteAllowed));
  const setTab=(name,visible)=>{const b=document.querySelector('nav [data-tab="'+name+'"]');if(b)b.style.display=visible?'':'none';const panel=document.getElementById(name);if(panel)panel.style.display=visible?'':'none';};
- setTab('add',addAllowed);setTab('duplicates',duplicateAllowed);setTab('adminStudents',profile.role==='main_admin');setTab('adminManagement',profile.role==='main_admin');
+ setTab('add',addAllowed);setTab('duplicates',duplicateAllowed);setTab('adminStudents',profile.role==='main_admin'||satCan('view_students'));setTab('adminManagement',profile.role==='main_admin');
  const submissionCards=document.querySelectorAll('#submissions > .card');if(submissionCards[1])submissionCards[1].style.display=reviewAllowed?'':'none';if(submissionCards[2])submissionCards[2].style.display=isStudent?'none':(reviewAllowed?'':'none');
  const homeCards=document.querySelectorAll('#home > .card');if(homeCards[2])homeCards[2].style.display=isStudent?'none':'';
  const exportAction=document.querySelector('#library .card .actions');if(exportAction)exportAction.style.display=isStudent?'none':'';
@@ -933,10 +933,10 @@ function renderAdminStudents(rows){
   const heading=document.createElement('h3');heading.textContent=student.full_name||student.Username||'Unnamed student';card.append(heading);
   const detail=document.createElement('p');detail.className='muted';detail.textContent='Username: '+(student.Username||'—')+' · Status: '+(student.Status||'unknown');card.append(detail);
   const actions=document.createElement('div');actions.className='actions';
-  if(student.Status!=='approved'){
+  if(satCan('manage_student_status')&&student.Status!=='approved'){
    const approve=document.createElement('button');approve.className='primary';approve.type='button';approve.textContent='Approve';approve.addEventListener('click',()=>updateStudentStatus(student.id,'approved',approve));actions.append(approve);
   }
-  if(student.Status!=='rejected'){
+  if(satCan('manage_student_status')&&student.Status!=='rejected'){
    const reject=document.createElement('button');reject.className='danger';reject.type='button';reject.textContent='Reject';reject.addEventListener('click',()=>updateStudentStatus(student.id,'rejected',reject));actions.append(reject);
   }
   if(!actions.children.length){const done=document.createElement('span');done.className='muted';done.textContent='No action needed';actions.append(done);}
@@ -944,7 +944,7 @@ function renderAdminStudents(rows){
  });
 }
 async function loadAdminStudents(){
- if(!satSupabase||satCurrentProfile?.role!=='main_admin')return;
+ if(!satSupabase||!(satCurrentProfile?.role==='main_admin'||satCan('view_students')))return;
  const refresh=document.getElementById('refreshAdminStudents');if(refresh)refresh.disabled=true;
  adminStudentsMessage('Loading student accounts…');
  try{
@@ -956,14 +956,14 @@ async function loadAdminStudents(){
  finally{if(refresh)refresh.disabled=false;}
 }
 async function updateStudentStatus(studentId,newStatus,button){
- if(satCurrentProfile?.role!=='main_admin'){adminStudentsMessage('Only the Main Admin can approve or reject students.','error');return;}
+ if(!satCan('manage_student_status')){adminStudentsMessage('You do not have permission to approve or reject students.','error');return;}
  const action=newStatus==='approved'?'approve':'reject';
  if(!confirm('Are you sure you want to '+action+' this student account?'))return;
  if(button)button.disabled=true;
  try{
-  const {data,error}=await satSupabase.from('profiles').update({Status:newStatus}).eq('id',studentId).eq('role','student').select('id,Status').maybeSingle();
+  const {data,error}=await satSupabase.rpc('manage_student_status',{target_user_id:studentId,new_status:newStatus});
   if(error)throw error;
-  if(!data)throw new Error('No profile was updated. Check the Main Admin UPDATE policy.');
+  if(data===false)throw new Error('The status change was not accepted.');
   adminStudentsMessage('Student account '+newStatus+'.','success');
   await loadAdminStudents();
  }catch(err){console.error('Student status update failed:',err);adminStudentsMessage('Could not '+action+' this student: '+(err.message||'Unknown error'),'error');if(button)button.disabled=false;}
