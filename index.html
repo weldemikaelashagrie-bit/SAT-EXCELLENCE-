@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>SAT EXCELLENCE v2.33</title>
+<title>SAT EXCELLENCE v2.34</title>
 <style>
 :root{--navy:#172554;--blue:#2563eb;--bg:#f4f6fb;--card:#fff;--ink:#172033;--muted:#475569;--line:#d7deea;--green:#15803d;--red:#b91c1c}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -54,11 +54,58 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
 .auth-message{display:none;margin:12px 0;padding:11px;border-radius:9px;font-size:13px;white-space:pre-wrap}
 .auth-message.info{display:block;background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
 .auth-message.error{display:block;background:#fff1f2;border:1px solid #fecdd3;color:#9f1239}
-.auth-message.success{display:block;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
 .auth-message.success{display:block;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}.admin-management-message{margin:14px 0 0;padding:12px 14px;border-radius:10px;border:1px solid var(--line);font-size:14px;font-weight:650}.admin-management-message.info{background:#eff6ff;border-color:#bfdbfe;color:#1e40af}.admin-management-message.success{background:#f0fdf4;border-color:#bbf7d0;color:#166534}.admin-management-message.error{background:#fff1f2;border-color:#fecdd3;color:#9f1239}
- .auth-userbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 14px;background:#eaf0ff;border-bottom:1px solid var(--line);font-size:13px}
+.auth-userbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 14px;background:#eaf0ff;border-bottom:1px solid var(--line);font-size:13px}
 
 .password-wrap{display:flex;align-items:stretch;gap:7px}.password-wrap input{flex:1;min-width:0}.password-toggle{flex:0 0 auto;min-width:66px;border:1px solid #cfd5df;border-radius:9px;background:#f8fafc;color:#1e3a8a;padding:8px 12px;font:inherit;font-weight:650}.password-toggle:focus-visible{outline:3px solid #93c5fd;outline-offset:2px}
+
+/* V2.34 visual refresh: premium indigo, teal and warm gold. */
+:root{--navy:#111B3A;--blue:#4F46E5;--bg:#F4F6FC;--card:#FFFFFF;--ink:#18233D;--muted:#61708C;--line:#E1E7F1;--green:#0F9F78;--red:#D14B64}
+body{background:linear-gradient(180deg,#EEF2FF 0,#F7F8FC 250px,#F4F6FC 100%);}
+header{background:linear-gradient(120deg,#111B3A 0%,#253B76 56%,#0F766E 100%);padding:24px 17px 21px;position:relative;overflow:hidden}
+header:after{content:"";position:absolute;width:210px;height:210px;border:1px solid #ffffff24;border-radius:50%;right:-65px;top:-105px;box-shadow:0 0 0 24px #ffffff0a,0 0 0 48px #ffffff08}
+header h1{position:relative;z-index:1;font-size:25px;letter-spacing:.5px}header p{position:relative;z-index:1;color:#DCEBFF}
+nav button.active{color:#4338CA;border-bottom-color:#4F46E5;background:#EEF2FF}
+button.primary,.action{background:linear-gradient(135deg,#4F46E5,#0F766E);box-shadow:0 5px 14px #3730a322}
+button.secondary{background:#EEF2FF;color:#3730A3;border-color:#C7D2FE}
+.card{border-radius:17px;box-shadow:0 5px 20px #1725540a;border-color:#E4E9F3}
+.stat{background:linear-gradient(145deg,#F8FAFF,#EEF2FF);border-color:#E0E7FF}
+.stat strong{color:#3730A3}
+.question{border-radius:14px}
+.qnumber{background:#E0E7FF;color:#3730A3;border:1px solid #C7D2FE}
+.home-hero{position:relative;overflow:hidden;background:linear-gradient(125deg,#172554 0%,#3730A3 53%,#0F766E 100%);border:0;color:#fff;padding:22px 19px;box-shadow:0 12px 28px #17255424}
+.home-hero:after{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:-72px;top:-85px;border:1px solid #ffffff2c;box-shadow:0 0 0 20px #ffffff0b,0 0 0 42px #ffffff08}
+.home-hero .eyebrow{font-size:11px;font-weight:800;letter-spacing:1.8px;color:#FDE68A;margin:0 0 9px;text-transform:uppercase}
+.home-hero h2{font-size:25px;line-height:1.18;max-width:520px;margin:0 0 10px;color:#fff}
+.home-hero p{color:#E0E7FF;max-width:520px;margin:0 0 15px}
+.home-hero .actions{position:relative;z-index:1}
+.home-hero .primary{background:#FDE68A;color:#29214F;box-shadow:none}
+.home-hero .secondary{background:#ffffff18;color:#fff;border-color:#ffffff55}
+.home-quote{border-left:4px solid #D6A84F;padding:10px 13px;background:#FFFBEB;border-radius:0 11px 11px 0;color:#713F12;font-weight:650;margin-top:13px}
+.home-section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px}
+.home-shortcuts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.home-shortcut{display:block;text-align:left;border:1px solid #E0E7FF;background:#F8FAFF;border-radius:13px;padding:12px 10px;color:#27345A;font-weight:750;min-width:0}
+.home-shortcut span{display:block;font-size:11px;font-weight:500;color:#64748B;margin-top:4px}
+@media(max-width:420px){.home-hero h2{font-size:22px}.home-shortcut{padding:10px 8px;font-size:13px}}
+
+.settings-toggles{display:grid;grid-template-columns:1fr;gap:7px;margin-top:14px}
+.setting-toggle{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#F8FAFC;font-weight:550}
+.setting-toggle input{width:18px;height:18px;margin:0;accent-color:var(--blue)}
+body.compact-layout .card{padding:11px;margin-bottom:10px}body.compact-layout .question{padding:10px;margin:8px 0}
+body.hide-explanations .explanation-block{display:none!important}
+body.hide-exam-grid .exam-nav,body.hide-exam-grid .exam-review-list{display:none!important}
+body.high-contrast{--ink:#080D1C;--muted:#27364F;--line:#64748B}
+body.high-contrast .card,body.high-contrast .question{border-width:2px}
+body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+body.dark-theme{--bg:#0B1224;--card:#121D34;--ink:#F1F5F9;--muted:#B6C3D8;--line:#33445F;--navy:#0B1224;background:#0B1224;color:var(--ink)}
+body.dark-theme nav{background:#111C33;border-color:#33445F}body.dark-theme nav button{color:#CBD5E1}body.dark-theme nav button.active{background:#27345A;color:#C7D2FE}
+body.dark-theme .card,body.dark-theme .question,body.dark-theme .auth-card{background:#121D34;border-color:#33445F;color:#F1F5F9}
+body.dark-theme .stat,body.dark-theme .home-shortcut,body.dark-theme .setting-toggle{background:#1B2944;border-color:#40516E;color:#F1F5F9}
+body.dark-theme input,body.dark-theme select,body.dark-theme textarea{background:#0F1A30;color:#F1F5F9;border-color:#53647F}
+body.dark-theme .muted{color:#B6C3D8}body.dark-theme .explanation-block{background:#1B2944}body.dark-theme .notice{background:#1B3150;color:#DCEBFF;border-color:#46618A}
+body.dark-theme .home-quote{background:#3A2D16;color:#FDE68A;border-color:#D6A84F}
+body.dark-theme .exam-nav button,body.dark-theme .exam-review-list button{background:#1B2944;color:#F1F5F9;border-color:#52627C}
+body{line-height:var(--reading-line-height,1.5)}
 </style>
 </head>
 <body class="auth-locked">
@@ -72,13 +119,14 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
  <form id="registerForm" style="display:none"><label for="registerName">Full name</label><input id="registerName" autocomplete="name" required maxlength="100"><label for="registerUsername">Username</label><input id="registerUsername" autocomplete="username" required minlength="3" maxlength="30" pattern="[A-Za-z0-9_]+" placeholder="Letters, numbers, underscore"><label for="registerEmail">Email address</label><input id="registerEmail" type="email" autocomplete="email" required><label for="registerPassword">Create password</label><div class="password-wrap"><input id="registerPassword" type="password" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-target="registerPassword" aria-label="Show password">Show</button></div><label for="registerPassword2">Confirm password</label><div class="password-wrap"><input id="registerPassword2" type="password" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-target="registerPassword2" aria-label="Show password">Show</button></div><div class="actions"><button class="primary" type="submit" id="registerSubmit">Create student account</button></div><p class="muted">Registration creates a student account with pending approval. You cannot register as an administrator.</p></form>
  </div></div>
 
-<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.33 PWA</p></header>
+<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.34</p></header>
 <div class="auth-userbar" id="authUserBar" style="display:none"><span id="signedInLabel"></span><button class="secondary" type="button" onclick="satSignOut()">Sign out</button></div>
 <nav>
 <button class="active" data-tab="home">Home</button>
 <button data-tab="adminStudents" id="adminStudentsTab" style="display:none">Student approvals</button>
 <button data-tab="adminManagement" id="adminManagementTab" style="display:none">Admin management</button>
 <button data-tab="library">Question bank</button>
+<button data-tab="collections" id="collectionsTab" style="display:none">Annual collections</button>
 <button data-tab="duplicates">Duplicate manager</button>
 <button data-tab="practice">Practice</button>
 <button data-tab="scoreboard">Scoreboard</button>
@@ -87,35 +135,38 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
 <button data-tab="saved">Difficult</button>
 <button data-tab="add">Add question</button>
 <button data-tab="submissions">Submission</button>
+<button data-tab="settings">Settings</button>
 </nav>
 
 <main>
 <section id="home" class="panel active">
- <div class="card">
-  <h2>Your aptitude practice space</h2>
-  <p class="muted">Keep your questions organized by topic and examination year. Your question bank stays on this device.</p>
-  <div class="statgrid">
-   <div class="stat"><strong id="totalStat">0</strong><span class="muted">Questions</span></div>
-   <div class="stat"><strong id="topicStat">0</strong><span class="muted">Topics</span></div>
-   <div class="stat"><strong id="savedStat">0</strong><span class="muted">Difficult</span></div>
+  <div class="card home-hero">
+   <p class="eyebrow">Think • Practice • Excel</p>
+   <h2>Every question brings you closer to excellence.</h2>
+   <p>Build confidence through focused practice. Learn from every challenge, strengthen your reasoning, and keep moving forward.</p>
+   <div class="actions"><button class="primary" type="button" onclick="switchTab('practice')">Start practising</button><button class="secondary" type="button" onclick="switchTab('library')">Explore question bank</button></div>
+   <div class="home-quote">“Small, consistent efforts create exceptional results.”</div>
   </div>
- </div>
- <div class="card">
-  <h3>Getting started</h3>
-  <ol>
-   <li>Add a question manually, or import a JSON/CSV file.</li>
-   <li>Choose a topic and examination year for each question.</li>
-   <li>Open Practice to answer questions and check explanations.</li>
-   <li>Export a JSON backup regularly so you don't lose your collection.</li>
-  </ol>
-  <div class="notice">Acode preview may not preserve browser storage when reopened. After every change, prepare a fresh backup and update your JSON file in QuickEdit before closing.</div>
- </div>
- <div class="card">
-  <h3>Backup and restore</h3>
-  <p class="muted">Create a copyable JSON backup of your question bank, or restore questions from a JSON/CSV file.</p>
-  <div class="actions"><button class="primary" onclick="exportJSON()">Create backup text</button><button class="secondary" onclick="document.getElementById('importFile').click()">Import file</button></div>
- </div>
-</section>
+  <div class="card">
+   <div class="home-section-title"><h3>Your learning journey</h3><span class="muted">Keep building momentum</span></div>
+   <div class="statgrid">
+    <div class="stat"><strong id="totalStat">0</strong><span class="muted">Questions</span></div>
+    <div class="stat"><strong id="topicStat">0</strong><span class="muted">Topics</span></div>
+    <div class="stat"><strong id="savedStat">0</strong><span class="muted">Difficult</span></div>
+   </div>
+   <div class="home-section-title" style="margin-top:17px"><h3>Choose your next step</h3></div>
+   <div class="home-shortcuts">
+    <button class="home-shortcut" type="button" onclick="switchTab('practice')">Practice<span>Test your understanding</span></button>
+    <button class="home-shortcut" type="button" onclick="switchTab('mistakes')">Mistake notebook<span>Learn from errors</span></button>
+    <button class="home-shortcut" type="button" onclick="switchTab('scoreboard')">My progress<span>Track improvement</span></button>
+   </div>
+  </div>
+  <div class="card">
+   <h3>Backup and restore</h3>
+   <p class="muted">Create a copyable JSON backup of your question bank, or restore questions from a JSON/CSV file.</p>
+   <div class="actions"><button class="primary" onclick="exportJSON()">Create backup text</button><button class="secondary" onclick="document.getElementById('importFile').click()">Import file</button></div>
+  </div>
+ </section>
 
 <section id="adminStudents" class="panel">
  <div class="card">
@@ -161,6 +212,8 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
  <div class="card">
   <h2 id="addFormTitle">Add a question</h2>
   <form id="questionForm">
+   <label for="qDestination">Save destination</label><select id="qDestination"><option value="official">Official question bank</option><option value="collection">Private annual collection (unpublished)</option></select>
+   <p class="muted">Private collection questions remain unpublished until the annual collection is ready, reviewed, and manually published.</p>
    <label for="qPart">Part *</label><select id="qPart" required><option value="">Choose part</option><option>English</option><option>Maths</option></select>
    <label for="qTopic">Topic *</label><input id="qTopic" required placeholder="e.g. Analogies, Number patterns">
    <div class="grid">
@@ -202,6 +255,19 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
  <div id="duplicateGroupsList"></div>
 </section>
 
+<section id="collections" class="panel">
+ <div class="card">
+  <h2>Annual question collections</h2>
+  <p class="muted">Collect questions privately by examination year. A collection becomes ready at 60 questions or when the exam is marked completed. An administrator must review the entire collection and publish it manually.</p>
+  <label for="collectionYearSelect">Examination year</label><select id="collectionYearSelect"><option value="">Choose a year</option></select>
+  <div class="statgrid"><div class="stat"><strong id="collectionQuestionCount">0</strong><span class="muted">Questions</span></div><div class="stat"><strong id="collectionStatus">—</strong><span class="muted">Collection status</span></div><div class="stat"><strong id="collectionYearLabel">—</strong><span class="muted">Exam year</span></div></div>
+  <label class="setting-toggle"><input type="checkbox" id="collectionExamCompleted"> This examination has been completed</label>
+  <div class="actions"><button type="button" class="secondary" id="syncCollectionBtn" onclick="syncSelectedCollection()">Save / sync collection</button><button type="button" class="secondary" id="reviewCollectionBtn" onclick="reviewSelectedCollection()" disabled>Review entire collection</button><button type="button" class="primary" id="publishCollectionBtn" onclick="publishSelectedCollection()" disabled>Publish collection</button></div>
+  <p id="collectionMessage" class="notice" role="status" aria-live="polite">Choose an examination year to begin.</p>
+ </div>
+ <div class="card"><h3>Collection contents</h3><p class="muted">Questions saved to the private collection for the selected year.</p><div id="collectionQuestionList" class="muted">No collection selected.</div></div>
+</section>
+
 <section id="submissions" class="panel">
  <div class="card">
   <h2>Submit a question</h2>
@@ -219,8 +285,8 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
    <div class="actions"><button class="primary" type="submit">Submit for review</button><button class="secondary" type="reset">Clear form</button></div>
   </form>
  </div>
- <div class="card"><h2>Administrator review workspace</h2><p class="muted">Review and editing controls in this prototype are local and are not protected by real accounts. Secure student/admin permissions will be enforced later by the shared server.</p><div id="reviewEditor" style="display:none"></div></div>
- <div class="card"><h2>Pending and rejected submissions</h2><p class="muted">Approved questions are moved out of this list and kept in submission history and backups. Submissions are stored on this device; sharing across phones requires the later server and synchronization stage.</p><div id="submissionList"></div></div>
+ <div class="card"><h2>Administrator review workspace</h2><p class="muted">Review and editing are available only to administrators with the review_submissions permission. Approval and rejection are checked by secure server functions.</p><div id="reviewEditor" style="display:none"></div></div>
+ <div class="card"><h2>Pending and rejected submissions</h2><p class="muted">Approved questions are moved out of this list and kept in submission history and backups. Submissions are stored in the shared database and remain available on the student account across devices.</p><div id="submissionList"></div></div>
 </section>
 
 <section id="practice" class="panel">
@@ -256,6 +322,49 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
  <div class="card"><h2>Mistake notebook</h2><p class="muted">Questions you answer incorrectly are added automatically. Remove any question whenever you no longer need it here; it remains in the official Question Bank.</p><strong id="mistakeCount">0 saved question(s)</strong></div>
  <div id="mistakeList"></div>
 </section>
+<section id="settings" class="panel">
+ <div class="card">
+  <h2>Personalise your study space</h2>
+  <p class="muted">Adjust how SAT EXCELLENCE looks and behaves on this device. Your preferences are saved automatically.</p>
+  <div class="grid">
+   <div><label for="settingTheme">Appearance</label><select id="settingTheme"><option value="light">Light</option><option value="dark">Dark</option><option value="system">Follow device</option></select></div>
+   <div><label for="settingFont">Text size</label><select id="settingFont"><option value="14">Small</option><option value="15">Default</option><option value="16">Comfortable</option><option value="18">Large</option><option value="20">Extra large</option></select></div>
+   <div><label for="settingLine">Line spacing</label><select id="settingLine"><option value="1.4">Compact</option><option value="1.5">Default</option><option value="1.7">Comfortable</option><option value="1.9">Wide</option></select></div>
+   <div><label for="settingLayout">Reading layout</label><select id="settingLayout"><option value="comfortable">Comfortable</option><option value="compact">Compact</option></select></div>
+   <div><label for="settingExamMinutes">Default Exam Mode duration</label><select id="settingExamMinutes"><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60">60 minutes</option><option value="90">90 minutes</option></select></div>
+   <div><label for="settingExplanations">Explanations</label><select id="settingExplanations"><option value="show">Show explanations</option><option value="hide">Hide explanations</option></select></div>
+  </div>
+  <div class="settings-toggles">
+   <label class="setting-toggle"><input type="checkbox" id="settingHighContrast"> High-contrast display</label>
+   <label class="setting-toggle"><input type="checkbox" id="settingReduceMotion"> Reduce decorative motion</label>
+   <label class="setting-toggle"><input type="checkbox" id="settingExamGrid"> Show Exam Mode question navigation grid</label>
+  </div>
+  <p id="settingsSaved" class="notice" role="status" aria-live="polite">Preferences are saved automatically on this device.</p>
+ </div>
+ <div class="card">
+  <h3>Connection and synchronisation</h3>
+  <p id="connectionStatus" class="notice" role="status">Checking connection…</p>
+  <p id="syncStatus" class="muted">Shared question and submission synchronisation will be shown here.</p>
+  <p class="muted">Automatic local saving is enabled. Keep a backup before major changes.</p>
+  <div class="actions"><button type="button" class="secondary" id="syncLocalQuestionsBtn" onclick="syncLocalQuestionBank()" style="display:none">Upload local questions to shared bank</button></div>
+ </div>
+ <div class="card">
+  <h3>Account and session</h3>
+  <p id="settingsAccount" class="muted">Sign in to view your account information.</p>
+  <label for="settingsNewPassword">Change password</label><input id="settingsNewPassword" type="password" minlength="8" autocomplete="new-password" placeholder="At least 8 characters">
+  <label for="settingsConfirmPassword">Confirm new password</label><input id="settingsConfirmPassword" type="password" minlength="8" autocomplete="new-password" placeholder="Enter the new password again">
+  <div class="actions"><button type="button" class="primary" onclick="changeAccountPassword()">Update password</button><button type="button" class="secondary" onclick="satSignOut()">Sign out</button></div>
+  <p id="passwordChangeStatus" class="muted" role="status" aria-live="polite"></p>
+ </div>
+ <div class="card">
+  <h3>Backup, restore and support</h3>
+  <p class="muted">Create a backup before changing devices or clearing browser data. Restoring a backup merges records and skips duplicates.</p>
+  <div class="actions" id="settingsBackupActions"><button type="button" class="primary" onclick="exportJSON()">Create backup</button><button type="button" class="secondary" onclick="document.getElementById('importFile').click()">Restore from file</button></div><div class="actions"><button type="button" class="secondary" onclick="switchTab('home')">Help and home</button></div>
+  <p class="muted">SAT EXCELLENCE V2.34 • ESSLCE SAT practice</p>
+  <button type="button" class="danger" onclick="resetUserSettings()">Reset preferences to defaults</button>
+ </div>
+</section>
+
 <div id="backupPanel" class="card" style="display:none;margin-top:14px">
  <h3 id="backupPanelTitle">Your latest backup text</h3>
  <p class="muted" id="backupPanelHint">Copy this text, paste it into a file in QuickEdit, and save it with a .json extension. This is the reliable way to keep your questions if Acode preview loses its browser storage.</p>
@@ -270,23 +379,24 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
 <script>
 const ACTIVE_EXAM_KEY='sat_excellence_active_exam_v1';
 let examLeaveReminderCount=0;
- const KEY='sat_excellence_questions_v1', SCORE_KEY='sat_excellence_scores_v1', SUB_KEY='sat_excellence_submissions_v1', MISTAKE_KEY='sat_excellence_mistakes_v1', MISTAKE_STATS_KEY='sat_excellence_mistake_stats_v1', BOOKMARK_KEY='sat_excellence_bookmarks_v1';
+const KEY='sat_excellence_questions_v1', SCORE_KEY='sat_excellence_scores_v1', SUB_KEY='sat_excellence_submissions_v1', MISTAKE_KEY='sat_excellence_mistakes_v1', MISTAKE_STATS_KEY='sat_excellence_mistake_stats_v1', BOOKMARK_KEY='sat_excellence_bookmarks_v1';
+let resubmittingSubmissionId=null;
 let questions=loadQuestions(), scoreHistory=loadScores(), submissions=loadSubmissions(), mistakeIds=loadMistakes(), mistakeStats=loadMistakeStats(), bookmarkIds=loadBookmarks(), duplicateGroups=[], selectedMistakeYear=null, selectedMistakePriority=null, filterState={library:{part:'',topic:'',year:''},practice:{part:'',topic:'',year:''}}, activeFilterContext=null, selectedLibraryYear=null, selectedPracticeYear=null, session=[], sessionIndex=0, score=0, timer=null, secondsLeft=0, elapsedSeconds=0, sessionAnswers=[], editingId=null, sessionMode='immediate', resultReviewItems=[], resultReviewFilter='all';
 function loadQuestions(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
 function loadScores(){try{return JSON.parse(localStorage.getItem(SCORE_KEY)||'[]')}catch(e){return []}}
 function loadSubmissions(){try{return JSON.parse(localStorage.getItem(SUB_KEY)||'[]')}catch(e){return []}}
 function loadMistakes(){try{return JSON.parse(localStorage.getItem(MISTAKE_KEY)||'[]')}catch(e){return []}}
 function loadMistakeStats(){try{return JSON.parse(localStorage.getItem(MISTAKE_STATS_KEY)||'{}')}catch(e){return {}}}
-function saveMistakeStats(){try{localStorage.setItem(MISTAKE_STATS_KEY,JSON.stringify(mistakeStats));return true}catch(e){alert('Mistake statistics could not be saved. Please create a backup.');return false}}
+function saveMistakeStats(){try{localStorage.setItem(MISTAKE_STATS_KEY,JSON.stringify(mistakeStats));if(window.scheduleWorkspaceSync)scheduleWorkspaceSync();return true}catch(e){alert('Mistake statistics could not be saved. Please create a backup.');return false}}
 function loadBookmarks(){try{return JSON.parse(localStorage.getItem(BOOKMARK_KEY)||'[]')}catch(e){return []}}
-function saveBookmarks(){try{bookmarkIds=[...new Set(bookmarkIds)].filter(id=>questions.some(q=>q.id===id));localStorage.setItem(BOOKMARK_KEY,JSON.stringify(bookmarkIds));renderBookmarks();return true}catch(e){alert('Bookmarks could not be saved. Please create a backup.');return false}}
+function saveBookmarks(){try{bookmarkIds=[...new Set(bookmarkIds)].filter(id=>questions.some(q=>q.id===id));localStorage.setItem(BOOKMARK_KEY,JSON.stringify(bookmarkIds));renderBookmarks();if(window.scheduleWorkspaceSync)scheduleWorkspaceSync();return true}catch(e){alert('Bookmarks could not be saved. Please create a backup.');return false}}
 function toggleBookmark(id){bookmarkIds=bookmarkIds.includes(id)?bookmarkIds.filter(x=>x!==id):[...bookmarkIds,id];saveBookmarks();renderLibrary();renderSaved()}
 function removeBookmark(id){bookmarkIds=bookmarkIds.filter(x=>x!==id);saveBookmarks();}
-function saveMistakes(){try{mistakeIds=[...new Set(mistakeIds)].filter(id=>questions.some(q=>q.id===id));localStorage.setItem(MISTAKE_KEY,JSON.stringify(mistakeIds));renderMistakes();return true}catch(e){alert('Mistake Notebook could not be saved. Please create a backup.');return false}}
+function saveMistakes(){try{mistakeIds=[...new Set(mistakeIds)].filter(id=>questions.some(q=>q.id===id));localStorage.setItem(MISTAKE_KEY,JSON.stringify(mistakeIds));renderMistakes();if(window.scheduleWorkspaceSync)scheduleWorkspaceSync();return true}catch(e){alert('Mistake Notebook could not be saved. Please create a backup.');return false}}
 function addMistake(id){if(!id||!questions.some(q=>q.id===id))return;let now=new Date().toISOString(),stat=mistakeStats[id]||{count:0,lastMistake:null};stat.count=(Number(stat.count)||0)+1;stat.lastMistake=now;mistakeStats[id]=stat;saveMistakeStats();if(!mistakeIds.includes(id)){mistakeIds.push(id);saveMistakes()}else renderMistakes()}
 function removeMistake(id){mistakeIds=mistakeIds.filter(x=>x!==id);saveMistakes()}
 function saveSubmissions(){try{localStorage.setItem(SUB_KEY,JSON.stringify(submissions));renderSubmissions();return true}catch(e){alert('Could not save submissions. Please create a backup.');return false}}
-function saveScores(){try{localStorage.setItem(SCORE_KEY,JSON.stringify(scoreHistory));return true}catch(e){alert('Score history could not be saved in this browser storage. Please create a backup.');return false}}
+function saveScores(){try{localStorage.setItem(SCORE_KEY,JSON.stringify(scoreHistory));if(window.scheduleWorkspaceSync)scheduleWorkspaceSync();return true}catch(e){alert('Score history could not be saved in this browser storage. Please create a backup.');return false}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(questions));renderAll();return true}catch(e){alert('Could not save to this browser storage. Your latest change may not be saved. Create a backup if possible. Error: '+e.message);return false}}
 function uid(){return 'q'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -300,30 +410,39 @@ function addOfficialOption(){let a=getOptions('officialOptions');if(a.length>=26
 function removeOfficialOption(){let a=getOptions('officialOptions');if(a.length<=2){alert('A question needs at least two options.');return}a.pop();optionInputs('officialOptions',a);updateAnswerSelect('qAnswer',a)}
 function addSubmissionOption(){let a=getOptions('submissionOptions');if(a.length>=26){alert('Maximum 26 options (A–Z).');return}a.push('');optionInputs('submissionOptions',a);updateAnswerSelect('sAnswer',a,document.getElementById('sAnswer').value)}
 function removeSubmissionOption(){let a=getOptions('submissionOptions');if(a.length<=2){alert('A question needs at least two options.');return}a.pop();optionInputs('submissionOptions',a);updateAnswerSelect('sAnswer',a)}
-function switchTab(id){if(sessionMode==='timed'&&session.length&&document.getElementById('practiceArea')?.querySelector('#clock')&&id!=='practice')if(examLeaveReminderCount<2){examLeaveReminderCount++;saveActiveExam();if(!confirm('Your timed exam is still active. Leave this exam? Your progress will be saved so you can resume it.'))return;}document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));if(id==='library'){selectedLibraryYear=null;renderLibrary();}if(id==='practice'){selectedPracticeYear=null;renderPracticeSetup();}if(id==='saved')renderSaved();if(id==='mistakes'){selectedMistakeYear=null;selectedMistakePriority=null;renderMistakes();}if(id==='bookmarks')renderBookmarks();if(id==='scoreboard')renderScoreboard();if(id==='submissions')renderSubmissions();if(id==='duplicates')renderDuplicateManager();if(id==='adminStudents')loadAdminStudents();if(id==='adminManagement')loadAdminManagement();}
+function switchTab(id){if(sessionMode==='timed'&&session.length&&document.getElementById('practiceArea')?.querySelector('#clock')&&id!=='practice')if(examLeaveReminderCount<2){examLeaveReminderCount++;saveActiveExam();if(!confirm('Your timed exam is still active. Leave this exam? Your progress will be saved so you can resume it.'))return;}document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));if(id==='library'){selectedLibraryYear=null;renderLibrary();}if(id==='practice'){selectedPracticeYear=null;renderPracticeSetup();}if(id==='saved')renderSaved();if(id==='mistakes'){selectedMistakeYear=null;selectedMistakePriority=null;renderMistakes();}if(id==='bookmarks')renderBookmarks();if(id==='scoreboard')renderScoreboard();if(id==='submissions'){renderSubmissions();if(window.loadSharedSubmissions)loadSharedSubmissions();}if(id==='duplicates')renderDuplicateManager();if(id==='adminStudents')loadAdminStudents();if(id==='adminManagement')loadAdminManagement();if(id==='collections')loadAnnualCollections();if(id==='settings')renderSettingsPanel();}
 document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
 document.getElementById('questionForm').addEventListener('submit',e=>{
  e.preventDefault();let existing=editingId?questions.find(x=>x.id===editingId):null,opts=getOptions('officialOptions'),ans=val('qAnswer');
  let details=explanationDetailsFromForm();let q={id:existing?existing.id:uid(),part:val('qPart'),topic:val('qTopic').trim(),year:val('qYear').trim(),difficulty:val('qDifficulty'),question:val('qText').trim(),options:opts,answer:ans===''?-1:Number(ans),explanationDetails:details,explanation:[details.concept,details.steps,details.otherChoices,details.examinerTrick,details.takeaway].filter(Boolean).join('\n\n'),saved:existing?existing.saved:false,status:'Verified'};
  if(!q.topic||!q.year||!q.question||q.options.length<2||q.options.some(x=>!x)){alert('Please complete the topic, year, question and at least two answer choices.');return}
+ if(val('qDestination')==='collection'){
+  if(existing){alert('Edit an official question from the Question Bank, or add a new private collection question.');return;}
+  if(!satCan('add_questions')){alert('You do not have permission to add questions to annual collections.');return;}
+  q.status='Draft';if(!saveCollectionDraftQuestion(q))return;
+  editingId=null;e.target.reset();optionInputs('officialOptions',['','','','']);updateAnswerSelect('qAnswer',getOptions('officialOptions'));resetEditForm();
+  alert('Question saved to the private annual collection for '+q.year+'. It is not in the official Question Bank.');switchTab('collections');return;
+ }
  if(existing){let index=questions.findIndex(x=>x.id===editingId);questions[index]=q;}else{questions.push(q)}
- let wasEditing=!!existing;editingId=null;save();e.target.reset();optionInputs('officialOptions',['','']);updateAnswerSelect('qAnswer',getOptions('officialOptions'));resetEditForm();alert(wasEditing?'Question updated.':'Question saved to the official bank.');switchTab('library');
+ let wasEditing=!!existing;editingId=null;save();if(window.queueOfficialQuestionSync)queueOfficialQuestionSync(q,wasEditing?'update':'insert');e.target.reset();optionInputs('officialOptions',['','']);updateAnswerSelect('qAnswer',getOptions('officialOptions'));resetEditForm();alert(wasEditing?'Question updated locally; shared sync is queued.':'Question saved locally; shared sync is queued.');switchTab('library');
 });
 document.getElementById('questionForm').addEventListener('reset',()=>{setTimeout(()=>{if(!editingId)resetEditForm()},0)});
 
 function initEntryForms(){optionInputs('officialOptions',['','','','']);updateAnswerSelect('qAnswer',getOptions('officialOptions'));optionInputs('submissionOptions',['','','','']);updateAnswerSelect('sAnswer',getOptions('submissionOptions'));}
-document.getElementById('submissionForm').addEventListener('submit',e=>{
+document.getElementById('submissionForm').addEventListener('submit',async e=>{
  e.preventDefault();let opts=getOptions('submissionOptions'),ans=val('sAnswer');
  if(opts.length<2||opts.some(x=>!x)){alert('Please provide at least two complete answer choices.');return}
- let item={submissionId:'S'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),submittedBy:val('sBy').trim()||'Anonymous',submittedAt:new Date().toISOString(),reviewStatus:'Pending',reviewNote:'',questionData:{id:uid(),part:val('sPart'),topic:val('sTopic').trim(),year:val('sYear').trim(),question:val('sText').trim(),options:opts,answer:ans===''?-1:Number(ans),explanation:val('sExplanation').trim(),saved:false,status:'Pending'}};
- submissions.unshift(item);saveSubmissions();e.target.reset();optionInputs('submissionOptions',['','','','']);updateAnswerSelect('sAnswer',getOptions('submissionOptions'));alert('Your question was submitted for administrator review.');
+ let questionData={part:val('sPart'),topic:val('sTopic').trim(),year:val('sYear').trim(),question:val('sText').trim(),options:opts,answer:ans===''?-1:Number(ans),explanation:val('sExplanation').trim(),explanationDetails:{}};
+ if(resubmittingSubmissionId&&window.resubmitSubmissionShared){const ok=await resubmitSubmissionShared(resubmittingSubmissionId,questionData);if(ok){resubmittingSubmissionId=null;e.target.reset();optionInputs('submissionOptions',['','','','']);updateAnswerSelect('sAnswer',getOptions('submissionOptions'));alert('Your corrected question was resubmitted for review.');}return;}
+ let item={submissionId:window.makeSubmissionUuid?makeSubmissionUuid():'S'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),submittedBy:val('sBy').trim()||satCurrentProfile?.Username||'Student',submittedAt:new Date().toISOString(),reviewStatus:'Pending',reviewNote:'',questionData:{...questionData,id:uid(),saved:false,status:'Pending'}};
+ submissions.unshift(item);saveSubmissions();if(window.queueSubmissionSync)queueSubmissionSync(item);e.target.reset();optionInputs('submissionOptions',['','','','']);updateAnswerSelect('sAnswer',getOptions('submissionOptions'));alert('Your question was saved and queued for administrator review.');
 });
 document.getElementById('submissionForm').addEventListener('reset',()=>setTimeout(()=>{optionInputs('submissionOptions',['','','','']);updateAnswerSelect('sAnswer',getOptions('submissionOptions'))},0));
 function renderSubmissions(){
  let el=document.getElementById('submissionList');if(!el)return;
  let visibleSubmissions=submissions.filter(x=>x.reviewStatus!=='Approved');
  if(!visibleSubmissions.length){el.innerHTML='<p class="muted">No pending or rejected submissions. Approved questions have been moved to the official Question Bank.</p>';return}
- el.innerHTML=visibleSubmissions.map(x=>{let q=x.questionData||{};let opts=(q.options||[]).map((o,j)=>`<div class="muted">${String.fromCharCode(65+j)}. ${esc(o)}</div>`).join('');let actions=x.reviewStatus==='Pending'?`<div class="actions"><button class="primary" data-review="review" data-id="${esc(x.submissionId)}">Review and approve</button><button class="danger" data-review="reject" data-id="${esc(x.submissionId)}">Reject with reason</button></div>`:x.reviewStatus==='Rejected'?`<div class="actions"><button class="secondary" data-review="resubmit" data-id="${esc(x.submissionId)}">Edit and resubmit</button></div>`:'';return `<article class="question"><div class="qmeta">${esc(x.submissionId)} • ${esc(x.submittedBy)} • ${esc(new Date(x.submittedAt).toLocaleString())}</div><div class="actions"><strong>${esc(x.reviewStatus)}</strong></div><p><strong>${esc(q.question||'')}</strong></p><p class="muted">${esc(q.topic||'')} • ${esc(q.year||'')}</p>${opts}<p class="muted">Proposed answer: ${q.answer>=0?String.fromCharCode(65+q.answer):'Not provided'}</p>${q.explanation?`<p>${esc(q.explanation)}</p>`:''}${x.reviewNote?`<div class="notice">Administrator note: ${esc(x.reviewNote)}</div>`:''}${actions}</article>`}).join('');
+ el.innerHTML=visibleSubmissions.map(x=>{let q=x.questionData||{};let opts=(q.options||[]).map((o,j)=>`<div class="muted">${String.fromCharCode(65+j)}. ${esc(o)}</div>`).join('');let actions=satCan('review_submissions')&&x.reviewStatus==='Pending'&&x.dbSynced?`<div class="actions"><button class="primary" data-review="review" data-id="${esc(x.submissionId)}">Review and approve</button><button class="danger" data-review="reject" data-id="${esc(x.submissionId)}">Reject with reason</button></div>`:satCan('review_submissions')&&x.reviewStatus==='Pending'?'<p class="muted">Waiting for shared synchronisation before review.</p>':satCurrentProfile?.role==='student'&&x.reviewStatus==='Rejected'&&x.dbSynced?`<div class="actions"><button class="secondary" data-review="resubmit" data-id="${esc(x.submissionId)}">Edit and resubmit</button></div>`:'';return `<article class="question"><div class="qmeta">${esc(x.submissionId)} • ${esc(x.submittedBy)} • ${esc(new Date(x.submittedAt).toLocaleString())}</div><div class="actions"><strong>${esc(x.reviewStatus)}</strong></div><p><strong>${esc(q.question||'')}</strong></p><p class="muted">${esc(q.topic||'')} • ${esc(q.year||'')}</p>${opts}<p class="muted">Proposed answer: ${q.answer>=0?String.fromCharCode(65+q.answer):'Not provided'}</p>${q.explanation?`<p>${esc(q.explanation)}</p>`:''}${x.reviewNote?`<div class="notice">Administrator note: ${esc(x.reviewNote)}</div>`:''}${actions}</article>`}).join('');
  el.querySelectorAll('[data-review]').forEach(btn=>btn.addEventListener('click',()=>{let id=btn.dataset.id; if(btn.dataset.review==='review')openReviewEditor(id);if(btn.dataset.review==='reject')rejectSubmission(id);if(btn.dataset.review==='resubmit')resubmitSubmission(id)}));
 }
 function openReviewEditor(id){
@@ -350,7 +469,7 @@ function openReviewEditor(id){
  document.getElementById('rAddOption').onclick=()=>{opts=getOptions('reviewOptions');if(opts.length>=26){alert('Maximum 26 options (A–Z).');return}opts.push('');draw()};
  document.getElementById('rRemoveOption').onclick=()=>{opts=getOptions('reviewOptions');if(opts.length<=2){alert('A question needs at least two options.');return}opts.pop();draw()};
  document.getElementById('rCancel').onclick=()=>{box.style.display='none';box.innerHTML=''};
- document.getElementById('reviewForm').onsubmit=e=>{
+ document.getElementById('reviewForm').onsubmit=async e=>{
   e.preventDefault();let choices=getOptions('reviewOptions'),answer=val('rAnswer');
   if(choices.length<2||choices.length>26||choices.some(v=>!v)){alert('Complete every answer choice.');return}
   if(answer===''){alert('Select the verified correct answer.');return}
@@ -360,14 +479,18 @@ function openReviewEditor(id){
   let explanation='Main concept: '+concept+'\n\nStep-by-step explanation: '+steps+(details.otherChoices?'\n\nWhy other choices are wrong: '+details.otherChoices:'')+(details.examinerTrick?'\n\nExaminer\'s trick: '+details.examinerTrick:'')+(details.takeaway?'\n\nImportant lesson: '+details.takeaway:'');
   let reviewed={...x.questionData,part:val('rPart'),topic:val('rTopic').trim(),year:val('rYear').trim(),difficulty:val('rDifficulty'),question:val('rQuestion').trim(),options:choices,answer:Number(answer),explanation,explanationDetails:details,status:'Verified',saved:false};
   if(!reviewed.part||!reviewed.topic||!reviewed.year||!reviewed.question){alert('Complete topic, year and question text.');return}
-  x.questionData=reviewed;x.reviewStatus='Approved';x.reviewNote='Reviewed, edited if needed, and approved into the official Question Bank.';
-  questions.push({...reviewed,id:uid()});save();saveSubmissions();box.style.display='none';box.innerHTML='';alert('Approved. The reviewed question and explanation have been added to the official Question Bank.');switchTab('library');
+  if(!satSupabase||!satCurrentUser||!navigator.onLine){alert('Approval requires an internet connection so the official bank and submission status update together.');return;}
+  try{
+   const {error}=await satSupabase.rpc('approve_submission_and_publish',{target_submission_id:id,reviewed_question:{part:reviewed.part,topic:reviewed.topic,year:reviewed.year,difficulty:reviewed.difficulty,question:reviewed.question,options:reviewed.options,answer:reviewed.answer,explanation:reviewed.explanation,explanationDetails:reviewed.explanationDetails}});
+   if(error)throw error;
+   box.style.display='none';box.innerHTML='';await loadSharedQuestions();await loadSharedSubmissions();alert('Approved and published to the shared Question Bank.');switchTab('library');
+  }catch(error){alert('Approval failed: '+(error.message||'Unknown error'));}
  };
  box.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-function rejectSubmission(id){let x=submissions.find(z=>z.submissionId===id);if(!x)return;let reason=prompt('Enter a clear reason so the student can correct the submission:');if(reason===null)return;if(!reason.trim()){alert('A rejection reason is required.');return}x.reviewStatus='Rejected';x.reviewNote=reason.trim();saveSubmissions()}
-function resubmitSubmission(id){let x=submissions.find(z=>z.submissionId===id);if(!x)return;let q=x.questionData||{};document.getElementById('sBy').value=x.submittedBy==='Anonymous'?'':x.submittedBy;document.getElementById('sPart').value=q.part||'';document.getElementById('sTopic').value=q.topic||'';document.getElementById('sYear').value=q.year||'';document.getElementById('sText').value=q.question||'';optionInputs('submissionOptions',q.options||['','']);updateAnswerSelect('sAnswer',getOptions('submissionOptions'),q.answer>=0?String(q.answer):'');document.getElementById('sExplanation').value=q.explanation||'';saveSubmissions();switchTab('submissions');window.scrollTo(0,0)}
+function rejectSubmission(id){if(window.rejectSubmissionShared)return rejectSubmissionShared(id);let x=submissions.find(z=>z.submissionId===id);if(!x)return;let reason=prompt('Enter a clear reason so the student can correct the submission:');if(reason===null)return;if(!reason.trim()){alert('A rejection reason is required.');return}x.reviewStatus='Rejected';x.reviewNote=reason.trim();saveSubmissions()}
+function resubmitSubmission(id){let x=submissions.find(z=>String(z.submissionId)===String(id));if(!x)return;resubmittingSubmissionId=id;let q=x.questionData||{};document.getElementById('sBy').value=x.submittedBy==='Anonymous'?'':x.submittedBy;document.getElementById('sPart').value=q.part||'';document.getElementById('sTopic').value=q.topic||'';document.getElementById('sYear').value=q.year||'';document.getElementById('sText').value=q.question||'';optionInputs('submissionOptions',q.options||['','']);updateAnswerSelect('sAnswer',getOptions('submissionOptions'),q.answer>=0?String(q.answer):'');document.getElementById('sExplanation').value=q.explanation||'';saveSubmissions();switchTab('submissions');window.scrollTo(0,0)}
 
 function val(id){return document.getElementById(id).value}
 function refreshFilterLabels(){
@@ -407,7 +530,7 @@ function renderLibrary(){
  }
  let arr=questions.filter(q=>q.year===selectedLibraryYear&&questionMatchesSearch(q,search));
  let partOrder={English:0,Maths:1};arr=arr.map((q,i)=>({q,i})).sort((a,b)=>(partOrder[a.q.part]??2)-(partOrder[b.q.part]??2)||a.i-b.i).map(x=>x.q);
-let html=`<div class="card"><button type="button" class="secondary" onclick="showLibraryYears()">← All examination years</button><h3 style="margin-top:12px">${esc(selectedLibraryYear)}</h3><p class="muted">English questions first, followed by Mathematics.</p><div class="actions"><button type="button" class="primary" onclick="exportSelectedLibraryYearJSON();downloadBackupFile()">Copy ${esc(selectedLibraryYear)} JSON backup</button></div></div>`;
+let html=`<div class="card"><button type="button" class="secondary" onclick="showLibraryYears()">← All examination years</button><h3 style="margin-top:12px">${esc(selectedLibraryYear)}</h3><p class="muted">English questions first, followed by Mathematics.</p>${satCan('add_questions')?`<div class="actions"><button type="button" class="primary" onclick="exportSelectedLibraryYearJSON();downloadBackupFile()">Copy ${esc(selectedLibraryYear)} JSON backup</button></div>`:''}</div>`;
  let number=0;
  ['English','Maths'].forEach(part=>{let group=arr.filter(q=>q.part===part);if(group.length){html+='<div class="card"><h3>'+part+'</h3><p class="muted">'+group.length+' question(s)</p></div>'+group.map(q=>questionCard(q,satCan('edit_questions'),satCan('delete_questions'),++number)).join('');}});
  let other=arr.filter(q=>!['English','Maths'].includes(q.part));if(other.length){html+='<div class="card"><h3>Other</h3></div>'+other.map(q=>questionCard(q,satCan('edit_questions'),satCan('delete_questions'),++number)).join('');}
@@ -442,7 +565,7 @@ function resetEditForm(){
 function cancelEdit(){editingId=null;document.getElementById('questionForm').reset();resetEditForm();switchTab('library')}
 
 function toggleSaved(id){let q=questions.find(x=>x.id===id);if(q){q.saved=!q.saved;save()}}
-function deleteQuestion(id){if(confirm('Delete this question?')){questions=questions.filter(q=>q.id!==id);mistakeIds=mistakeIds.filter(x=>x!==id);bookmarkIds=bookmarkIds.filter(x=>x!==id);saveMistakes();saveBookmarks();save()}}
+function deleteQuestion(id){if(confirm('Delete this question?')){questions=questions.filter(q=>q.id!==id);mistakeIds=mistakeIds.filter(x=>x!==id);bookmarkIds=bookmarkIds.filter(x=>x!==id);saveMistakes();saveBookmarks();save();if(window.queueOfficialQuestionDelete)queueOfficialQuestionDelete(id)}}
 function duplicateNormalize(value){
  return String(value??'').normalize('NFKC').toLocaleLowerCase().replace(/[\u200B-\u200D\uFEFF]/g,'').replace(/[‘’]/g,"'").replace(/[“”]/g,'"').replace(/[‐‑‒–—]/g,'-').replace(/\s+/g,' ').trim();
 }
@@ -584,9 +707,9 @@ function updatePracticeModeButtons(){
 }
 function saveActiveExam(){
  if(sessionMode!=='timed'||!session.length||!document.getElementById('clock'))return;
- try{localStorage.setItem(ACTIVE_EXAM_KEY,JSON.stringify({session,examCurrent,examFlags,examResponses,examReviewOpen,secondsLeft,elapsedSeconds,filterState,selectedPracticeYear,leaveReminderCount:examLeaveReminderCount,savedAt:Date.now()}));}catch(e){}
+ try{localStorage.setItem(ACTIVE_EXAM_KEY,JSON.stringify({session,examCurrent,examFlags,examResponses,examReviewOpen,secondsLeft,elapsedSeconds,filterState,selectedPracticeYear,leaveReminderCount:examLeaveReminderCount,savedAt:Date.now()}));if(window.scheduleWorkspaceSync)scheduleWorkspaceSync();}catch(e){}
 }
-function clearActiveExam(){try{localStorage.removeItem(ACTIVE_EXAM_KEY)}catch(e){}}
+function clearActiveExam(){try{localStorage.removeItem(ACTIVE_EXAM_KEY);if(window.scheduleWorkspaceSync)scheduleWorkspaceSync()}catch(e){}}
 function restoreActiveExam(){
  let raw;try{raw=localStorage.getItem(ACTIVE_EXAM_KEY)}catch(e){return}
  if(!raw)return;
@@ -713,7 +836,8 @@ function renderScoreProgressChart(){
 function clearScoreboard(){if(!scoreHistory.length)return;if(confirm('Delete all saved practice scores? This cannot be undone unless you have a backup.')){scoreHistory=[];saveScores();renderScoreboard();}}
 function openLatestBackup(){switchTab('home');exportJSON()}
 function exportJSON(){
- const backup={app:'SAT EXCELLENCE',version:4,exported:new Date().toISOString(),questions,scores:scoreHistory,submissions,mistakes:mistakeIds,mistakeStats,bookmarks:bookmarkIds};
+ const activeExam=(()=>{try{return JSON.parse(localStorage.getItem(ACTIVE_EXAM_KEY)||'null')}catch(e){return null}})();
+ const backup={app:'SAT EXCELLENCE',version:6,exported:new Date().toISOString(),questions,scores:scoreHistory,submissions,mistakes:mistakeIds,mistakeStats,bookmarks:bookmarkIds,collections:typeof collectionDrafts!=='undefined'?collectionDrafts:{},settings:typeof satUserSettings!=='undefined'?satUserSettings:{},activeExam};
  const text=JSON.stringify(backup,null,2);
  const area=document.getElementById('backupText');
  area.value=text;
@@ -724,9 +848,10 @@ function exportJSON(){
 function exportSelectedLibraryYearJSON(){exportYearJSON(selectedLibraryYear)}
 function exportYearJSON(year){
  const yearQuestions=questions.filter(q=>String(q.year||'Not specified')===String(year));
- if(!yearQuestions.length){alert('There are no questions for '+year+'.');return}
+ const yearCollection=typeof collectionDrafts!=='undefined'?(collectionDrafts[String(year)]||null):null;
+ if(!yearQuestions.length&&!(yearCollection?.questions||[]).length){alert('There are no official or private collection questions for '+year+'.');return}
  const ids=new Set(yearQuestions.map(q=>q.id));
- const backup={app:'SAT EXCELLENCE',version:5,backupType:'year-questions',year:String(year),exported:new Date().toISOString(),questions:yearQuestions,mistakes:mistakeIds.filter(id=>ids.has(id)),mistakeStats:Object.fromEntries(Object.entries(mistakeStats).filter(([id])=>ids.has(id))),bookmarks:bookmarkIds.filter(id=>ids.has(id))};
+ const backup={app:'SAT EXCELLENCE',version:6,backupType:'year-questions',year:String(year),exported:new Date().toISOString(),questions:yearQuestions,mistakes:mistakeIds.filter(id=>ids.has(id)),mistakeStats:Object.fromEntries(Object.entries(mistakeStats).filter(([id])=>ids.has(id))),bookmarks:bookmarkIds.filter(id=>ids.has(id)),collection:yearCollection};
  const area=document.getElementById('backupText');
  area.value=JSON.stringify(backup,null,2);
  document.getElementById('backupPanelTitle').textContent=String(year)+' year backup (JSON)';
@@ -805,6 +930,10 @@ function showImportPreview(plan,fileName){
  if(Array.isArray(b.submissions))extras.push(`${b.submissions.length} submission record(s)`);
  if(Array.isArray(b.mistakes))extras.push(`${b.mistakes.length} mistake link(s)`);
  if(Array.isArray(b.bookmarks))extras.push(`${b.bookmarks.length} bookmark link(s)`);
+ if(b.collections&&typeof b.collections==='object')extras.push(`${Object.keys(b.collections).length} annual collection draft(s)`);
+ if(b.collection&&typeof b.collection==='object')extras.push('one year-specific collection draft');
+ if(b.settings&&typeof b.settings==='object')extras.push('display and study preferences');
+ if(b.activeExam&&Array.isArray(b.activeExam.session))extras.push('one resumable exam session');
  const details=[
   `File: ${fileName}`,
   `Questions in file: ${plan.items.length}`,
@@ -827,6 +956,9 @@ function applyImportPlan(plan){
  const importedIdMap=plan.importedIdMap;
  const mappedId=id=>importedIdMap[String(id)]||(plan.nextQuestions.find(q=>String(q.id)===String(id))?.id??null);
  let nextScores=scoreHistory.slice(),nextSubmissions=submissions.slice(),nextMistakes=mistakeIds.slice(),nextMistakeStats={...mistakeStats},nextBookmarks=bookmarkIds.slice();
+ let nextCollections=typeof collectionDrafts!=='undefined'?JSON.parse(JSON.stringify(collectionDrafts)):{};
+ let nextSettings=typeof satUserSettings!=='undefined'?{...satUserSettings}:null;
+ let nextActiveExam=(()=>{try{return JSON.parse(localStorage.getItem(ACTIVE_EXAM_KEY)||'null')}catch(e){return null}})();
  if(backupData&&!Array.isArray(backupData)){
   if(Array.isArray(backupData.scores))nextScores=mergeUniqueRecords(nextScores,backupData.scores,x=>JSON.stringify(x),100);
   if(Array.isArray(backupData.submissions))nextSubmissions=mergeUniqueRecords(nextSubmissions,backupData.submissions,x=>String(x?.id??JSON.stringify(x)));
@@ -846,9 +978,25 @@ function applyImportPlan(plan){
    const mapped=backupData.bookmarks.map(mappedId).filter(Boolean);
    nextBookmarks=[...new Map([...nextBookmarks,...mapped].map(id=>[String(id),id])).values()];
   }
+  const incomingCollections=backupData.collections&&typeof backupData.collections==='object'?backupData.collections:{};
+  if(backupData.collection&&backupData.year)incomingCollections[backupData.year]=backupData.collection;
+  for(const [year,incoming] of Object.entries(incomingCollections)){
+   if(!incoming||!Array.isArray(incoming.questions))continue;
+   const old=nextCollections[year]||{questions:[],exam_completed:false};
+   const merged=Array.isArray(old.questions)?old.questions.slice():[];
+   const ids=new Set(merged.map(q=>String(q.id)));
+   const fingerprints=new Set(merged.map(q=>duplicateFingerprint(q,q.year||year)));
+   for(const q of incoming.questions){const key=duplicateFingerprint(q,q.year||year);if(!ids.has(String(q.id))&&!fingerprints.has(key)){merged.push(q);ids.add(String(q.id));fingerprints.add(key);}}
+   nextCollections[year]={questions:merged,exam_completed:!!(old.exam_completed||incoming.exam_completed),exam_completed_dirty:!!old.exam_completed_dirty};
+  }
+  if(backupData.settings&&nextSettings)nextSettings={...nextSettings,...backupData.settings};
+  if(backupData.activeExam&&Array.isArray(backupData.activeExam.session)&&(!nextActiveExam||Number(backupData.activeExam.savedAt||0)>Number(nextActiveExam.savedAt||0)))nextActiveExam=backupData.activeExam;
  }
  // Commit all related records together. If storage rejects any write, restore every prior value.
  const keys=[KEY,SCORE_KEY,SUB_KEY,MISTAKE_KEY,MISTAKE_STATS_KEY,BOOKMARK_KEY];
+ if(typeof COLLECTION_DRAFT_KEY!=='undefined')keys.push(COLLECTION_DRAFT_KEY);
+ if(typeof SAT_SETTINGS_KEY!=='undefined')keys.push(SAT_SETTINGS_KEY);
+ if(nextActiveExam)keys.push(ACTIVE_EXAM_KEY);
  const before=Object.fromEntries(keys.map(k=>[k,localStorage.getItem(k)]));
  try{
   localStorage.setItem(KEY,JSON.stringify(plan.nextQuestions));
@@ -857,11 +1005,17 @@ function applyImportPlan(plan){
   localStorage.setItem(MISTAKE_KEY,JSON.stringify(nextMistakes));
   localStorage.setItem(MISTAKE_STATS_KEY,JSON.stringify(nextMistakeStats));
   localStorage.setItem(BOOKMARK_KEY,JSON.stringify(nextBookmarks));
+  if(typeof COLLECTION_DRAFT_KEY!=='undefined')localStorage.setItem(COLLECTION_DRAFT_KEY,JSON.stringify(nextCollections));
+  if(typeof SAT_SETTINGS_KEY!=='undefined'&&nextSettings)localStorage.setItem(SAT_SETTINGS_KEY,JSON.stringify(nextSettings));
+  if(nextActiveExam)localStorage.setItem(ACTIVE_EXAM_KEY,JSON.stringify(nextActiveExam));
  }catch(err){
   for(const k of keys){try{if(before[k]===null)localStorage.removeItem(k);else localStorage.setItem(k,before[k]);}catch(restoreErr){}}
   throw new Error('The browser could not save the complete import. Existing saved data was restored where storage allowed. Free some device storage and try again. '+err.message);
  }
  questions=plan.nextQuestions;scoreHistory=nextScores;submissions=nextSubmissions;mistakeIds=nextMistakes;mistakeStats=nextMistakeStats;bookmarkIds=nextBookmarks;
+ if(typeof collectionDrafts!=='undefined'){collectionDrafts=nextCollections;for(const year of Object.keys(collectionDrafts))if(navigator.onLine&&window.scheduleCollectionSync)scheduleCollectionSync(year);}
+ if(typeof satUserSettings!=='undefined'&&nextSettings){satUserSettings=nextSettings;applyUserSettings();}
+ if(window.queueOfficialQuestionSync){const oldIds=new Set(plan.baseQuestions.map(q=>String(q.id)));for(const q of plan.nextQuestions)if(!oldIds.has(String(q.id)))queueOfficialQuestionSync(q,'insert');}
  renderAll();renderDuplicateManager();renderMistakes();renderScoreboard();renderSubmissions();renderBookmarks();
  const label=plan.added+' new question(s) imported; '+plan.duplicates+' duplicate(s) skipped; '+plan.invalid+' invalid row(s) ignored.';
  document.getElementById('importStatus').textContent=label+' Existing records were preserved and backup records were merged.';
@@ -876,7 +1030,7 @@ document.getElementById('importFile').addEventListener('change',async e=>{
   else{backupData=JSON.parse(raw);items=Array.isArray(backupData)?backupData:backupData.questions;}
   if(!Array.isArray(items))throw new Error('The file must contain a list of questions.');
   const plan=buildImportPlan(items,backupData);
-  if(!plan.items.length)throw new Error('No question rows were found in this file.');
+  if(!plan.items.length&&!((backupData?.collections&&Object.keys(backupData.collections).length)||(backupData?.collection&&backupData?.year)))throw new Error('No question rows or annual collection drafts were found in this file.');
   if(!showImportPreview(plan,file.name)){
    document.getElementById('importStatus').textContent='Import cancelled. No saved data was changed.';
    return;
@@ -894,10 +1048,21 @@ function parseCSV(s){
  return rows.map(r=>{let o={};headers.forEach((h,i)=>o[h]=(r[i]||'').trim());return o});
 }
 let satAppStarted=false;
-function startSATApp(){
+async function startSATApp(){
  if(satAppStarted)return;
  satAppStarted=true;
- initEntryForms();updatePracticeModeButtons();renderAll();restoreActiveExam();
+ initEntryForms();updatePracticeModeButtons();
+ // Show the local app immediately; shared sync must never hold the study interface hostage.
+ renderAll();restoreActiveExam();
+ (async()=>{
+  try{
+   if(window.loadSharedQuestions)await loadSharedQuestions();
+   if(window.loadStudentWorkspace)await loadStudentWorkspace();
+   renderAll();
+   if(!session.length)restoreActiveExam();
+   if(window.loadSharedSubmissions)await loadSharedSubmissions();
+  }catch(error){console.warn('Shared data could not be loaded; using saved local data.',error);}
+ })();
 }
 
 // Register the offline app service worker when served from HTTPS or localhost.
@@ -916,14 +1081,14 @@ function lockSATApp(message,type='info'){document.body.classList.add('auth-locke
 function satCan(permission){if(!satCurrentProfile)return false;if(satCurrentProfile.role==='main_admin')return true;if(satCurrentProfile.role!=='additional_admin')return false;const perms=satCurrentProfile.Permissions||{};return perms[permission]===true;}
 function applySATRoleUI(profile){const isStudent=profile.role==='student';const addAllowed=satCan('add_questions');const editAllowed=satCan('edit_questions');const deleteAllowed=satCan('delete_questions');const reviewAllowed=satCan('review_submissions');const duplicateAllowed=profile.role==='main_admin'||(profile.role==='additional_admin'&&(addAllowed||editAllowed||deleteAllowed));
  const setTab=(name,visible)=>{const b=document.querySelector('nav [data-tab="'+name+'"]');if(b)b.style.display=visible?'':'none';const panel=document.getElementById(name);if(panel)panel.style.display=visible?'':'none';};
- setTab('add',addAllowed);setTab('duplicates',duplicateAllowed);setTab('adminStudents',profile.role==='main_admin'||satCan('view_students'));setTab('adminManagement',profile.role==='main_admin');
- const submissionCards=document.querySelectorAll('#submissions > .card');if(submissionCards[1])submissionCards[1].style.display=reviewAllowed?'':'none';if(submissionCards[2])submissionCards[2].style.display=isStudent?'none':(reviewAllowed?'':'none');
+ setTab('add',addAllowed);setTab('collections',addAllowed);const localSyncButton=document.getElementById('syncLocalQuestionsBtn');if(localSyncButton)localSyncButton.style.display=addAllowed?'':'none';const settingsBackupActions=document.getElementById('settingsBackupActions');if(settingsBackupActions)settingsBackupActions.style.display=addAllowed?'':'none';setTab('duplicates',duplicateAllowed);setTab('adminStudents',profile.role==='main_admin'||satCan('view_students'));setTab('adminManagement',profile.role==='main_admin');
+ const submissionCards=document.querySelectorAll('#submissions > .card');if(submissionCards[1])submissionCards[1].style.display=reviewAllowed?'':'none';if(submissionCards[2])submissionCards[2].style.display=(isStudent||reviewAllowed)?'':'none';
  const homeCards=document.querySelectorAll('#home > .card');if(homeCards[2])homeCards[2].style.display=addAllowed?'':'none';
  const exportAction=document.querySelector('#library .card .actions');if(exportAction)exportAction.style.display=isStudent?'none':'';
 }
 function adminStudentsMessage(message,type='info'){
  const el=document.getElementById('adminStudentsMessage');if(!el)return;
- el.textContent=message;el.style.color=type==='error'?'#b91c1c':type==='success'?'#15803d':'';
+ el.className='admin-management-message '+type;el.textContent=message;
 }
 function renderAdminStudents(rows){
  const list=document.getElementById('adminStudentsList');if(!list)return;list.replaceChildren();
@@ -985,7 +1150,7 @@ const ADMIN_PERMISSION_LABELS=[
 ];
 function adminManagementMessage(message,type='info'){
  const el=document.getElementById('adminManagementMessage');if(!el)return;
-  el.className='admin-management-message '+type;el.textContent=message;
+ el.className='admin-management-message '+type;el.textContent=message;
 }
 function adminManagementButton(label,className,handler){
  const button=document.createElement('button');button.type='button';button.className=className;button.textContent=label;button.addEventListener('click',handler);return button;
@@ -1067,13 +1232,35 @@ async function changeAdditionalAdminRole(profile,makeAdmin){
  }catch(err){console.error('Administrator role update failed:',err);adminManagementMessage('Could not change this account role: '+(err.message||'Unknown error'),'error');}
 }
 document.getElementById('refreshAdminManagement')?.addEventListener('click',loadAdminManagement);
-function unlockSATApp(profile,user){satCurrentUser=user;satCurrentProfile=profile;applySATRoleUI(profile);document.body.classList.remove('auth-locked');document.getElementById('authUserBar').style.display='flex';document.getElementById('signedInLabel').textContent=(profile.full_name||profile.Username||user.email)+' • '+profile.role;startSATApp();}
+const OFFLINE_PROFILE_KEY='sat_excellence_offline_student_profile_v1';
+function unlockOfflineStudent(){
+ let cached=null;try{cached=JSON.parse(localStorage.getItem(OFFLINE_PROFILE_KEY)||'null')}catch(e){}
+ if(!cached||cached.Status!=='approved')return false;
+ satCurrentUser=null;satCurrentProfile={...cached,role:'student',Status:'approved',Permissions:{}};
+ applySATRoleUI(satCurrentProfile);document.body.classList.remove('auth-locked');document.getElementById('authUserBar').style.display='flex';document.getElementById('signedInLabel').textContent=(cached.full_name||cached.Username||'Student')+' • offline study mode';
+ startSATApp();return true;
+}
+function unlockSATApp(profile,user){
+ satCurrentUser=user;satCurrentProfile=profile;
+ try{localStorage.setItem(OFFLINE_PROFILE_KEY,JSON.stringify({Username:profile.Username||'',full_name:profile.full_name||'',Status:'approved',role:'student',Permissions:{}}));}catch(e){}
+ applySATRoleUI(profile);document.body.classList.remove('auth-locked');document.getElementById('authUserBar').style.display='flex';document.getElementById('signedInLabel').textContent=(profile.full_name||profile.Username||user.email)+' • '+profile.role;startSATApp();
+}
 async function loadSATProfile(user){const {data,error}=await satSupabase.from('profiles').select('id,Username,full_name,role,Status,Permissions').eq('id',user.id).maybeSingle();if(error)throw error;return data;}
-async function checkSATUser(user){if(!user){satCurrentUser=null;satCurrentProfile=null;lockSATApp();return;}satCurrentUser=user;try{const profile=await loadSATProfile(user);if(!profile){lockSATApp('Your account profile was not found. Please contact the Main Admin.','error');return;}if(profile.Status!=='approved'){const msg=profile.Status==='pending'?'Your student account is waiting for Main Admin approval. Please try signing in again after approval.':profile.Status==='rejected'?'Your registration was not approved. Please contact the Main Admin if you need help.':'Your account is not currently active. Please contact the Main Admin.';satCurrentUser=user;satCurrentProfile=profile;lockSATApp(msg,'info');return;}if(!['student','main_admin','additional_admin'].includes(profile.role)){lockSATApp('This account does not have an allowed SAT EXCELLENCE role. Contact the Main Admin.','error');return;}unlockSATApp(profile,user);}catch(err){console.error('Profile check failed:',err);lockSATApp('We could not verify your account profile. Check your internet connection and try again. Details: '+(err.message||'Unknown error'),'error');}}
+async function checkSATUser(user){
+ if(!user){satCurrentUser=null;satCurrentProfile=null;if(!navigator.onLine&&unlockOfflineStudent())return;lockSATApp();return;}
+ satCurrentUser=user;
+ try{
+  const profile=await loadSATProfile(user);
+  if(!profile){lockSATApp('Your account profile was not found. Please contact the Main Admin.','error');return;}
+  if(profile.Status!=='approved'){const msg=profile.Status==='pending'?'Your student account is waiting for Main Admin approval. Please try signing in again after approval.':profile.Status==='rejected'?'Your registration was not approved. Please contact the Main Admin if you need help.':'Your account is not currently active. Please contact the Main Admin.';satCurrentUser=user;satCurrentProfile=profile;lockSATApp(msg,'info');return;}
+  if(!['student','main_admin','additional_admin'].includes(profile.role)){lockSATApp('This account does not have an allowed SAT EXCELLENCE role. Contact the Main Admin.','error');return;}
+  unlockSATApp(profile,user);
+ }catch(err){console.error('Profile check failed:',err);if(unlockOfflineStudent())return;lockSATApp('We could not verify your account profile. Check your internet connection and try again. Details: '+(err.message||'Unknown error'),'error');}
+}
 document.getElementById('loginForm').addEventListener('submit',async e=>{e.preventDefault();const btn=document.getElementById('loginSubmit');btn.disabled=true;btn.textContent='Signing in…';try{const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value;const {data,error}=await satSupabase.auth.signInWithPassword({email,password});if(error)throw error;await checkSATUser(data.user);}catch(err){authMessage(err.message||'Sign in failed. Please check your details.','error');}finally{btn.disabled=false;btn.textContent='Sign in';}});
 document.getElementById('registerForm').addEventListener('submit',async e=>{e.preventDefault();const btn=document.getElementById('registerSubmit');btn.disabled=true;btn.textContent='Creating account…';try{const full_name=document.getElementById('registerName').value.trim(),username=document.getElementById('registerUsername').value.trim(),email=document.getElementById('registerEmail').value.trim(),password=document.getElementById('registerPassword').value,password2=document.getElementById('registerPassword2').value;if(!/^[A-Za-z0-9_]{3,30}$/.test(username))throw new Error('Username must be 3–30 characters: letters, numbers, or underscore.');if(password!==password2)throw new Error('The two passwords do not match.');const {data,error}=await satSupabase.auth.signUp({email,password,options:{data:{username,full_name}}});if(error)throw error;if(data.session&&data.user){await checkSATUser(data.user);}else{showAuthMode('login');authMessage('Registration submitted. Check your email for confirmation if required. Your profile is pending Main Admin approval. After confirming your email, sign in to check your approval status.','success');}}catch(err){authMessage(err.message||'Registration failed. Please try again.','error');}finally{btn.disabled=false;btn.textContent='Create student account';}});
-async function satSignOut(){try{const {error}=await satSupabase.auth.signOut();if(error)throw error;}catch(err){alert('Sign out failed: '+(err.message||'Unknown error'));return;}satCurrentUser=null;satCurrentProfile=null;lockSATApp('You have signed out.','success');}
-async function initSATAuthentication(){try{if(!window.supabase||!window.supabase.createClient){lockSATApp('The sign-in service could not load. Check your internet connection and refresh this page.','error');return;}satSupabase=window.supabase.createClient(SAT_SUPABASE_URL,SAT_SUPABASE_PUBLISHABLE_KEY);const {data:{session},error}=await satSupabase.auth.getSession();if(error)throw error;await checkSATUser(session?.user||null);satSupabase.auth.onAuthStateChange((_event,newSession)=>{setTimeout(()=>checkSATUser(newSession?.user||null),0);});}catch(err){console.error('Authentication initialization failed:',err);lockSATApp('Could not initialize sign in. Check your connection and refresh. '+(err.message||''),'error');}}
+async function satSignOut(){if(!satCurrentUser){try{localStorage.removeItem(OFFLINE_PROFILE_KEY)}catch(e){}satCurrentProfile=null;lockSATApp('Offline study mode ended.','success');return;}try{const {error}=await satSupabase.auth.signOut();if(error)throw error;}catch(err){alert('Sign out failed: '+(err.message||'Unknown error'));return;}satCurrentUser=null;satCurrentProfile=null;try{localStorage.removeItem(OFFLINE_PROFILE_KEY)}catch(e){}lockSATApp('You have signed out.','success');}
+async function initSATAuthentication(){try{if(!window.supabase||!window.supabase.createClient){if(unlockOfflineStudent())return;lockSATApp('The sign-in service could not load. Connect to the internet and refresh this page.','error');return;}satSupabase=window.supabase.createClient(SAT_SUPABASE_URL,SAT_SUPABASE_PUBLISHABLE_KEY);const {data:{session},error}=await satSupabase.auth.getSession();if(error)throw error;await checkSATUser(session?.user||null);satSupabase.auth.onAuthStateChange((_event,newSession)=>{setTimeout(()=>checkSATUser(newSession?.user||null),0);});}catch(err){console.error('Authentication initialization failed:',err);if(unlockOfflineStudent())return;lockSATApp('Could not initialize sign in. Check your connection and refresh. '+(err.message||''),'error');}}
 initSATAuthentication();
 </script>
 
@@ -1089,5 +1276,54 @@ document.querySelectorAll('[data-password-target]').forEach(button=>{
  });
 });
 </script>
+
+<script>
+const SAT_SETTINGS_KEY='sat_excellence_settings_v1';
+const SAT_DEFAULT_SETTINGS={theme:'light',fontSize:15,lineSpacing:1.5,layout:'comfortable',examMinutes:30,explanations:'show',highContrast:false,reduceMotion:false,examGrid:true};
+let satUserSettings=loadUserSettings();
+function loadUserSettings(){try{return {...SAT_DEFAULT_SETTINGS,...JSON.parse(localStorage.getItem(SAT_SETTINGS_KEY)||'{}')}}catch(e){return {...SAT_DEFAULT_SETTINGS}}}
+function saveUserSettings(){try{localStorage.setItem(SAT_SETTINGS_KEY,JSON.stringify(satUserSettings));applyUserSettings();const status=document.getElementById('settingsSaved');if(status)status.textContent='Preferences saved automatically.';}catch(e){const status=document.getElementById('settingsSaved');if(status)status.textContent='Could not save preferences. Check available device storage.';}}
+function applyUserSettings(){
+ const s=satUserSettings,body=document.body;
+ const systemDark=s.theme==='system'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+ body.classList.toggle('dark-theme',s.theme==='dark'||systemDark);
+ body.classList.toggle('compact-layout',s.layout==='compact');
+ body.classList.toggle('hide-explanations',s.explanations==='hide');
+ body.classList.toggle('high-contrast',!!s.highContrast);
+ body.classList.toggle('reduce-motion',!!s.reduceMotion);
+ body.classList.toggle('hide-exam-grid',!s.examGrid);
+ body.style.fontSize=Number(s.fontSize||15)+'px';
+ document.documentElement.style.setProperty('--reading-line-height',String(s.lineSpacing||1.5));
+ const timerInput=document.getElementById('timerMinutes');if(timerInput&&!timerInput.dataset.userEdited)timerInput.value=String(s.examMinutes||30);
+ const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=body.classList.contains('dark-theme')?'#0B1224':'#172554';
+}
+function renderSettingsPanel(){
+ const map={settingTheme:'theme',settingFont:'fontSize',settingLine:'lineSpacing',settingLayout:'layout',settingExamMinutes:'examMinutes',settingExplanations:'explanations',settingHighContrast:'highContrast',settingReduceMotion:'reduceMotion',settingExamGrid:'examGrid'};
+ for(const [id,key] of Object.entries(map)){const el=document.getElementById(id);if(!el)continue;if(el.type==='checkbox')el.checked=!!satUserSettings[key];else el.value=String(satUserSettings[key]);}
+ const account=document.getElementById('settingsAccount');if(account)account.textContent=satCurrentProfile?(satCurrentProfile.full_name||satCurrentProfile.Username||satCurrentUser?.email||'Signed in')+' • '+satCurrentProfile.role:'Sign in to view your account information.';
+ updateConnectionStatus();if(window.updateSharedSyncStatus)updateSharedSyncStatus();applyUserSettings();
+}
+function updateConnectionStatus(){const el=document.getElementById('connectionStatus');if(!el)return;const online=navigator.onLine;el.textContent=online?'You are online.':'You are offline. Your locally saved study data remains available.';el.className=online?'notice':'notice';const sync=document.getElementById('syncStatus');if(sync)sync.textContent=satSupabase&&satCurrentUser?(online?'Account connected. Shared-data sync status will update after the shared-data module is active.':'Shared data will sync when the connection returns.'):'Sign in and connect to the internet to access shared account features.';}
+function resetUserSettings(){if(!confirm('Reset all display and study preferences to their defaults?'))return;satUserSettings={...SAT_DEFAULT_SETTINGS};saveUserSettings();renderSettingsPanel();}
+async function changeAccountPassword(){
+ const password=document.getElementById('settingsNewPassword')?.value||'';
+ const confirmPassword=document.getElementById('settingsConfirmPassword')?.value||'';
+ const status=document.getElementById('passwordChangeStatus');
+ if(!satSupabase||!satCurrentUser||!navigator.onLine){if(status)status.textContent='Sign in online before changing your password.';return;}
+ if(password.length<8){if(status)status.textContent='Use at least 8 characters.';return;}
+ if(password!==confirmPassword){if(status)status.textContent='The two passwords do not match.';return;}
+ try{const {error}=await satSupabase.auth.updateUser({password});if(error)throw error;document.getElementById('settingsNewPassword').value='';document.getElementById('settingsConfirmPassword').value='';if(status)status.textContent='Password updated successfully.';}
+ catch(error){if(status)status.textContent='Could not update password: '+(error.message||'Unknown error');}
+}
+for(const [id,key] of Object.entries({settingTheme:'theme',settingFont:'fontSize',settingLine:'lineSpacing',settingLayout:'layout',settingExamMinutes:'examMinutes',settingExplanations:'explanations',settingHighContrast:'highContrast',settingReduceMotion:'reduceMotion',settingExamGrid:'examGrid'})){
+ const el=document.getElementById(id);if(!el)continue;el.addEventListener('change',()=>{satUserSettings[key]=el.type==='checkbox'?el.checked:el.value;saveUserSettings();});
+}
+window.addEventListener('online',updateConnectionStatus);window.addEventListener('offline',updateConnectionStatus);
+if(window.matchMedia){window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{if(satUserSettings.theme==='system')applyUserSettings();});}
+document.getElementById('timerMinutes')?.addEventListener('input',e=>{e.target.dataset.userEdited='true';});
+applyUserSettings();updateConnectionStatus();
+</script>
+<script src="./collections.js"></script>
+<script src="./shared-data.js"></script>
 </body>
 </html>
