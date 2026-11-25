@@ -55,7 +55,8 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
 .auth-message.info{display:block;background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
 .auth-message.error{display:block;background:#fff1f2;border:1px solid #fecdd3;color:#9f1239}
 .auth-message.success{display:block;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
-.auth-userbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 14px;background:#eaf0ff;border-bottom:1px solid var(--line);font-size:13px}
+.auth-message.success{display:block;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}.admin-management-message{margin:14px 0 0;padding:12px 14px;border-radius:10px;border:1px solid var(--line);font-size:14px;font-weight:650}.admin-management-message.info{background:#eff6ff;border-color:#bfdbfe;color:#1e40af}.admin-management-message.success{background:#f0fdf4;border-color:#bbf7d0;color:#166534}.admin-management-message.error{background:#fff1f2;border-color:#fecdd3;color:#9f1239}
+ .auth-userbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 14px;background:#eaf0ff;border-bottom:1px solid var(--line);font-size:13px}
 
 .password-wrap{display:flex;align-items:stretch;gap:7px}.password-wrap input{flex:1;min-width:0}.password-toggle{flex:0 0 auto;min-width:66px;border:1px solid #cfd5df;border-radius:9px;background:#f8fafc;color:#1e3a8a;padding:8px 12px;font:inherit;font-weight:650}.password-toggle:focus-visible{outline:3px solid #93c5fd;outline-offset:2px}
 </style>
@@ -141,7 +142,7 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
    <div class="stat"><strong id="adminManagementTotal">—</strong><span class="muted">Accounts listed</span></div>
   </div>
   <div class="actions"><button class="primary" type="button" id="refreshAdminManagement">Refresh accounts</button></div>
-  <p class="muted" id="adminManagementMessage" role="status" aria-live="polite">Open this tab to load accounts.</p>
+  <p class="admin-management-message info" id="adminManagementMessage" role="status" aria-live="polite">Open this tab to load accounts.</p>
  </div>
  <div id="adminManagementList"></div>
 </section>
@@ -980,7 +981,7 @@ const ADMIN_PERMISSION_LABELS=[
 ];
 function adminManagementMessage(message,type='info'){
  const el=document.getElementById('adminManagementMessage');if(!el)return;
- el.textContent=message;el.style.color=type==='error'?'#b91c1c':type==='success'?'#15803d':'';
+  el.className='admin-management-message '+type;el.textContent=message;
 }
 function adminManagementButton(label,className,handler){
  const button=document.createElement('button');button.type='button';button.className=className;button.textContent=label;button.addEventListener('click',handler);return button;
