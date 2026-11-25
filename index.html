@@ -866,6 +866,7 @@ function applyImportPlan(plan){
 }
 document.getElementById('importFile').addEventListener('change',async e=>{
  const file=e.target.files[0];if(!file)return;
+ if(!satCan('add_questions')){alert('You do not have permission to import questions.');e.target.value='';return;}
  try{
   const raw=await file.text();let items,backupData=null;
   if(file.name.toLowerCase().endsWith('.csv'))items=parseCSV(raw);
@@ -914,7 +915,7 @@ function applySATRoleUI(profile){const isStudent=profile.role==='student';const 
  const setTab=(name,visible)=>{const b=document.querySelector('nav [data-tab="'+name+'"]');if(b)b.style.display=visible?'':'none';const panel=document.getElementById(name);if(panel)panel.style.display=visible?'':'none';};
  setTab('add',addAllowed);setTab('duplicates',duplicateAllowed);setTab('adminStudents',profile.role==='main_admin'||satCan('view_students'));setTab('adminManagement',profile.role==='main_admin');
  const submissionCards=document.querySelectorAll('#submissions > .card');if(submissionCards[1])submissionCards[1].style.display=reviewAllowed?'':'none';if(submissionCards[2])submissionCards[2].style.display=isStudent?'none':(reviewAllowed?'':'none');
- const homeCards=document.querySelectorAll('#home > .card');if(homeCards[2])homeCards[2].style.display=isStudent?'none':'';
+ const homeCards=document.querySelectorAll('#home > .card');if(homeCards[2])homeCards[2].style.display=addAllowed?'':'none';
  const exportAction=document.querySelector('#library .card .actions');if(exportAction)exportAction.style.display=isStudent?'none':'';
 }
 function adminStudentsMessage(message,type='info'){
