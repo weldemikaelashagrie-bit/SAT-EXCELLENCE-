@@ -269,7 +269,8 @@ body.auth-locked header,body.auth-locked nav,body.auth-locked main,body.auth-loc
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const ACTIVE_EXAM_KEY='sat_excellence_active_exam_v1';
-const KEY='sat_excellence_questions_v1', SCORE_KEY='sat_excellence_scores_v1', SUB_KEY='sat_excellence_submissions_v1', MISTAKE_KEY='sat_excellence_mistakes_v1', MISTAKE_STATS_KEY='sat_excellence_mistake_stats_v1', BOOKMARK_KEY='sat_excellence_bookmarks_v1';
+let examLeaveReminderCount=0;
+ const KEY='sat_excellence_questions_v1', SCORE_KEY='sat_excellence_scores_v1', SUB_KEY='sat_excellence_submissions_v1', MISTAKE_KEY='sat_excellence_mistakes_v1', MISTAKE_STATS_KEY='sat_excellence_mistake_stats_v1', BOOKMARK_KEY='sat_excellence_bookmarks_v1';
 let questions=loadQuestions(), scoreHistory=loadScores(), submissions=loadSubmissions(), mistakeIds=loadMistakes(), mistakeStats=loadMistakeStats(), bookmarkIds=loadBookmarks(), duplicateGroups=[], selectedMistakeYear=null, selectedMistakePriority=null, filterState={library:{part:'',topic:'',year:''},practice:{part:'',topic:'',year:''}}, activeFilterContext=null, selectedLibraryYear=null, selectedPracticeYear=null, session=[], sessionIndex=0, score=0, timer=null, secondsLeft=0, elapsedSeconds=0, sessionAnswers=[], editingId=null, sessionMode='immediate', resultReviewItems=[], resultReviewFilter='all';
 function loadQuestions(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
 function loadScores(){try{return JSON.parse(localStorage.getItem(SCORE_KEY)||'[]')}catch(e){return []}}
