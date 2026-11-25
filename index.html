@@ -1029,7 +1029,7 @@ function renderAdminManagement(rows){
    try{
     const {error}=await satSupabase.rpc('set_additional_admin_permissions',{target_user_id:admin.id,new_permissions:permissions});
     if(error)throw error;
-    adminManagementMessage('Permissions saved.','success');await loadAdminManagement();
+    await loadAdminManagement('Permissions saved and updated permissions are displayed.');
    }catch(err){console.error('Permission update failed:',err);adminManagementMessage('Could not save permissions: '+(err.message||'Unknown error'),'error');save.disabled=false;}
   });
   if(admin.Status!=='approved')save.disabled=true;
@@ -1037,7 +1037,7 @@ function renderAdminManagement(rows){
   actions.append(save,demote);card.append(actions);list.append(card);
  });
 }
-async function loadAdminManagement(){
+async function loadAdminManagement(successMessage=null){
  if(!satSupabase||satCurrentProfile?.role!=='main_admin')return;
  const refresh=document.getElementById('refreshAdminManagement');if(refresh)refresh.disabled=true;
  adminManagementMessage('Loading accounts…');
@@ -1045,7 +1045,7 @@ async function loadAdminManagement(){
   const {data,error}=await satSupabase.from('profiles').select('id,Username,full_name,role,Status,Permissions').in('role',['student','additional_admin']);
   if(error)throw error;
   const rows=(data||[]).sort((a,b)=>String(a.role).localeCompare(String(b.role))||String(a.Status).localeCompare(String(b.Status))||String(a.Username||'').localeCompare(String(b.Username||'')));
-  renderAdminManagement(rows);adminManagementMessage('Account list updated.','success');
+  renderAdminManagement(rows);adminManagementMessage(successMessage||'Account list updated.','success');
  }catch(err){console.error('Could not load admin accounts:',err);adminManagementMessage('Could not load accounts: '+(err.message||'Unknown error')+'. Check the Main Admin profiles SELECT policy.','error');}
  finally{if(refresh)refresh.disabled=false;}
 }
