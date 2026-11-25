@@ -118,6 +118,7 @@ body{line-height:var(--reading-line-height,1.5)}
  <div id="authMessage" class="auth-message" role="status" aria-live="polite"></div>
  <form id="loginForm"><label for="loginEmail">Email address</label><input id="loginEmail" type="email" autocomplete="email" required><label for="loginPassword">Password</label><div class="password-wrap"><input id="loginPassword" type="password" autocomplete="current-password" required><button class="password-toggle" type="button" data-password-target="loginPassword" aria-label="Show password">Show</button></div><div class="actions"><button class="primary" type="submit" id="loginSubmit">Sign in</button></div></form>
  <form id="registerForm" style="display:none"><label for="registerName">Full name</label><input id="registerName" autocomplete="name" required maxlength="100"><label for="registerUsername">Username</label><input id="registerUsername" autocomplete="username" required minlength="3" maxlength="30" pattern="[A-Za-z0-9_]+" placeholder="Letters, numbers, underscore"><label for="registerEmail">Email address</label><input id="registerEmail" type="email" autocomplete="email" required><label for="registerPassword">Create password</label><div class="password-wrap"><input id="registerPassword" type="password" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-target="registerPassword" aria-label="Show password">Show</button></div><label for="registerPassword2">Confirm password</label><div class="password-wrap"><input id="registerPassword2" type="password" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-target="registerPassword2" aria-label="Show password">Show</button></div><div class="actions"><button class="primary" type="submit" id="registerSubmit">Create student account</button></div><p class="muted">Registration creates a student account with pending approval. You cannot register as an administrator.</p></form>
+ <div class="contact-details" aria-label="Contact SAT EXCELLENCE"><h3>Contact Us</h3><p class="muted">Phone: <a href="tel:0947568575">0947568575</a></p><p class="muted">Telegram: <a href="https://t.me/weldemikael_12" target="_blank" rel="noopener noreferrer">@weldemikael_12</a></p></div>
  </div></div>
 
 <header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.35</p></header>
@@ -148,6 +149,7 @@ body{line-height:var(--reading-line-height,1.5)}
    <div class="actions"><button class="primary" type="button" onclick="switchTab('practice')">Start practising</button><button class="secondary" type="button" onclick="switchTab('library')">Explore question bank</button></div>
    <div class="home-quote">“Small, consistent efforts create exceptional results.”</div>
   </div>
+  <div class="card"><div class="contact-details" aria-label="Contact SAT EXCELLENCE"><h3>Contact Us</h3><p class="muted">Phone: <a href="tel:0947568575">0947568575</a></p><p class="muted">Telegram: <a href="https://t.me/weldemikael_12" target="_blank" rel="noopener noreferrer">@weldemikael_12</a></p></div></div>
   <div class="card">
    <div class="home-section-title"><h3>Your learning journey</h3><span class="muted">Keep building momentum</span></div>
    <div class="statgrid">
@@ -362,7 +364,7 @@ body{line-height:var(--reading-line-height,1.5)}
   <h3>Backup, restore and support</h3>
   <p class="muted">Create a backup before changing devices or clearing browser data. Restoring a backup merges records and skips duplicates.</p>
   <div class="actions" id="settingsBackupActions"><button type="button" class="primary" onclick="exportJSON()">Create backup</button><button type="button" class="secondary" onclick="document.getElementById('importFile').click()">Restore from file</button></div><div class="actions"><button type="button" class="secondary" onclick="switchTab('home')">Help and home</button></div>
-  <p class="muted">SAT EXCELLENCE V2.34 • ESSLCE SAT practice</p>
+  <p class="muted">SAT EXCELLENCE V2.35 • ESSLCE SAT practice</p>
   <button type="button" class="danger" onclick="resetUserSettings()">Reset preferences to defaults</button>
  </div>
 </section>
