@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>SAT EXCELLENCE v2.34</title>
+<title>SAT EXCELLENCE v2.35</title>
 <style>
 :root{--navy:#172554;--blue:#2563eb;--bg:#f4f6fb;--card:#fff;--ink:#172033;--muted:#475569;--line:#d7deea;--green:#15803d;--red:#b91c1c}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -35,7 +35,8 @@ button:disabled{opacity:.45}
 .progress-chart{display:flex;align-items:flex-end;gap:10px;min-height:190px;padding:18px 8px 4px;border-bottom:1px solid var(--line);overflow-x:auto}.progress-point{flex:1;min-width:42px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:7px;height:160px}.progress-value{font-size:11px;font-weight:700;color:var(--text)}.progress-bar-wrap{height:120px;width:100%;display:flex;align-items:flex-end;justify-content:center}.progress-bar{width:min(34px,75%);min-height:3px;background:var(--blue);border-radius:6px 6px 0 0}.progress-date{font-size:10px;color:var(--muted);white-space:nowrap}.chart-empty{padding:22px;text-align:center;color:var(--muted);font-size:13px}
 .question{border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0;background:#fff}
 .qmeta{color:var(--muted);font-size:12px;margin-bottom:7px}.qhead{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}.qnumber{flex:0 0 34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#dbeafe;color:#1d4ed8;font-weight:800;font-size:15px}.qbody{flex:1;min-width:0}.option{display:block;padding:10px;border:1px solid var(--line);border-radius:9px;margin:8px 0;font-weight:400}
-.option input{width:auto;margin:0 0 0 9px;vertical-align:middle}.option input[type="radio"]{accent-color:#16a34a}.option-letter{display:inline;font-weight:800;font-size:14px;color:var(--text);margin-right:0;vertical-align:middle}.option.exam-selected{background:transparent;border:1px solid var(--line);color:inherit;font-weight:400}.correct{border-color:#86efac;background:#f0fdf4}.incorrect{border-color:#fda4af;background:#fff1f2}
+.option input{width:auto;margin:0 0 0 9px;vertical-align:middle}.option input[type="radio"]{accent-color:#16a34a}.option-letter{display:inline;font-weight:800;font-size:14px;color:var(--text);margin-right:0;vertical-align:middle}.option.exam-selected,.option.selected{background:#dbeafe;border:2px solid #2563eb;color:#1e3a8a;font-weight:650;box-shadow:0 0 0 2px #2563eb22}.correct,.option.correct{border-color:#16a34a;background:#dcfce7;color:#14532d}.incorrect,.option.incorrect{border-color:#e11d48;background:#ffe4e6;color:#9f1239}.qbody>strong,.question>h3,.option{font-size:var(--reading-font-size,15px);line-height:var(--reading-line-height,1.5)}
+body.dark-theme .option.exam-selected,body.dark-theme .option.selected{background:#203d70;border:2px solid #93c5fd;color:#eff6ff;box-shadow:0 0 0 2px #93c5fd33}body.dark-theme .correct,body.dark-theme .option.correct{background:#123b32;border-color:#4ade80;color:#dcfce7}body.dark-theme .incorrect,body.dark-theme .option.incorrect{background:#4a2030;border-color:#fb7185;color:#ffe4e6}
 .notice{padding:11px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;color:#1e40af;font-size:13px}
 .explanation-block{margin:12px 0 0;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#f8fafc}.explanation-block h4{font-size:13px;margin:0 0 5px;color:#1e40af}.explanation-block p{margin:0;white-space:pre-wrap;line-height:1.6}.explanation-section{margin-top:10px}.explanation-section:first-child{margin-top:0}
 .empty{text-align:center;padding:25px;color:var(--muted)}
@@ -119,7 +120,7 @@ body{line-height:var(--reading-line-height,1.5)}
  <form id="registerForm" style="display:none"><label for="registerName">Full name</label><input id="registerName" autocomplete="name" required maxlength="100"><label for="registerUsername">Username</label><input id="registerUsername" autocomplete="username" required minlength="3" maxlength="30" pattern="[A-Za-z0-9_]+" placeholder="Letters, numbers, underscore"><label for="registerEmail">Email address</label><input id="registerEmail" type="email" autocomplete="email" required><label for="registerPassword">Create password</label><div class="password-wrap"><input id="registerPassword" type="password" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-target="registerPassword" aria-label="Show password">Show</button></div><label for="registerPassword2">Confirm password</label><div class="password-wrap"><input id="registerPassword2" type="password" autocomplete="new-password" minlength="8" required><button class="password-toggle" type="button" data-password-target="registerPassword2" aria-label="Show password">Show</button></div><div class="actions"><button class="primary" type="submit" id="registerSubmit">Create student account</button></div><p class="muted">Registration creates a student account with pending approval. You cannot register as an administrator.</p></form>
  </div></div>
 
-<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.34</p></header>
+<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.35</p></header>
 <div class="auth-userbar" id="authUserBar" style="display:none"><span id="signedInLabel"></span><button class="secondary" type="button" onclick="satSignOut()">Sign out</button></div>
 <nav>
 <button class="active" data-tab="home">Home</button>
@@ -202,6 +203,7 @@ body{line-height:var(--reading-line-height,1.5)}
  <div class="card">
   <h2>Question bank</h2>
   <p class="muted">Choose an examination year to browse its questions. Years are arranged from newest to oldest, with English before Mathematics.</p>
+  <div class="notice" role="status" aria-live="polite"><strong>More questions are on the way!</strong><br>SAT EXCELLENCE is growing. More examination questions from additional years are being prepared and will be added to the Question Bank as they become available. Keep checking back for new questions and updates. Thank you for learning with SAT EXCELLENCE!</div>
   <label for="searchBox">Search question text</label><input id="searchBox" placeholder="Search questions…">
   <p class="muted" id="libraryCount">0 questions</p>
  </div>
@@ -774,7 +776,7 @@ function renderExamReview(){
 function checkImmediate(i){
  if(sessionAnswers.some(a=>a.index===i))return;
  let chosen=document.querySelector('input[name="practiceAnswer'+i+'"]:checked');if(!chosen)return;
- let q=session[i],n=Number(chosen.value),correct=q.answer>=0&&n===q.answer;chosen.closest('label.option')?.classList.add('selected');if(correct)score++;
+ let q=session[i],n=Number(chosen.value),correct=q.answer>=0&&n===q.answer;const chosenLabel=chosen.closest('label.option');chosenLabel?.classList.add('selected');if(correct){chosenLabel?.classList.add('correct');score++;}else chosenLabel?.classList.add('incorrect');
  sessionAnswers.push({index:i,id:q.id,chosen:n,correct});if(!correct)addMistake(q.id);
  let fb=document.getElementById('feedback'+i);if(fb)fb.innerHTML=(correct?'<span style="color:var(--green);font-weight:700">Correct.</span>':'<span style="color:var(--red);font-weight:700">Incorrect. Correct answer: '+String.fromCharCode(65+q.answer)+'.</span>')+renderExplanation(q);
  document.querySelectorAll('input[name="practiceAnswer'+i+'"]').forEach(x=>x.disabled=true);
@@ -1047,22 +1049,24 @@ function parseCSV(s){
  let headers=rows.shift().map(h=>h.trim().toLowerCase());
  return rows.map(r=>{let o={};headers.forEach((h,i)=>o[h]=(r[i]||'').trim());return o});
 }
-let satAppStarted=false;
+let satAppStartedFor=null;
 async function startSATApp(){
- if(satAppStarted)return;
- satAppStarted=true;
+ const ownerId=satCurrentUser?.id||'offline-device';
+ if(satAppStartedFor===ownerId)return;
+ satAppStartedFor=ownerId;
+ if(timer){clearInterval(timer);timer=null;}
+ session=[];sessionIndex=0;sessionAnswers=[];score=0;sessionMode='immediate';
+ if(window.switchCollectionDraftAccount)window.switchCollectionDraftAccount();
  initEntryForms();updatePracticeModeButtons();
- // Show the local app immediately; shared sync must never hold the study interface hostage.
- renderAll();restoreActiveExam();
- (async()=>{
-  try{
-   if(window.loadSharedQuestions)await loadSharedQuestions();
-   if(window.loadStudentWorkspace)await loadStudentWorkspace();
-   renderAll();
-   if(!session.length)restoreActiveExam();
-   if(window.loadSharedSubmissions)await loadSharedSubmissions();
-  }catch(error){console.warn('Shared data could not be loaded; using saved local data.',error);}
- })();
+ renderAll();
+ try{
+  if(window.loadSharedQuestions)await loadSharedQuestions();
+  if(window.loadStudentWorkspace)await loadStudentWorkspace();
+  renderAll();
+  restoreActiveExam();
+  if(window.loadSharedSubmissions)await loadSharedSubmissions();
+  if(window.loadAnnualCollections)await loadAnnualCollections(false);
+ }catch(error){console.warn('Shared data could not be loaded; using saved local data.',error);}
 }
 
 // Register the offline app service worker when served from HTTPS or localhost.
@@ -1075,6 +1079,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
 const SAT_SUPABASE_URL='https://wajqbceftdfufktqyauu.supabase.co';
 const SAT_SUPABASE_PUBLISHABLE_KEY='sb_publishable_VuakXINvqkF_3jb2uTNY3w_MhrgGBCb';
 let satSupabase=null,satCurrentUser=null,satCurrentProfile=null;
+let satAuthCheckGeneration=0;
 function authMessage(message,type='info'){const el=document.getElementById('authMessage');el.className='auth-message '+type;el.textContent=message;}
 function showAuthMode(mode){document.getElementById('loginForm').style.display=mode==='login'?'block':'none';document.getElementById('registerForm').style.display=mode==='register'?'block':'none';document.getElementById('showLoginBtn').className=mode==='login'?'primary':'secondary';document.getElementById('showRegisterBtn').className=mode==='register'?'primary':'secondary';document.getElementById('authMessage').className='auth-message';}
 function lockSATApp(message,type='info'){document.body.classList.add('auth-locked');document.getElementById('authUserBar').style.display=satCurrentUser?'flex':'none';if(satCurrentUser)document.getElementById('signedInLabel').textContent=(satCurrentProfile?.full_name||satCurrentProfile?.Username||satCurrentUser.email)+' • awaiting access';if(message)authMessage(message,type);}
@@ -1235,30 +1240,32 @@ document.getElementById('refreshAdminManagement')?.addEventListener('click',load
 const OFFLINE_PROFILE_KEY='sat_excellence_offline_student_profile_v1';
 function unlockOfflineStudent(){
  let cached=null;try{cached=JSON.parse(localStorage.getItem(OFFLINE_PROFILE_KEY)||'null')}catch(e){}
- if(!cached||cached.Status!=='approved')return false;
+ if(!cached||cached.Status!=='approved'||cached.role!=='student'||!cached.id)return false;
  satCurrentUser=null;satCurrentProfile={...cached,role:'student',Status:'approved',Permissions:{}};
  applySATRoleUI(satCurrentProfile);document.body.classList.remove('auth-locked');document.getElementById('authUserBar').style.display='flex';document.getElementById('signedInLabel').textContent=(cached.full_name||cached.Username||'Student')+' • offline study mode';
  startSATApp();return true;
 }
 function unlockSATApp(profile,user){
  satCurrentUser=user;satCurrentProfile=profile;
- try{localStorage.setItem(OFFLINE_PROFILE_KEY,JSON.stringify({Username:profile.Username||'',full_name:profile.full_name||'',Status:'approved',role:'student',Permissions:{}}));}catch(e){}
+ try{if(profile.role==='student')localStorage.setItem(OFFLINE_PROFILE_KEY,JSON.stringify({id:profile.id,Username:profile.Username||'',full_name:profile.full_name||'',Status:'approved',role:'student',Permissions:{}}));else localStorage.removeItem(OFFLINE_PROFILE_KEY);}catch(e){}
  applySATRoleUI(profile);document.body.classList.remove('auth-locked');document.getElementById('authUserBar').style.display='flex';document.getElementById('signedInLabel').textContent=(profile.full_name||profile.Username||user.email)+' • '+profile.role;startSATApp();
 }
 async function loadSATProfile(user){const {data,error}=await satSupabase.from('profiles').select('id,Username,full_name,role,Status,Permissions').eq('id',user.id).maybeSingle();if(error)throw error;return data;}
 async function checkSATUser(user){
- if(!user){satCurrentUser=null;satCurrentProfile=null;if(!navigator.onLine&&unlockOfflineStudent())return;lockSATApp();return;}
+ const generation=++satAuthCheckGeneration;
+ if(!user){satAppStartedFor=null;satCurrentUser=null;satCurrentProfile=null;if(!navigator.onLine&&unlockOfflineStudent())return;lockSATApp();return;}
  satCurrentUser=user;
  try{
   const profile=await loadSATProfile(user);
-  if(!profile){lockSATApp('Your account profile was not found. Please contact the Main Admin.','error');return;}
+  if(generation!==satAuthCheckGeneration)return;
+  if(!profile){satCurrentUser=null;satCurrentProfile=null;lockSATApp('Your account profile was not found. Please contact the Main Admin.','error');return;}
   if(profile.Status!=='approved'){const msg=profile.Status==='pending'?'Your student account is waiting for Main Admin approval. Please try signing in again after approval.':profile.Status==='rejected'?'Your registration was not approved. Please contact the Main Admin if you need help.':'Your account is not currently active. Please contact the Main Admin.';satCurrentUser=user;satCurrentProfile=profile;lockSATApp(msg,'info');return;}
   if(!['student','main_admin','additional_admin'].includes(profile.role)){lockSATApp('This account does not have an allowed SAT EXCELLENCE role. Contact the Main Admin.','error');return;}
   unlockSATApp(profile,user);
- }catch(err){console.error('Profile check failed:',err);if(unlockOfflineStudent())return;lockSATApp('We could not verify your account profile. Check your internet connection and try again. Details: '+(err.message||'Unknown error'),'error');}
+ }catch(err){if(generation!==satAuthCheckGeneration)return;console.error('Profile check failed:',err);if(!navigator.onLine&&unlockOfflineStudent())return;lockSATApp('We could not verify your account profile. Check your internet connection and try again. Details: '+(err.message||'Unknown error'),'error');}
 }
 document.getElementById('loginForm').addEventListener('submit',async e=>{e.preventDefault();const btn=document.getElementById('loginSubmit');btn.disabled=true;btn.textContent='Signing in…';try{const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value;const {data,error}=await satSupabase.auth.signInWithPassword({email,password});if(error)throw error;await checkSATUser(data.user);}catch(err){authMessage(err.message||'Sign in failed. Please check your details.','error');}finally{btn.disabled=false;btn.textContent='Sign in';}});
-document.getElementById('registerForm').addEventListener('submit',async e=>{e.preventDefault();const btn=document.getElementById('registerSubmit');btn.disabled=true;btn.textContent='Creating account…';try{const full_name=document.getElementById('registerName').value.trim(),username=document.getElementById('registerUsername').value.trim(),email=document.getElementById('registerEmail').value.trim(),password=document.getElementById('registerPassword').value,password2=document.getElementById('registerPassword2').value;if(!/^[A-Za-z0-9_]{3,30}$/.test(username))throw new Error('Username must be 3–30 characters: letters, numbers, or underscore.');if(password!==password2)throw new Error('The two passwords do not match.');const {data,error}=await satSupabase.auth.signUp({email,password,options:{data:{username,full_name}}});if(error)throw error;if(data.session&&data.user){await checkSATUser(data.user);}else{showAuthMode('login');authMessage('Registration submitted. Check your email for confirmation if required. Your profile is pending Main Admin approval. After confirming your email, sign in to check your approval status.','success');}}catch(err){authMessage(err.message||'Registration failed. Please try again.','error');}finally{btn.disabled=false;btn.textContent='Create student account';}});
+document.getElementById('registerForm').addEventListener('submit',async e=>{e.preventDefault();const btn=document.getElementById('registerSubmit');btn.disabled=true;btn.textContent='Creating account…';try{const full_name=document.getElementById('registerName').value.trim(),username=document.getElementById('registerUsername').value.trim(),email=document.getElementById('registerEmail').value.normalize('NFKC').replace(/[\u200B-\u200D\uFEFF]/g,'').trim(),password=document.getElementById('registerPassword').value,password2=document.getElementById('registerPassword2').value;if(!/^[A-Za-z0-9_]{3,30}$/.test(username))throw new Error('Username must be 3–30 characters: letters, numbers, or underscore.');if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw new Error('Please enter a valid email address. Check for spaces or hidden characters.');if(password!==password2)throw new Error('The two passwords do not match.');const {data,error}=await satSupabase.auth.signUp({email,password,options:{data:{username,full_name}}});if(error)throw error;if(data.session&&data.user){await checkSATUser(data.user);}else{showAuthMode('login');authMessage('Registration submitted. Check your email for confirmation if required. Your profile is pending Main Admin approval. After confirming your email, sign in to check your approval status.','success');}}catch(err){const diagnostic=[err.code?'Code: '+err.code:'',err.status?'HTTP: '+err.status:''].filter(Boolean).join(' • ');authMessage((err.message||'Registration failed. Please try again.')+(diagnostic?' ('+diagnostic+')':''),'error');}finally{btn.disabled=false;btn.textContent='Create student account';}});
 async function satSignOut(){if(!satCurrentUser){try{localStorage.removeItem(OFFLINE_PROFILE_KEY)}catch(e){}satCurrentProfile=null;lockSATApp('Offline study mode ended.','success');return;}try{const {error}=await satSupabase.auth.signOut();if(error)throw error;}catch(err){alert('Sign out failed: '+(err.message||'Unknown error'));return;}satCurrentUser=null;satCurrentProfile=null;try{localStorage.removeItem(OFFLINE_PROFILE_KEY)}catch(e){}lockSATApp('You have signed out.','success');}
 async function initSATAuthentication(){try{if(!window.supabase||!window.supabase.createClient){if(unlockOfflineStudent())return;lockSATApp('The sign-in service could not load. Connect to the internet and refresh this page.','error');return;}satSupabase=window.supabase.createClient(SAT_SUPABASE_URL,SAT_SUPABASE_PUBLISHABLE_KEY);const {data:{session},error}=await satSupabase.auth.getSession();if(error)throw error;await checkSATUser(session?.user||null);satSupabase.auth.onAuthStateChange((_event,newSession)=>{setTimeout(()=>checkSATUser(newSession?.user||null),0);});}catch(err){console.error('Authentication initialization failed:',err);if(unlockOfflineStudent())return;lockSATApp('Could not initialize sign in. Check your connection and refresh. '+(err.message||''),'error');}}
 initSATAuthentication();
@@ -1293,6 +1300,7 @@ function applyUserSettings(){
  body.classList.toggle('reduce-motion',!!s.reduceMotion);
  body.classList.toggle('hide-exam-grid',!s.examGrid);
  body.style.fontSize=Number(s.fontSize||15)+'px';
+ document.documentElement.style.setProperty('--reading-font-size',Number(s.fontSize||15)+'px');
  document.documentElement.style.setProperty('--reading-line-height',String(s.lineSpacing||1.5));
  const timerInput=document.getElementById('timerMinutes');if(timerInput&&!timerInput.dataset.userEdited)timerInput.value=String(s.examMinutes||30);
  const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=body.classList.contains('dark-theme')?'#0B1224':'#172554';

@@ -1,4 +1,4 @@
-# SAT EXCELLENCE V2.34 — Release Candidate
+# SAT EXCELLENCE V2.35 — Release Candidate
 
 This package builds on the recovered V2.33 application and preserves the later GitHub fixes already present in `v2-development`.
 
@@ -7,10 +7,10 @@ This package builds on the recovered V2.33 application and preserves the later G
 - `index.html` — main application, authentication, practice, question bank, administration, settings, and home screen.
 - `collections.js` — private annual collection drafts, readiness, review, and manual publishing workflow.
 - `shared-data.js` — Supabase question/submission sync, student progress sync, and offline queues.
-- `sw.js` — V2.34 app-shell cache and cached Supabase client support.
+- `sw.js` — V2.35 app-shell cache and cached Supabase client support.
 - `manifest.webmanifest` — installable PWA metadata.
 - `icon-192.png`, `icon-512.png`, `icon-512-maskable.png` — existing application icons.
-- `supabase_v234_migration.sql` — additive database migration required for V2.34 shared data.
+- `supabase_v234_migration.sql` — additive database migration required for V2.35 shared data.
 
 ## Required deployment order
 
@@ -35,7 +35,7 @@ This package builds on the recovered V2.33 application and preserves the later G
 
 - Existing local questions are retained. The first online sync merges the server bank into the existing local order rather than replacing the local list.
 - The migration adds a stable `display_order` value so new devices can retrieve the same stored question order. The library still displays English before Mathematics and preserves each part's order.
-- Existing local student progress is merged on the first V2.34 workspace sync. Later progress snapshots synchronize scores, mistakes, bookmarks, and resumable exams.
+- Existing local student progress is merged on the first V2.35 workspace sync. Later progress snapshots synchronize scores, mistakes, bookmarks, and resumable exams.
 - Offline submissions and question changes are kept locally and queued where the signed-in account is available. They synchronize when connectivity returns.
 - The app does not contain a Supabase service-role key. Database access uses the existing publishable key, RLS policies, and server-side RPC checks.
 

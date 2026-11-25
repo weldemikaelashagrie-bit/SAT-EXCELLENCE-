@@ -1,17 +1,26 @@
 /* SAT EXCELLENCE V2.34 — private annual collections */
 const COLLECTION_DRAFT_KEY = 'sat_excellence_collection_drafts_v1';
+let collectionDraftOwner = null;
 let collectionDrafts = loadCollectionDrafts();
 let collectionServerRows = [];
 const collectionSyncTimers = Object.create(null);
 
+function collectionDraftStorageKey() { return COLLECTION_DRAFT_KEY + '__' + (satCurrentUser?.id || 'offline-device'); }
+function switchCollectionDraftAccount() {
+  const owner = satCurrentUser?.id || 'offline-device';
+  if (collectionDraftOwner === owner) return;
+  for (const timer of Object.values(collectionSyncTimers)) clearTimeout(timer);
+  for (const key of Object.keys(collectionSyncTimers)) delete collectionSyncTimers[key];
+  collectionDraftOwner = owner; collectionDrafts = loadCollectionDrafts(); collectionServerRows = [];
+}
 function loadCollectionDrafts() {
   try {
-    const value = JSON.parse(localStorage.getItem(COLLECTION_DRAFT_KEY) || '{}');
+    const value = JSON.parse(localStorage.getItem(collectionDraftStorageKey()) || '{}');
     return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
   } catch (_) { return {}; }
 }
 function saveCollectionDrafts() {
-  try { localStorage.setItem(COLLECTION_DRAFT_KEY, JSON.stringify(collectionDrafts)); return true; }
+  try { localStorage.setItem(collectionDraftStorageKey(), JSON.stringify(collectionDrafts)); return true; }
   catch (error) { alert('Private collection drafts could not be saved. Create a backup and free device storage.'); return false; }
 }
 function collectionQuestionKey(question) {
@@ -39,17 +48,20 @@ function saveCollectionDraftQuestion(question) {
   return true;
 }
 function scheduleCollectionSync(year) {
+  const ownerId = satCurrentUser?.id;
+  if (!ownerId) return;
   if (collectionSyncTimers[year]) clearTimeout(collectionSyncTimers[year]);
-  collectionSyncTimers[year] = setTimeout(() => syncCollectionDraftYear(year), 400);
+  collectionSyncTimers[year] = setTimeout(() => syncCollectionDraftYear(year, ownerId), 400);
 }
-async function syncCollectionDraftYear(year) {
-  if (!satSupabase || !satCurrentUser || !satCan('add_questions') || !navigator.onLine) return false;
+async function syncCollectionDraftYear(year, expectedOwnerId = satCurrentUser?.id) {
+  if (!satSupabase || !satCurrentUser || satCurrentUser.id !== expectedOwnerId || !satCan('add_questions') || !navigator.onLine) return false;
   const local = collectionDrafts[year] || {questions: [], exam_completed: false, exam_completed_dirty: false};
   try {
     const {data, error} = await satSupabase.from('question_collections')
       .select('id,exam_year,questions,exam_completed,status,created_by,updated_at,ready_at,reviewed_at,published_at')
       .eq('exam_year', year).maybeSingle();
     if (error) throw error;
+    if (satCurrentUser?.id !== expectedOwnerId) return false;
     const row = data;
     if (row?.status === 'published') throw new Error('This year’s collection is already published and locked.');
     const merged = Array.isArray(row?.questions) ? row.questions.slice() : [];
@@ -64,6 +76,7 @@ async function syncCollectionDraftYear(year) {
         keys.add(key);
       }
     }
+    if (satCurrentUser?.id !== expectedOwnerId) return false;
     if (row) {
       const questionsChanged = JSON.stringify(merged) !== JSON.stringify(row.questions || []);
       const completionChanged = examCompleted !== !!row.exam_completed;
@@ -75,10 +88,11 @@ async function syncCollectionDraftYear(year) {
       }
     } else {
       const result = await satSupabase.from('question_collections').insert({
-        exam_year: year, questions: merged, exam_completed: examCompleted, created_by: satCurrentUser.id
+        exam_year: year, questions: merged, exam_completed: examCompleted, created_by: expectedOwnerId
       });
       if (result.error) throw result.error;
     }
+    if (satCurrentUser?.id !== expectedOwnerId) return false;
     collectionDrafts[year] = {questions: merged, exam_completed: examCompleted, exam_completed_dirty: false};
     saveCollectionDrafts();
     await loadAnnualCollections(false);
@@ -196,6 +210,7 @@ document.getElementById('collectionExamCompleted')?.addEventListener('change', e
 window.addEventListener('online', () => { for (const year of Object.keys(collectionDrafts)) scheduleCollectionSync(year); });
 
 // Expose the handlers used by the existing form and inline controls.
+window.switchCollectionDraftAccount = switchCollectionDraftAccount;
 window.saveCollectionDraftQuestion = saveCollectionDraftQuestion;
 window.loadAnnualCollections = loadAnnualCollections;
 window.syncSelectedCollection = syncSelectedCollection;

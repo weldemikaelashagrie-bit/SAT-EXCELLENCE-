@@ -6,6 +6,7 @@ const WORKSPACE_DIRTY_KEY = 'sat_excellence_workspace_dirty_v1';
 const WORKSPACE_UPDATED_KEY = 'sat_excellence_workspace_updated_v1';
 const WORKSPACE_SYNCED_KEY = 'sat_excellence_workspace_synced_v1';
 const WORKSPACE_CONFLICT_KEY = 'sat_excellence_workspace_conflict_backup_v1';
+const WORKSPACE_OWNER_KEY = 'sat_excellence_workspace_owner_v1';
 let workspaceSyncTimer = null;
 let lastWorkspaceSyncAt = 0;
 
@@ -74,8 +75,14 @@ async function flushQuestionSyncQueue() {
         if (error) throw error;
       } else if (job.operation === 'delete') {
         if (!satCan('delete_questions')) { remaining.push(job); continue; }
-        const {error} = await satSupabase.from('questions').delete().eq('id', String(job.question.id));
+        const {data, error} = await satSupabase.from('questions').delete().eq('id', String(job.question.id)).select('id');
         if (error) throw error;
+        // An empty result is safe only when the row is already absent (idempotent retry).
+        if (!data || !data.length) {
+          const check = await satSupabase.from('questions').select('id').eq('id', String(job.question.id)).maybeSingle();
+          if (check.error) throw check.error;
+          if (check.data) throw new Error('The question still exists remotely; deletion was not confirmed.');
+        }
       }
     } catch (error) {
       console.error('Question sync is still pending:', error);
@@ -93,14 +100,21 @@ async function loadSharedQuestions() {
     const local = Array.isArray(questions) ? questions.slice() : [];
     const localById = new Map(local.map(item => [String(item.id), item]));
     const remoteById = new Map((data || []).map(row => [String(row.id), row]));
-    // Keep the existing local order so question numbers do not jump after synchronisation.
-    const merged = local.map(item => {
-      const row = remoteById.get(String(item.id));
-      if (!row) return item;
+    const pending = readQueue(QUESTION_QUEUE_KEY).filter(job => job.userId === satCurrentUser.id);
+    const pendingById = new Map(pending.map(job => [String(job.question?.id), job]));
+    // The server is authoritative: a locally cached row absent remotely is removed,
+    // unless this account has a still-pending insert/update for that exact question.
+    const merged = (data || []).filter(row => pendingById.get(String(row.id))?.operation !== 'delete').map(row => {
+      const item = localById.get(String(row.id)) || {};
       return {...item, id: row.id, part: row.part || '', topic: row.topic || '', year: row.year || '', difficulty: row.difficulty || '', question: row.question || '', options: row.options || [], answer: Number.isInteger(row.answer) ? row.answer : -1, explanation: row.explanation || '', explanationDetails: row.explanation_details || item.explanationDetails || {}, status: row.status || 'Verified', display_order: row.display_order};
     });
-    for (const row of (data || [])) {
-      if (!localById.has(String(row.id))) merged.push({id: row.id, part: row.part || '', topic: row.topic || '', year: row.year || '', difficulty: row.difficulty || '', question: row.question || '', options: row.options || [], answer: Number.isInteger(row.answer) ? row.answer : -1, explanation: row.explanation || '', explanationDetails: row.explanation_details || {}, saved: false, status: row.status || 'Verified', display_order: row.display_order});
+    const mergedIds = new Set(merged.map(item => String(item.id)));
+    for (const [id, job] of pendingById) {
+      if (!id || mergedIds.has(id) || job.operation === 'delete') continue;
+      if (job.operation === 'insert' || job.operation === 'update') {
+        merged.push({...job.question, status: job.question.status || 'Verified'});
+        mergedIds.add(id);
+      }
     }
     questions = merged;
     localStorage.setItem(KEY, JSON.stringify(questions));
@@ -124,7 +138,8 @@ async function syncLocalQuestionBank() {
     const {data, error} = await satSupabase.from('questions').select('id');
     if (error) throw error;
     remoteIds = new Set((data || []).map(row => String(row.id)));
-    const candidates = questions.filter(question => !remoteIds.has(String(question.id)));
+    const pendingDeletes = new Set(readQueue(QUESTION_QUEUE_KEY).filter(job => job.userId === satCurrentUser.id && job.operation === 'delete').map(job => String(job.question?.id)));
+    const candidates = questions.filter(question => !remoteIds.has(String(question.id)) && !pendingDeletes.has(String(question.id)));
     if (!candidates.length) { alert('All locally saved questions are already in the shared bank.'); return; }
     if (!confirm('Upload ' + candidates.length + ' local question(s) to the shared official bank? Existing shared questions will not be replaced.')) return;
     let added = 0, skipped = 0;
@@ -158,7 +173,7 @@ async function flushSubmissionQueue() {
     const q = job.item.questionData || {};
     try {
       const {error} = await satSupabase.from('submissions').insert({
-        id: job.item.submissionId, submitted_by: satCurrentUser.id, part: q.part, topic: q.topic,
+        id: job.item.submissionId, submitted_by: job.userId, part: q.part, topic: q.topic,
         year: q.year, difficulty: q.difficulty || null, question: q.question, options: q.options,
         answer: Number(q.answer) >= 0 ? Number(q.answer) : null, explanation: q.explanation || '',
         explanation_details: q.explanationDetails || {}, status: 'pending'
@@ -266,10 +281,33 @@ async function syncStudentWorkspace() {
 async function loadStudentWorkspace() {
   if (!satSupabase || !satCurrentUser || !navigator.onLine) return false;
   try {
+    const owner = localStorage.getItem(WORKSPACE_OWNER_KEY);
+    if (owner !== satCurrentUser.id) {
+      // Preserve an unowned/previous account snapshot locally for manual backup,
+      // but never merge it into another account's cloud workspace.
+      const previous = {owner: owner || 'unassigned-device-data', scores: scoreHistory || [], mistakes: mistakeIds || [], mistakeStats: mistakeStats || {}, bookmarks: bookmarkIds || [], activeExam: (() => { try { return JSON.parse(localStorage.getItem(ACTIVE_EXAM_KEY) || 'null'); } catch (_) { return null; } })()};
+      if (previous.scores.length || previous.mistakes.length || Object.keys(previous.mistakeStats).length || previous.bookmarks.length || previous.activeExam) {
+        try { localStorage.setItem(WORKSPACE_CONFLICT_KEY + '__' + (owner || 'unassigned'), JSON.stringify(previous)); localStorage.setItem(WORKSPACE_CONFLICT_KEY, '1'); } catch (_) {}
+      }
+      scoreHistory = []; mistakeIds = []; mistakeStats = {}; bookmarkIds = []; submissions = [];
+      localStorage.setItem(SUB_KEY, '[]');
+      localStorage.removeItem(ACTIVE_EXAM_KEY);
+      localStorage.setItem(SCORE_KEY, '[]'); localStorage.setItem(MISTAKE_KEY, '[]');
+      localStorage.setItem(MISTAKE_STATS_KEY, '{}'); localStorage.setItem(BOOKMARK_KEY, '[]');
+      localStorage.removeItem(WORKSPACE_DIRTY_KEY); localStorage.removeItem(WORKSPACE_SYNCED_KEY);
+      localStorage.setItem(WORKSPACE_OWNER_KEY, satCurrentUser.id);
+    }
     const {data, error} = await satSupabase.from('student_workspace').select('*').eq('user_id', satCurrentUser.id).maybeSingle();
     if (error) throw error;
     const localExam = (() => { try { return JSON.parse(localStorage.getItem(ACTIVE_EXAM_KEY) || 'null'); } catch (_) { return null; } })();
-    if (!data) { await syncStudentWorkspace(); return true; }
+    if (!data) {
+      // Start a new account with an empty workspace; never upload old device-local data.
+      scoreHistory = []; mistakeIds = []; mistakeStats = {}; bookmarkIds = [];
+      localStorage.setItem(SCORE_KEY, '[]'); localStorage.setItem(MISTAKE_KEY, '[]');
+      localStorage.setItem(MISTAKE_STATS_KEY, '{}'); localStorage.setItem(BOOKMARK_KEY, '[]');
+      localStorage.removeItem(ACTIVE_EXAM_KEY);
+      await syncStudentWorkspace(); return true;
+    }
 
     const syncedBefore = Number(localStorage.getItem(WORKSPACE_SYNCED_KEY) || 0);
     const localDirty = localStorage.getItem(WORKSPACE_DIRTY_KEY) === '1';
