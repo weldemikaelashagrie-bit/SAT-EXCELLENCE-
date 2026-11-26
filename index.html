@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>SAT EXCELLENCE v2.35</title>
+<title>SAT EXCELLENCE v2.36</title>
 <style>
 :root{--navy:#172554;--blue:#2563eb;--bg:#f4f6fb;--card:#fff;--ink:#172033;--muted:#475569;--line:#d7deea;--green:#15803d;--red:#b91c1c}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -107,6 +107,7 @@ body.dark-theme .muted{color:#B6C3D8}body.dark-theme .explanation-block{backgrou
 body.dark-theme .home-quote{background:#3A2D16;color:#FDE68A;border-color:#D6A84F}
 body.dark-theme .exam-nav button,body.dark-theme .exam-review-list button{background:#1B2944;color:#F1F5F9;border-color:#52627C}
 body{line-height:var(--reading-line-height,1.5)}
+#libraryCount.library-count{display:block!important;visibility:visible!important;min-height:1em;margin:8px 0 12px;color:var(--muted)}
 </style>
 </head>
 <body class="auth-locked">
@@ -121,7 +122,7 @@ body{line-height:var(--reading-line-height,1.5)}
  <div class="contact-details" aria-label="Contact SAT EXCELLENCE"><h3>Contact Us</h3><p class="muted">Phone: <a href="tel:0947568575">0947568575</a></p><p class="muted">Telegram: <a href="https://t.me/weldemikael_12" target="_blank" rel="noopener noreferrer">@weldemikael_12</a></p></div>
  </div></div>
 
-<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.35</p></header>
+<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.36</p></header>
 <div class="auth-userbar" id="authUserBar" style="display:none"><span id="signedInLabel"></span><button class="secondary" type="button" onclick="satSignOut()">Sign out</button></div>
 <nav>
 <button class="active" data-tab="home">Home</button>
@@ -164,7 +165,7 @@ body{line-height:var(--reading-line-height,1.5)}
     <button class="home-shortcut" type="button" onclick="switchTab('scoreboard')">My progress<span>Track improvement</span></button>
    </div>
   </div>
-  <div class="card">
+  <div class="card" id="homeBackupCard">
    <h3>Backup and restore</h3>
    <p class="muted">Create a copyable JSON backup of your question bank, or restore questions from a JSON/CSV file.</p>
    <div class="actions"><button class="primary" onclick="exportJSON()">Create backup text</button><button class="secondary" onclick="document.getElementById('importFile').click()">Import file</button></div>
@@ -207,7 +208,7 @@ body{line-height:var(--reading-line-height,1.5)}
   <p class="muted">Choose an examination year to browse its questions. Years are arranged from newest to oldest, with English before Mathematics.</p>
   <div class="notice" role="status" aria-live="polite"><strong>More questions are on the way!</strong><br>SAT EXCELLENCE is growing. More examination questions from additional years are being prepared and will be added to the Question Bank as they become available. Keep checking back for new questions and updates. Thank you for learning with SAT EXCELLENCE!</div>
   <label for="searchBox">Search question text</label><input id="searchBox" placeholder="Search questions…">
-  <p class="muted" id="libraryCount">0 questions</p>
+  <p class="muted library-count" id="libraryCount">0 questions</p>
  </div>
  <div id="questionList"></div>
 </section>
@@ -361,10 +362,10 @@ body{line-height:var(--reading-line-height,1.5)}
   <p id="passwordChangeStatus" class="muted" role="status" aria-live="polite"></p>
  </div>
  <div class="card">
-  <h3>Backup, restore and support</h3>
-  <p class="muted">Create a backup before changing devices or clearing browser data. Restoring a backup merges records and skips duplicates.</p>
+  <h3 id="settingsBackupHeading">Backup, restore and support</h3>
+  <p class="muted" id="settingsBackupDescription">Create a backup before changing devices or clearing browser data. Restoring a backup merges records and skips duplicates.</p>
   <div class="actions" id="settingsBackupActions"><button type="button" class="primary" onclick="exportJSON()">Create backup</button><button type="button" class="secondary" onclick="document.getElementById('importFile').click()">Restore from file</button></div><div class="actions"><button type="button" class="secondary" onclick="switchTab('home')">Help and home</button></div>
-  <p class="muted">SAT EXCELLENCE V2.35 • ESSLCE SAT practice</p>
+  <p class="muted">SAT EXCELLENCE V2.36 • ESSLCE SAT practice</p>
   <button type="button" class="danger" onclick="resetUserSettings()">Reset preferences to defaults</button>
  </div>
 </section>
@@ -522,13 +523,14 @@ function questionMatchesSearch(q,search){return !search||[q.question,q.part,q.to
 function selectLibraryYear(year){selectedLibraryYear=year;renderLibrary();}
 function selectLibraryYearFromButton(button){selectLibraryYear(button.dataset.year);}
 function showLibraryYears(){selectedLibraryYear=null;renderLibrary();}
+function setLibraryCount(message){const count=document.getElementById('libraryCount');if(!count)return;count.hidden=false;count.style.display='block';count.style.visibility='visible';count.textContent=message;}
 function renderLibrary(){
  let search=val('searchBox').toLowerCase(),list=document.getElementById('questionList');
  if(!selectedLibraryYear){
   let years=[...new Set(questions.map(q=>q.year).filter(Boolean))].sort(compareExamYearsNewest);
   let visible=years.map(year=>({year,items:questions.filter(q=>q.year===year&&questionMatchesSearch(q,search))})).filter(x=>x.items.length);
   let total=visible.reduce((n,x)=>n+x.items.length,0);
-  document.getElementById('libraryCount').textContent=visible.length+' examination year(s) • '+total+' matching question(s)';
+  setLibraryCount(visible.length+' examination year(s) • '+total+' matching question(s)');
   list.innerHTML=visible.length?visible.map(x=>'<button type="button" class="secondary" style="width:100%;text-align:left;margin-bottom:10px;padding:16px" data-year="'+esc(x.year)+'" onclick="selectLibraryYearFromButton(this)"><strong>'+esc(x.year)+'</strong><span class="muted" style="display:block;margin-top:4px">'+x.items.length+' question(s) • English and Mathematics</span></button>').join(''):'<div class="card empty">No matching examination years. Add or import questions to begin.</div>';
   return;
  }
@@ -538,7 +540,7 @@ let html=`<div class="card"><button type="button" class="secondary" onclick="sho
  let number=0;
  ['English','Maths'].forEach(part=>{let group=arr.filter(q=>q.part===part);if(group.length){html+='<div class="card"><h3>'+part+'</h3><p class="muted">'+group.length+' question(s)</p></div>'+group.map(q=>questionCard(q,satCan('edit_questions'),satCan('delete_questions'),++number)).join('');}});
  let other=arr.filter(q=>!['English','Maths'].includes(q.part));if(other.length){html+='<div class="card"><h3>Other</h3></div>'+other.map(q=>questionCard(q,satCan('edit_questions'),satCan('delete_questions'),++number)).join('');}
- document.getElementById('libraryCount').textContent=arr.length+' question(s) in '+selectedLibraryYear;
+ setLibraryCount(arr.length+' question(s) in '+selectedLibraryYear);
  list.innerHTML=arr.length?html:html+'<div class="card empty">No matching questions in this year.</div>';
 }
 function questionCard(q,showEdit,showDelete,number){
@@ -840,6 +842,7 @@ function renderScoreProgressChart(){
 function clearScoreboard(){if(!scoreHistory.length)return;if(confirm('Delete all saved practice scores? This cannot be undone unless you have a backup.')){scoreHistory=[];saveScores();renderScoreboard();}}
 function openLatestBackup(){switchTab('home');exportJSON()}
 function exportJSON(){
+ if(!requireBackupPermission())return;
  const activeExam=(()=>{try{return JSON.parse(localStorage.getItem(ACTIVE_EXAM_KEY)||'null')}catch(e){return null}})();
  const backup={app:'SAT EXCELLENCE',version:6,exported:new Date().toISOString(),questions,scores:scoreHistory,submissions,mistakes:mistakeIds,mistakeStats,bookmarks:bookmarkIds,collections:typeof collectionDrafts!=='undefined'?collectionDrafts:{},settings:typeof satUserSettings!=='undefined'?satUserSettings:{},activeExam};
  const text=JSON.stringify(backup,null,2);
@@ -851,6 +854,7 @@ function exportJSON(){
 }
 function exportSelectedLibraryYearJSON(){exportYearJSON(selectedLibraryYear)}
 function exportYearJSON(year){
+ if(!requireBackupPermission())return;
  const yearQuestions=questions.filter(q=>String(q.year||'Not specified')===String(year));
  const yearCollection=typeof collectionDrafts!=='undefined'?(collectionDrafts[String(year)]||null):null;
  if(!yearQuestions.length&&!(yearCollection?.questions||[]).length){alert('There are no official or private collection questions for '+year+'.');return}
@@ -866,6 +870,7 @@ function exportYearJSON(year){
  document.getElementById('backupPanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function downloadBackupFile(){
+ if(!requireBackupPermission())return;
  const area=document.getElementById('backupText');
  const content=area.value;
  if(!content){alert('Create a backup first.');return;}
@@ -884,6 +889,7 @@ function downloadBackupFile(){
  }
 }
 async function copyBackup(){
+ if(!requireBackupPermission())return;
  const area=document.getElementById('backupText');
  const status=document.getElementById('backupStatus');
  try{
@@ -1086,11 +1092,12 @@ function authMessage(message,type='info'){const el=document.getElementById('auth
 function showAuthMode(mode){document.getElementById('loginForm').style.display=mode==='login'?'block':'none';document.getElementById('registerForm').style.display=mode==='register'?'block':'none';document.getElementById('showLoginBtn').className=mode==='login'?'primary':'secondary';document.getElementById('showRegisterBtn').className=mode==='register'?'primary':'secondary';document.getElementById('authMessage').className='auth-message';}
 function lockSATApp(message,type='info'){document.body.classList.add('auth-locked');document.getElementById('authUserBar').style.display=satCurrentUser?'flex':'none';if(satCurrentUser)document.getElementById('signedInLabel').textContent=(satCurrentProfile?.full_name||satCurrentProfile?.Username||satCurrentUser.email)+' • awaiting access';if(message)authMessage(message,type);}
 function satCan(permission){if(!satCurrentProfile)return false;if(satCurrentProfile.role==='main_admin')return true;if(satCurrentProfile.role!=='additional_admin')return false;const perms=satCurrentProfile.Permissions||{};return perms[permission]===true;}
+function requireBackupPermission(){if(!satCan('add_questions')){alert('Backup and restore are available only to administrators with question-management permission.');return false;}return true;}
 function applySATRoleUI(profile){const isStudent=profile.role==='student';const addAllowed=satCan('add_questions');const editAllowed=satCan('edit_questions');const deleteAllowed=satCan('delete_questions');const reviewAllowed=satCan('review_submissions');const duplicateAllowed=profile.role==='main_admin'||(profile.role==='additional_admin'&&(addAllowed||editAllowed||deleteAllowed));
  const setTab=(name,visible)=>{const b=document.querySelector('nav [data-tab="'+name+'"]');if(b)b.style.display=visible?'':'none';const panel=document.getElementById(name);if(panel)panel.style.display=visible?'':'none';};
- setTab('add',addAllowed);setTab('collections',addAllowed);const localSyncButton=document.getElementById('syncLocalQuestionsBtn');if(localSyncButton)localSyncButton.style.display=addAllowed?'':'none';const settingsBackupActions=document.getElementById('settingsBackupActions');if(settingsBackupActions)settingsBackupActions.style.display=addAllowed?'':'none';setTab('duplicates',duplicateAllowed);setTab('adminStudents',profile.role==='main_admin'||satCan('view_students'));setTab('adminManagement',profile.role==='main_admin');
+ setTab('add',addAllowed);setTab('collections',addAllowed);const localSyncButton=document.getElementById('syncLocalQuestionsBtn');if(localSyncButton)localSyncButton.style.display=addAllowed?'':'none';const settingsBackupActions=document.getElementById('settingsBackupActions');if(settingsBackupActions)settingsBackupActions.style.display=addAllowed?'':'none';const homeBackupCard=document.getElementById('homeBackupCard');if(homeBackupCard)homeBackupCard.style.display=addAllowed?'':'none';const settingsBackupHeading=document.getElementById('settingsBackupHeading');if(settingsBackupHeading)settingsBackupHeading.style.display=addAllowed?'':'none';const settingsBackupDescription=document.getElementById('settingsBackupDescription');if(settingsBackupDescription)settingsBackupDescription.style.display=addAllowed?'':'none';const backupPanel=document.getElementById('backupPanel');if(backupPanel&&!addAllowed)backupPanel.style.display='none';setTab('duplicates',duplicateAllowed);setTab('adminStudents',profile.role==='main_admin'||satCan('view_students'));setTab('adminManagement',profile.role==='main_admin');
  const submissionCards=document.querySelectorAll('#submissions > .card');if(submissionCards[1])submissionCards[1].style.display=reviewAllowed?'':'none';if(submissionCards[2])submissionCards[2].style.display=(isStudent||reviewAllowed)?'':'none';
- const homeCards=document.querySelectorAll('#home > .card');if(homeCards[2])homeCards[2].style.display=addAllowed?'':'none';
+ /* Home statistics remain visible; backup visibility uses the dedicated card ID above. */
  const exportAction=document.querySelector('#library .card .actions');if(exportAction)exportAction.style.display=isStudent?'none':'';
 }
 function adminStudentsMessage(message,type='info'){

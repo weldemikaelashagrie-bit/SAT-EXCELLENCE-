@@ -1,44 +1,34 @@
-# SAT EXCELLENCE V2.35 — Release Candidate
+# SAT EXCELLENCE V2.36 — Repair Release
 
-This package builds on the recovered V2.33 application and preserves the later GitHub fixes already present in `v2-development`.
+This package is built from the existing V2.35 release source. It preserves the current application structure, Supabase shared-data integration, and existing database.
 
-## Package contents
+## Repairs in V2.36
 
-- `index.html` — main application, authentication, practice, question bank, administration, settings, and home screen.
-- `collections.js` — private annual collection drafts, readiness, review, and manual publishing workflow.
-- `shared-data.js` — Supabase question/submission sync, student progress sync, and offline queues.
-- `sw.js` — V2.35 app-shell cache and cached Supabase client support.
-- `manifest.webmanifest` — installable PWA metadata.
-- `icon-192.png`, `icon-512.png`, `icon-512-maskable.png` — existing application icons.
-- `supabase_v234_migration.sql` — additive database migration required for V2.35 shared data.
+- Keeps the Home learning-statistics card visible to students.
+- Hides the Home Backup and Restore card from users without question-management permission.
+- Hides the Settings Backup and Restore heading, description, and actions from unauthorized users.
+- Adds permission checks inside the backup export, year-export, download, and copy functions.
+- Keeps the Question Bank count line visible in both the examination-year view and the selected-year view.
+- Updates the application version labels and refreshes the service-worker cache to V2.36.
 
-## Required deployment order
+## Deployment
 
-1. **Back up the Supabase project first.** Do not skip the backup.
-2. Open the Supabase SQL Editor for the existing SAT EXCELLENCE project.
-3. Review and run `supabase_v234_migration.sql`. This migration depends on the existing `profiles`, `questions`, and `submissions` tables and the existing `is_main_admin()` and `has_admin_permission(text)` functions.
-4. Confirm that the SQL finishes without errors. If it fails, stop and inspect the error before retrying.
-5. Upload the application files to the root of the existing `v2-development` branch in the existing GitHub repository. Keep the SQL file available as a project migration record; it does not need to be served as a public page.
-6. Wait for GitHub Pages to finish deploying, then open the app while online and sign in.
-7. As Main Admin or an Additional Admin with `add_questions`, open **Settings → Upload local questions to shared bank** to migrate any questions that are still stored only on the device. Review the count before confirming.
-8. Test a student account, an Additional Admin with limited permissions, and the Main Admin account before relying on the new shared workflow.
+1. Keep a copy of the current V2.35 files before replacing them.
+2. Upload the files in this ZIP to the root of the existing GitHub Pages publishing branch, replacing the matching files.
+3. Keep the current GitHub Pages branch and folder settings unchanged.
+4. Do not upload any SQL migration and do not rerun a previous Supabase migration for these front-end repairs.
+5. After deployment, open the app online and reload it so the V2.36 service worker can install.
 
-## Annual collection workflow
+## Recommended checks
 
-1. In **Add a question**, choose **Private annual collection (unpublished)**.
-2. Add questions for the relevant examination year. They remain private in the annual collection.
-3. A collection becomes **ready** when it contains at least 60 questions or the examination is marked completed.
-4. An authorized question administrator reviews the entire collection and records that review.
-5. Publishing is a separate, explicit confirmation. Once published, the collection is locked and its questions enter the official shared Question Bank.
+- Sign in as a student: the Home learning-statistics card and Question Bank count should be visible; Backup and Restore should not be shown.
+- Sign in as an administrator with question-management permission: Backup and Restore should remain available.
+- Confirm that the service worker has updated and that the app opens normally after one online reload.
 
-## Data and numbering notes
+## Known issue not included in this repair
 
-- Existing local questions are retained. The first online sync merges the server bank into the existing local order rather than replacing the local list.
-- The migration adds a stable `display_order` value so new devices can retrieve the same stored question order. The library still displays English before Mathematics and preserves each part's order.
-- Existing local student progress is merged on the first V2.35 workspace sync. Later progress snapshots synchronize scores, mistakes, bookmarks, and resumable exams.
-- Offline submissions and question changes are kept locally and queued where the signed-in account is available. They synchronize when connectivity returns.
-- The app does not contain a Supabase service-role key. Database access uses the existing publishable key, RLS policies, and server-side RPC checks.
+The previously reported Supabase signup response `email_address_invalid` has not been diagnosed or fixed by this release. It requires inspection of the Supabase Auth logs/request details. This package does not weaken email validation or change Auth settings.
 
-## Important verification boundary
+## Verification boundary
 
-The application code and SQL migration have been prepared and locally checked. The SQL migration has **not** been executed against the live Supabase project, and the real project has not yet been tested end-to-end with multiple accounts. Complete those steps before treating this release candidate as production-ready.
+This builder checks source-match counts and key patch assertions before creating the ZIP. It does not deploy to GitHub, modify Supabase, or perform live multi-account/device testing. Test the deployed app before treating the release as production-ready.
