@@ -380,8 +380,16 @@ function updateSharedSyncStatus(customMessage = null) {
 }
 
 window.addEventListener('online', async () => {
+  // Revalidate the saved Supabase session first. This restores the authenticated
+  // user after offline study so the correct account queues can synchronize.
+  if (window.satResumeOnlineSession) {
+    try { await window.satResumeOnlineSession(); }
+    catch (error) { console.warn('Online session revalidation failed:', error); }
+  }
   await flushQuestionSyncQueue();
   await flushSubmissionQueue();
+  await loadSharedQuestions();
+  await loadSharedSubmissions();
   await loadStudentWorkspace();
   updateSharedSyncStatus();
 });

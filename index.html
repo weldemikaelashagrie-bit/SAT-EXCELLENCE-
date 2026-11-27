@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>SAT EXCELLENCE v2.36</title>
+<title>SAT EXCELLENCE v2.37</title>
 <style>
 :root{--navy:#172554;--blue:#2563eb;--bg:#f4f6fb;--card:#fff;--ink:#172033;--muted:#475569;--line:#d7deea;--green:#15803d;--red:#b91c1c}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -122,7 +122,7 @@ body{line-height:var(--reading-line-height,1.5)}
  <div class="contact-details" aria-label="Contact SAT EXCELLENCE"><h3>Contact Us</h3><p class="muted">Phone: <a href="tel:0947568575">0947568575</a></p><p class="muted">Telegram: <a href="https://t.me/weldemikael_12" target="_blank" rel="noopener noreferrer">@weldemikael_12</a></p></div>
  </div></div>
 
-<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.36</p></header>
+<header><h1>SAT EXCELLENCE</h1><p>Ethiopian ESSLCE • Scholastic Aptitude Practice • v2.37</p></header>
 <div class="auth-userbar" id="authUserBar" style="display:none"><span id="signedInLabel"></span><button class="secondary" type="button" onclick="satSignOut()">Sign out</button></div>
 <nav>
 <button class="active" data-tab="home">Home</button>
@@ -130,6 +130,7 @@ body{line-height:var(--reading-line-height,1.5)}
 <button data-tab="adminManagement" id="adminManagementTab" style="display:none">Admin management</button>
 <button data-tab="library">Question bank</button>
 <button data-tab="collections" id="collectionsTab" style="display:none">Annual collections</button>
+<button data-tab="privateQuestions" id="privateQuestionsTab" style="display:none">Private Questions</button>
 <button data-tab="duplicates">Duplicate manager</button>
 <button data-tab="practice">Practice</button>
 <button data-tab="scoreboard">Scoreboard</button>
@@ -167,7 +168,7 @@ body{line-height:var(--reading-line-height,1.5)}
   </div>
   <div class="card" id="homeBackupCard">
    <h3>Backup and restore</h3>
-   <p class="muted">Create a copyable JSON backup of your question bank, or restore questions from a JSON/CSV file.</p>
+   <p class="muted">Create a complete backup, including your private staging questions. Ordinary JSON/CSV imports go to Private Questions; full and year-specific backups use their restore workflow.</p>
    <div class="actions"><button class="primary" onclick="exportJSON()">Create backup text</button><button class="secondary" onclick="document.getElementById('importFile').click()">Import file</button></div>
   </div>
  </section>
@@ -248,6 +249,20 @@ body{line-height:var(--reading-line-height,1.5)}
   <h3>File format</h3>
   <p class="muted">JSON question fields: part, topic, year, question, options (at least two choices), answer (letter or zero-based index), explanation. Variable option counts are supported. CSV headers: part, topic, year, question, A, B, C, D, answer, explanation.</p>
  </div>
+</section>
+
+<section id="privateQuestions" class="panel">
+ <div class="card">
+  <h2>Private Questions</h2>
+  <p class="muted">Your imported questions are private to your administrator account. They do not enter the official Question Bank, Annual Questions, Practice Mode, or Exam Mode until you deliberately transfer them.</p>
+  <div class="actions">
+   <button class="primary" type="button" onclick="document.getElementById('importFile').click()">Import JSON / CSV</button>
+   <button class="secondary" type="button" onclick="loadPrivateQuestions()">Refresh</button>
+   <button class="secondary" type="button" onclick="exportPrivateQuestions()">Export private file</button>
+  </div>
+  <p id="privateQuestionsStatus" class="muted" aria-live="polite">Private staging is account-specific.</p>
+ </div>
+ <div id="privateQuestionsList"></div>
 </section>
 
 <section id="duplicates" class="panel">
@@ -365,7 +380,7 @@ body{line-height:var(--reading-line-height,1.5)}
   <h3 id="settingsBackupHeading">Backup, restore and support</h3>
   <p class="muted" id="settingsBackupDescription">Create a backup before changing devices or clearing browser data. Restoring a backup merges records and skips duplicates.</p>
   <div class="actions" id="settingsBackupActions"><button type="button" class="primary" onclick="exportJSON()">Create backup</button><button type="button" class="secondary" onclick="document.getElementById('importFile').click()">Restore from file</button></div><div class="actions"><button type="button" class="secondary" onclick="switchTab('home')">Help and home</button></div>
-  <p class="muted">SAT EXCELLENCE V2.36 • ESSLCE SAT practice</p>
+  <p class="muted">SAT EXCELLENCE V2.37 • ESSLCE SAT practice</p>
   <button type="button" class="danger" onclick="resetUserSettings()">Reset preferences to defaults</button>
  </div>
 </section>
@@ -415,7 +430,7 @@ function addOfficialOption(){let a=getOptions('officialOptions');if(a.length>=26
 function removeOfficialOption(){let a=getOptions('officialOptions');if(a.length<=2){alert('A question needs at least two options.');return}a.pop();optionInputs('officialOptions',a);updateAnswerSelect('qAnswer',a)}
 function addSubmissionOption(){let a=getOptions('submissionOptions');if(a.length>=26){alert('Maximum 26 options (A–Z).');return}a.push('');optionInputs('submissionOptions',a);updateAnswerSelect('sAnswer',a,document.getElementById('sAnswer').value)}
 function removeSubmissionOption(){let a=getOptions('submissionOptions');if(a.length<=2){alert('A question needs at least two options.');return}a.pop();optionInputs('submissionOptions',a);updateAnswerSelect('sAnswer',a)}
-function switchTab(id){if(sessionMode==='timed'&&session.length&&document.getElementById('practiceArea')?.querySelector('#clock')&&id!=='practice')if(examLeaveReminderCount<2){examLeaveReminderCount++;saveActiveExam();if(!confirm('Your timed exam is still active. Leave this exam? Your progress will be saved so you can resume it.'))return;}document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));if(id==='library'){selectedLibraryYear=null;renderLibrary();}if(id==='practice'){selectedPracticeYear=null;renderPracticeSetup();}if(id==='saved')renderSaved();if(id==='mistakes'){selectedMistakeYear=null;selectedMistakePriority=null;renderMistakes();}if(id==='bookmarks')renderBookmarks();if(id==='scoreboard')renderScoreboard();if(id==='submissions'){renderSubmissions();if(window.loadSharedSubmissions)loadSharedSubmissions();}if(id==='duplicates')renderDuplicateManager();if(id==='adminStudents')loadAdminStudents();if(id==='adminManagement')loadAdminManagement();if(id==='collections')loadAnnualCollections();if(id==='settings')renderSettingsPanel();}
+function switchTab(id){if(sessionMode==='timed'&&session.length&&document.getElementById('practiceArea')?.querySelector('#clock')&&id!=='practice')if(examLeaveReminderCount<2){examLeaveReminderCount++;saveActiveExam();if(!confirm('Your timed exam is still active. Leave this exam? Your progress will be saved so you can resume it.'))return;}document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));if(id==='library'){selectedLibraryYear=null;renderLibrary();}if(id==='practice'){selectedPracticeYear=null;renderPracticeSetup();}if(id==='saved')renderSaved();if(id==='mistakes'){selectedMistakeYear=null;selectedMistakePriority=null;renderMistakes();}if(id==='bookmarks')renderBookmarks();if(id==='scoreboard')renderScoreboard();if(id==='submissions'){renderSubmissions();if(window.loadSharedSubmissions)loadSharedSubmissions();}if(id==='duplicates')renderDuplicateManager();if(id==='adminStudents')loadAdminStudents();if(id==='adminManagement')loadAdminManagement();if(id==='collections')loadAnnualCollections();if(id==='privateQuestions')loadPrivateQuestions();if(id==='settings')renderSettingsPanel();}
 document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
 document.getElementById('questionForm').addEventListener('submit',e=>{
  e.preventDefault();let existing=editingId?questions.find(x=>x.id===editingId):null,opts=getOptions('officialOptions'),ans=val('qAnswer');
@@ -841,15 +856,19 @@ function renderScoreProgressChart(){
 }
 function clearScoreboard(){if(!scoreHistory.length)return;if(confirm('Delete all saved practice scores? This cannot be undone unless you have a backup.')){scoreHistory=[];saveScores();renderScoreboard();}}
 function openLatestBackup(){switchTab('home');exportJSON()}
-function exportJSON(){
+async function exportJSON(){
  if(!requireBackupPermission())return;
+ if(!satCurrentUser||!navigator.onLine){alert('Connect to the internet to create a complete backup that includes your private questions.');return;}
+ const loaded=await loadPrivateQuestions();
+ if(!loaded){alert('The private questions could not be loaded. No incomplete backup was created.');return;}
+ const privateQuestions=privateQuestionsCache.map(cleanPrivateQuestion);
  const activeExam=(()=>{try{return JSON.parse(localStorage.getItem(ACTIVE_EXAM_KEY)||'null')}catch(e){return null}})();
- const backup={app:'SAT EXCELLENCE',version:6,exported:new Date().toISOString(),questions,scores:scoreHistory,submissions,mistakes:mistakeIds,mistakeStats,bookmarks:bookmarkIds,collections:typeof collectionDrafts!=='undefined'?collectionDrafts:{},settings:typeof satUserSettings!=='undefined'?satUserSettings:{},activeExam};
+ const backup={app:'SAT EXCELLENCE',version:7,exported:new Date().toISOString(),questions,scores:scoreHistory,submissions,mistakes:mistakeIds,mistakeStats,bookmarks:bookmarkIds,collections:typeof collectionDrafts!=='undefined'?collectionDrafts:{},settings:typeof satUserSettings!=='undefined'?satUserSettings:{},activeExam,privateQuestions:privateQuestions};
  const text=JSON.stringify(backup,null,2);
  const area=document.getElementById('backupText');
  area.value=text;
  document.getElementById('backupPanel').style.display='block';
- document.getElementById('backupStatus').textContent=questions.length+' official question(s) and '+submissions.length+' submission(s) included. After copying, paste into your existing backup file in QuickEdit and save it.';
+ document.getElementById('backupStatus').textContent=questions.length+' official question(s), '+privateQuestions.length+' private question(s), and '+submissions.length+' submission(s) included. Copy or download this complete backup and keep it in a safe place.';
  area.focus();area.select();
 }
 function exportSelectedLibraryYearJSON(){exportYearJSON(selectedLibraryYear)}
@@ -859,7 +878,7 @@ function exportYearJSON(year){
  const yearCollection=typeof collectionDrafts!=='undefined'?(collectionDrafts[String(year)]||null):null;
  if(!yearQuestions.length&&!(yearCollection?.questions||[]).length){alert('There are no official or private collection questions for '+year+'.');return}
  const ids=new Set(yearQuestions.map(q=>q.id));
- const backup={app:'SAT EXCELLENCE',version:6,backupType:'year-questions',year:String(year),exported:new Date().toISOString(),questions:yearQuestions,mistakes:mistakeIds.filter(id=>ids.has(id)),mistakeStats:Object.fromEntries(Object.entries(mistakeStats).filter(([id])=>ids.has(id))),bookmarks:bookmarkIds.filter(id=>ids.has(id)),collection:yearCollection};
+ const backup={app:'SAT EXCELLENCE',version:7,backupType:'year-questions',year:String(year),exported:new Date().toISOString(),questions:yearQuestions,mistakes:mistakeIds.filter(id=>ids.has(id)),mistakeStats:Object.fromEntries(Object.entries(mistakeStats).filter(([id])=>ids.has(id))),bookmarks:bookmarkIds.filter(id=>ids.has(id)),collection:yearCollection};
  const area=document.getElementById('backupText');
  area.value=JSON.stringify(backup,null,2);
  document.getElementById('backupPanelTitle').textContent=String(year)+' year backup (JSON)';
@@ -936,6 +955,7 @@ function mergeUniqueRecords(existing,incoming,keyFn,limit=Infinity){
 function showImportPreview(plan,fileName){
  const b=plan.backupData&&!Array.isArray(plan.backupData)?plan.backupData:{};
  const extras=[];
+ if(Array.isArray(b.privateQuestions))extras.push(`${b.privateQuestions.length} private question(s)`);
  if(Array.isArray(b.scores))extras.push(`${b.scores.length} score record(s)`);
  if(Array.isArray(b.submissions))extras.push(`${b.submissions.length} submission record(s)`);
  if(Array.isArray(b.mistakes))extras.push(`${b.mistakes.length} mistake link(s)`);
@@ -1039,16 +1059,197 @@ document.getElementById('importFile').addEventListener('change',async e=>{
   if(file.name.toLowerCase().endsWith('.csv'))items=parseCSV(raw);
   else{backupData=JSON.parse(raw);items=Array.isArray(backupData)?backupData:backupData.questions;}
   if(!Array.isArray(items))throw new Error('The file must contain a list of questions.');
-  const plan=buildImportPlan(items,backupData);
-  if(!plan.items.length&&!((backupData?.collections&&Object.keys(backupData.collections).length)||(backupData?.collection&&backupData?.year)))throw new Error('No question rows or annual collection drafts were found in this file.');
-  if(!showImportPreview(plan,file.name)){
-   document.getElementById('importStatus').textContent='Import cancelled. No saved data was changed.';
-   return;
+  const isYearBackup=!!(backupData&&!Array.isArray(backupData)&&backupData.backupType==='year-questions');
+  const isFullBackup=!!(backupData&&!Array.isArray(backupData)&&backupData.app==='SAT EXCELLENCE'&&!isYearBackup);
+  if(isYearBackup||isFullBackup){
+   const plan=buildImportPlan(items,backupData);
+   if(!plan.items.length&&!((backupData?.collections&&Object.keys(backupData.collections).length)||(backupData?.collection&&backupData?.year)))throw new Error('No question rows or annual collection drafts were found in this file.');
+   if(!showImportPreview(plan,file.name)){document.getElementById('importStatus').textContent='Restore cancelled. No saved data was changed.';return;}
+   applyImportPlan(plan);
+   if(isFullBackup&&Array.isArray(backupData.privateQuestions)){
+    try{
+     const restored=await restorePrivateQuestionsFromBackup(backupData.privateQuestions);
+     const note=restored.inserted+' private question(s) restored; '+restored.duplicates+' private duplicate(s) skipped.';
+     document.getElementById('importStatus').textContent+=' '+note;
+    }catch(privateError){
+     document.getElementById('importStatus').textContent+=' Official and local backup records were restored, but private-question restore failed: '+privateError.message;
+     alert('The official/local backup records were restored, but private questions could not be restored: '+privateError.message);
+    }
+   }
+  }else{
+   const preview=normalizePrivateImport(items);
+   if(!preview.valid.length)throw new Error('No valid question rows were found. Each question needs a question text, at least two options, and a correct answer.');
+   if(!confirm('Private import preview\n\nFile: '+file.name+'\nValid questions: '+preview.valid.length+'\nInvalid rows: '+preview.invalid+'\n\nThese questions will be saved only in your Private Questions staging area. They will not enter the official Question Bank or Practice/Exam Mode. Continue?')){document.getElementById('importStatus').textContent='Import cancelled. No data was changed.';return;}
+   const result=await savePrivateQuestions(preview.valid);
+   document.getElementById('importStatus').textContent=result.inserted+' private question(s) imported; '+result.duplicates+' duplicate(s) skipped; '+preview.invalid+' invalid row(s) ignored.';
+   switchTab('privateQuestions');
   }
-  applyImportPlan(plan);
- }catch(err){alert('Import failed: '+err.message);}
+ }catch(err){alert('Import failed: '+(err.message||'Unknown error'));}
  finally{e.target.value='';}
 });
+
+
+let privateQuestionsCache=[];
+function cleanPrivateQuestion(q){
+ const out={...q};delete out._privateId;delete out.created_at;delete out.updated_at;delete out.owner_id;return out;
+}
+function normalizePrivateImport(items){
+ const valid=[];let invalid=0;
+ for(const source0 of items){
+  if(!source0||typeof source0!=='object'||Array.isArray(source0)){invalid++;continue;}
+  const source=source0.question_data&&typeof source0.question_data==='object'?source0.question_data:source0;
+  const options=Array.isArray(source.options)?source.options:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(k=>source[k]).filter(v=>v!==undefined&&String(v).trim()!=='');
+  const question=String(source.question||source.text||'').trim();
+  const answer=normalizeAnswer(source.answer??source.correct??source.correctAnswer??source.correct_answer,options.length);
+  if(!question||options.length<2||!options.every(v=>String(v??'').trim())||answer<0){invalid++;continue;}
+  const q={...source,id:String(source.id||uid()),part:['English','Maths'].includes(String(source.part||''))?String(source.part):'',topic:String(source.topic||'Uncategorized'),year:String(source.year||'Not specified'),difficulty:String(source.difficulty||''),question,options:options.map(v=>String(v)),answer,explanation:String(source.explanation||''),explanationDetails:source.explanationDetails||source.explanation_details||{},status:'Private'};
+  delete q._privateId;delete q.owner_id;delete q.created_at;delete q.updated_at;delete q.question_data;
+  valid.push(q);
+ }
+ return {valid,invalid};
+}
+function privateQuestionMessage(message,isError=false){
+ const el=document.getElementById('privateQuestionsStatus');
+ if(el)el.textContent=message;
+ if(isError)console.error(message);
+}
+async function loadPrivateQuestions(){
+ if(!satCan('add_questions'))return false;
+ if(!satSupabase||!satCurrentUser||!navigator.onLine){privateQuestionMessage('Connect to the internet to load private questions.',true);return false;}
+ privateQuestionMessage('Loading your private questions…');
+ try{
+  const {data,error}=await satSupabase.from('private_questions').select('id,question_data,created_at,updated_at').eq('owner_id',satCurrentUser.id).order('created_at',{ascending:false});
+  if(error)throw error;
+  privateQuestionsCache=(data||[]).map(row=>({...row.question_data,_privateId:row.id}));
+  renderPrivateQuestions();
+  privateQuestionMessage(privateQuestionsCache.length+' private question(s) loaded. Only your account can access this staging list.');
+  return true;
+ }catch(err){privateQuestionMessage('Could not load private questions: '+(err.message||'Unknown error'),true);return false;}
+}
+async function savePrivateQuestions(items){
+ if(!satCan('add_questions')||!satSupabase||!satCurrentUser||!navigator.onLine)throw new Error('An administrator with add_questions permission and an internet connection is required.');
+ const valid=normalizePrivateImport(items).valid;
+ if(!valid.length)return {inserted:0,duplicates:0};
+ const {data:existing,error:readError}=await satSupabase.from('private_questions').select('question_data').eq('owner_id',satCurrentUser.id);
+ if(readError)throw readError;
+ const seen=new Set((existing||[]).map(row=>duplicateFingerprint(row.question_data,row.question_data?.year)));
+ const rows=[];
+ for(const q of valid){
+  const key=duplicateFingerprint(q,q.year);
+  if(key&&seen.has(key))continue;
+  rows.push({owner_id:satCurrentUser.id,question_data:q});
+  if(key)seen.add(key);
+ }
+ if(rows.length){
+  const {error}=await satSupabase.from('private_questions').insert(rows);
+  if(error)throw error;
+ }
+ await loadPrivateQuestions();
+ return {inserted:rows.length,duplicates:valid.length-rows.length};
+}
+async function restorePrivateQuestionsFromBackup(items){
+ if(!Array.isArray(items)||!items.length)return {inserted:0,duplicates:0};
+ return await savePrivateQuestions(items);
+}
+function renderPrivateQuestions(){
+ const list=document.getElementById('privateQuestionsList');if(!list)return;
+ list.replaceChildren();
+ if(!privateQuestionsCache.length){
+  const empty=document.createElement('div');empty.className='card empty';
+  empty.textContent='No private questions yet. Use Import JSON / CSV to add questions to this staging area.';
+  list.append(empty);return;
+ }
+ privateQuestionsCache.forEach(q=>{
+  const card=document.createElement('div');card.className='card';
+  const title=document.createElement('h3');title.textContent=q.question||'Untitled question';card.append(title);
+  const meta=document.createElement('p');meta.className='muted';meta.textContent=[q.part,q.topic,q.year,q.difficulty].filter(Boolean).join(' • ');card.append(meta);
+  const choices=document.createElement('ol');
+  (q.options||[]).forEach((value,index)=>{const li=document.createElement('li');li.textContent=String.fromCharCode(65+index)+'. '+String(value);choices.append(li);});
+  card.append(choices);
+  const answer=document.createElement('p');answer.className='muted';answer.textContent='Saved answer: '+String.fromCharCode(65+Number(q.answer||0));card.append(answer);
+  if(q.transferredToOfficial){const done=document.createElement('p');done.className='notice';done.textContent='Transferred to the official Question Bank. The private copy is retained because cleanup needs attention.';card.append(done);}
+  const details=document.createElement('details');const summary=document.createElement('summary');summary.textContent='Edit private question';details.append(summary);
+  const form=document.createElement('form');form.className='private-question-editor';
+  const addField=(labelText,value,multiline=false)=>{
+   const label=document.createElement('label');label.textContent=labelText;
+   const field=document.createElement(multiline?'textarea':'input');
+   if(multiline)field.rows=labelText==='Answer choices (one per line)'?6:3;
+   field.value=value??'';label.append(field);form.append(label);return field;
+  };
+  const questionField=addField('Question',q.question,true);
+  const partField=addField('Part (English or Maths)',q.part||'');
+  const topicField=addField('Topic',q.topic||'');
+  const yearField=addField('Year',q.year||'');
+  const difficultyField=addField('Difficulty',q.difficulty||'');
+  const optionsField=addField('Answer choices (one per line)',(q.options||[]).join('\n'),true);
+  const answerField=addField('Correct answer (letter A, B, C… or zero-based number)',String(q.answer));
+  const explanationField=addField('Explanation',q.explanation||'',true);
+  const save=document.createElement('button');save.type='submit';save.className='primary';save.textContent='Save edits';form.append(save);
+  form.addEventListener('submit',async event=>{
+   event.preventDefault();save.disabled=true;
+   try{
+    const candidate={...cleanPrivateQuestion(q),question:questionField.value,part:partField.value.trim(),topic:topicField.value.trim(),year:yearField.value.trim(),difficulty:difficultyField.value.trim(),options:optionsField.value.split('\n').map(v=>v.trim()).filter(Boolean),answer:answerField.value.trim(),explanation:explanationField.value,explanationDetails:q.explanationDetails||{}};
+    const parsed=normalizePrivateImport([candidate]);
+    if(parsed.valid.length!==1)throw new Error('Please provide a question, at least two non-empty choices, and a valid correct answer.');
+    const {error}=await satSupabase.from('private_questions').update({question_data:parsed.valid[0],updated_at:new Date().toISOString()}).eq('id',q._privateId).eq('owner_id',satCurrentUser.id);
+    if(error)throw error;
+    await loadPrivateQuestions();privateQuestionMessage('Private question updated.');
+   }catch(err){alert('Could not save edit: '+err.message);}
+   finally{save.disabled=false;}
+  });
+  details.append(form);card.append(details);
+  const actions=document.createElement('div');actions.className='actions';
+  const del=document.createElement('button');del.type='button';del.className='danger';del.textContent='Delete';del.onclick=()=>deletePrivateQuestion(q._privateId);actions.append(del);
+  const transfer=document.createElement('button');transfer.type='button';transfer.className='primary';transfer.textContent=q.transferredToOfficial?'Already transferred':'Transfer to Question Bank';transfer.disabled=!!q.transferredToOfficial;transfer.onclick=()=>transferPrivateQuestion(q._privateId);actions.append(transfer);
+  card.append(actions);list.append(card);
+ });
+}
+async function deletePrivateQuestion(id){
+ if(!satCan('add_questions')||!satCurrentUser||!navigator.onLine)return;
+ if(!confirm('Delete this private question permanently?'))return;
+ try{
+  const {error}=await satSupabase.from('private_questions').delete().eq('id',id).eq('owner_id',satCurrentUser.id);
+  if(error)throw error;
+  await loadPrivateQuestions();privateQuestionMessage('Private question deleted.');
+ }catch(err){privateQuestionMessage('Delete failed: '+err.message,true);}
+}
+function exportPrivateQuestions(){
+ if(!satCan('add_questions'))return;
+ const rows=privateQuestionsCache.map(cleanPrivateQuestion);
+ const data={app:'SAT EXCELLENCE PRIVATE QUESTIONS',version:1,exported:new Date().toISOString(),questions:rows};
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='SAT_EXCELLENCE_Private_Questions.json';document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+async function transferPrivateQuestion(id){
+ if(!satCan('add_questions')||!satSupabase||!satCurrentUser||!navigator.onLine){alert('Connect to the internet with an authorized administrator account before transferring.');return;}
+ const q=privateQuestionsCache.find(item=>item._privateId===id);if(!q)return;
+ if(q.transferredToOfficial){alert('This question has already been transferred.');return;}
+ if(!confirm('Transfer this question to the shared official Question Bank? It will become available in the official bank after the transfer succeeds.'))return;
+ try{
+  const {data:officialRows,error:readError}=await satSupabase.from('questions').select('id,part,topic,year,question,options').eq('status','Verified');
+  if(readError)throw readError;
+  const fingerprint=duplicateFingerprint(q,q.year);
+  const duplicate=(officialRows||[]).some(row=>String(row.id)===String(q.id)||duplicateFingerprint(row,row.year)===fingerprint);
+  if(duplicate){alert('A matching question already exists in the official Question Bank. The private copy was kept; no second copy was published.');return;}
+  const payload={id:String(q.id||uid()),part:q.part||'',topic:q.topic||'',year:q.year||'',difficulty:q.difficulty||null,question:q.question,options:q.options,answer:Number(q.answer),explanation:q.explanation||'',explanation_details:q.explanationDetails||{},status:'Verified',created_by:satCurrentUser.id};
+  const {error}=await satSupabase.from('questions').insert(payload);
+  if(error)throw error;
+  const {error:deleteError}=await satSupabase.from('private_questions').delete().eq('id',id).eq('owner_id',satCurrentUser.id);
+  if(deleteError){
+   const retained={...cleanPrivateQuestion(q),transferredToOfficial:true};
+   const {error:updateError}=await satSupabase.from('private_questions').update({question_data:retained,updated_at:new Date().toISOString()}).eq('id',id).eq('owner_id',satCurrentUser.id);
+   await loadPrivateQuestions();
+   if(updateError)throw new Error('The question reached the official bank, but the private copy could not be marked as transferred. Check the official bank before trying again.');
+   alert('Transferred successfully. The private copy remains marked as transferred because it could not be removed.');
+  }else{
+   await loadPrivateQuestions();alert('Question transferred successfully to the official Question Bank.');
+  }
+  if(window.loadSharedQuestions)await loadSharedQuestions();
+ }catch(err){alert('Transfer failed: '+(err.message||'Unknown error'));}
+}
+
 function parseCSV(s){
  let rows=[],row=[],cell='',quoted=false;
  for(let i=0;i<s.length;i++){let c=s[i];if(c==='"'&&quoted&&s[i+1]==='"'){cell+='"';i++}else if(c==='"'){quoted=!quoted}else if(c===','&&!quoted){row.push(cell);cell=''}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&s[i+1]==='\n')i++;row.push(cell);if(row.some(v=>v.trim()))rows.push(row);row=[];cell=''}else cell+=c}
@@ -1059,7 +1260,7 @@ function parseCSV(s){
 }
 let satAppStartedFor=null;
 async function startSATApp(){
- const ownerId=satCurrentUser?.id||'offline-device';
+ const ownerId=satCurrentUser?.id||satCurrentProfile?.id||'offline-device';
  if(satAppStartedFor===ownerId)return;
  satAppStartedFor=ownerId;
  if(timer){clearInterval(timer);timer=null;}
@@ -1074,6 +1275,7 @@ async function startSATApp(){
   restoreActiveExam();
   if(window.loadSharedSubmissions)await loadSharedSubmissions();
   if(window.loadAnnualCollections)await loadAnnualCollections(false);
+  if(satCan('add_questions')&&navigator.onLine)await loadPrivateQuestions();
  }catch(error){console.warn('Shared data could not be loaded; using saved local data.',error);}
 }
 
@@ -1095,7 +1297,7 @@ function satCan(permission){if(!satCurrentProfile)return false;if(satCurrentProf
 function requireBackupPermission(){if(!satCan('add_questions')){alert('Backup and restore are available only to administrators with question-management permission.');return false;}return true;}
 function applySATRoleUI(profile){const isStudent=profile.role==='student';const addAllowed=satCan('add_questions');const editAllowed=satCan('edit_questions');const deleteAllowed=satCan('delete_questions');const reviewAllowed=satCan('review_submissions');const duplicateAllowed=profile.role==='main_admin'||(profile.role==='additional_admin'&&(addAllowed||editAllowed||deleteAllowed));
  const setTab=(name,visible)=>{const b=document.querySelector('nav [data-tab="'+name+'"]');if(b)b.style.display=visible?'':'none';const panel=document.getElementById(name);if(panel)panel.style.display=visible?'':'none';};
- setTab('add',addAllowed);setTab('collections',addAllowed);const localSyncButton=document.getElementById('syncLocalQuestionsBtn');if(localSyncButton)localSyncButton.style.display=addAllowed?'':'none';const settingsBackupActions=document.getElementById('settingsBackupActions');if(settingsBackupActions)settingsBackupActions.style.display=addAllowed?'':'none';const homeBackupCard=document.getElementById('homeBackupCard');if(homeBackupCard)homeBackupCard.style.display=addAllowed?'':'none';const settingsBackupHeading=document.getElementById('settingsBackupHeading');if(settingsBackupHeading)settingsBackupHeading.style.display=addAllowed?'':'none';const settingsBackupDescription=document.getElementById('settingsBackupDescription');if(settingsBackupDescription)settingsBackupDescription.style.display=addAllowed?'':'none';const backupPanel=document.getElementById('backupPanel');if(backupPanel&&!addAllowed)backupPanel.style.display='none';setTab('duplicates',duplicateAllowed);setTab('adminStudents',profile.role==='main_admin'||satCan('view_students'));setTab('adminManagement',profile.role==='main_admin');
+ setTab('add',addAllowed);setTab('collections',addAllowed);setTab('privateQuestions',addAllowed);const localSyncButton=document.getElementById('syncLocalQuestionsBtn');if(localSyncButton)localSyncButton.style.display=addAllowed?'':'none';const settingsBackupActions=document.getElementById('settingsBackupActions');if(settingsBackupActions)settingsBackupActions.style.display=addAllowed?'':'none';const homeBackupCard=document.getElementById('homeBackupCard');if(homeBackupCard)homeBackupCard.style.display=addAllowed?'':'none';const settingsBackupHeading=document.getElementById('settingsBackupHeading');if(settingsBackupHeading)settingsBackupHeading.style.display=addAllowed?'':'none';const settingsBackupDescription=document.getElementById('settingsBackupDescription');if(settingsBackupDescription)settingsBackupDescription.style.display=addAllowed?'':'none';const backupPanel=document.getElementById('backupPanel');if(backupPanel&&!addAllowed)backupPanel.style.display='none';setTab('duplicates',duplicateAllowed);setTab('adminStudents',profile.role==='main_admin'||satCan('view_students'));setTab('adminManagement',profile.role==='main_admin');
  const submissionCards=document.querySelectorAll('#submissions > .card');if(submissionCards[1])submissionCards[1].style.display=reviewAllowed?'':'none';if(submissionCards[2])submissionCards[2].style.display=(isStudent||reviewAllowed)?'':'none';
  /* Home statistics remain visible; backup visibility uses the dedicated card ID above. */
  const exportAction=document.querySelector('#library .card .actions');if(exportAction)exportAction.style.display=isStudent?'none':'';
@@ -1254,15 +1456,15 @@ function unlockOfflineStudent(){
  applySATRoleUI(satCurrentProfile);document.body.classList.remove('auth-locked');document.getElementById('authUserBar').style.display='flex';document.getElementById('signedInLabel').textContent=(cached.full_name||cached.Username||'Student')+' • offline study mode';
  startSATApp();return true;
 }
-function unlockSATApp(profile,user){
+async function unlockSATApp(profile,user){
  satCurrentUser=user;satCurrentProfile=profile;
  try{if(profile.role==='student')localStorage.setItem(OFFLINE_PROFILE_KEY,JSON.stringify({id:profile.id,Username:profile.Username||'',full_name:profile.full_name||'',Status:'approved',role:'student',Permissions:{}}));else localStorage.removeItem(OFFLINE_PROFILE_KEY);}catch(e){}
- applySATRoleUI(profile);document.body.classList.remove('auth-locked');document.getElementById('authUserBar').style.display='flex';document.getElementById('signedInLabel').textContent=(profile.full_name||profile.Username||user.email)+' • '+profile.role;startSATApp();
+ applySATRoleUI(profile);document.body.classList.remove('auth-locked');document.getElementById('authUserBar').style.display='flex';document.getElementById('signedInLabel').textContent=(profile.full_name||profile.Username||user.email)+' • '+profile.role;await startSATApp();
 }
 async function loadSATProfile(user){const {data,error}=await satSupabase.from('profiles').select('id,Username,full_name,role,Status,Permissions').eq('id',user.id).maybeSingle();if(error)throw error;return data;}
 async function checkSATUser(user){
  const generation=++satAuthCheckGeneration;
- if(!user){satAppStartedFor=null;satCurrentUser=null;satCurrentProfile=null;if(!navigator.onLine&&unlockOfflineStudent())return;lockSATApp();return;}
+ if(!user){satAppStartedFor=null;satCurrentUser=null;satCurrentProfile=null;if(!navigator.onLine&&unlockOfflineStudent())return;if(navigator.onLine){try{localStorage.removeItem(OFFLINE_PROFILE_KEY)}catch(e){}}lockSATApp();return;}
  satCurrentUser=user;
  try{
   const profile=await loadSATProfile(user);
@@ -1270,12 +1472,22 @@ async function checkSATUser(user){
   if(!profile){satCurrentUser=null;satCurrentProfile=null;lockSATApp('Your account profile was not found. Please contact the Main Admin.','error');return;}
   if(profile.Status!=='approved'){const msg=profile.Status==='pending'?'Your student account is waiting for Main Admin approval. Please try signing in again after approval.':profile.Status==='rejected'?'Your registration was not approved. Please contact the Main Admin if you need help.':'Your account is not currently active. Please contact the Main Admin.';satCurrentUser=user;satCurrentProfile=profile;lockSATApp(msg,'info');return;}
   if(!['student','main_admin','additional_admin'].includes(profile.role)){lockSATApp('This account does not have an allowed SAT EXCELLENCE role. Contact the Main Admin.','error');return;}
-  unlockSATApp(profile,user);
+  await unlockSATApp(profile,user);
  }catch(err){if(generation!==satAuthCheckGeneration)return;console.error('Profile check failed:',err);if(!navigator.onLine&&unlockOfflineStudent())return;lockSATApp('We could not verify your account profile. Check your internet connection and try again. Details: '+(err.message||'Unknown error'),'error');}
 }
+window.satResumeOnlineSession=async function(){
+ if(!navigator.onLine||!satSupabase)return false;
+ const {data,error}=await satSupabase.auth.getSession();if(error)throw error;
+ await checkSATUser(data?.session?.user||null);return true;
+};
 document.getElementById('loginForm').addEventListener('submit',async e=>{e.preventDefault();const btn=document.getElementById('loginSubmit');btn.disabled=true;btn.textContent='Signing in…';try{const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value;const {data,error}=await satSupabase.auth.signInWithPassword({email,password});if(error)throw error;await checkSATUser(data.user);}catch(err){authMessage(err.message||'Sign in failed. Please check your details.','error');}finally{btn.disabled=false;btn.textContent='Sign in';}});
 document.getElementById('registerForm').addEventListener('submit',async e=>{e.preventDefault();const btn=document.getElementById('registerSubmit');btn.disabled=true;btn.textContent='Creating account…';try{const full_name=document.getElementById('registerName').value.trim(),username=document.getElementById('registerUsername').value.trim(),email=document.getElementById('registerEmail').value.normalize('NFKC').replace(/[\u200B-\u200D\uFEFF]/g,'').trim(),password=document.getElementById('registerPassword').value,password2=document.getElementById('registerPassword2').value;if(!/^[A-Za-z0-9_]{3,30}$/.test(username))throw new Error('Username must be 3–30 characters: letters, numbers, or underscore.');if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw new Error('Please enter a valid email address. Check for spaces or hidden characters.');if(password!==password2)throw new Error('The two passwords do not match.');const {data,error}=await satSupabase.auth.signUp({email,password,options:{data:{username,full_name}}});if(error)throw error;if(data.session&&data.user){await checkSATUser(data.user);}else{showAuthMode('login');authMessage('Registration submitted. Check your email for confirmation if required. Your profile is pending Main Admin approval. After confirming your email, sign in to check your approval status.','success');}}catch(err){const diagnostic=[err.code?'Code: '+err.code:'',err.status?'HTTP: '+err.status:''].filter(Boolean).join(' • ');authMessage((err.message||'Registration failed. Please try again.')+(diagnostic?' ('+diagnostic+')':''),'error');}finally{btn.disabled=false;btn.textContent='Create student account';}});
-async function satSignOut(){if(!satCurrentUser){try{localStorage.removeItem(OFFLINE_PROFILE_KEY)}catch(e){}satCurrentProfile=null;lockSATApp('Offline study mode ended.','success');return;}try{const {error}=await satSupabase.auth.signOut();if(error)throw error;}catch(err){alert('Sign out failed: '+(err.message||'Unknown error'));return;}satCurrentUser=null;satCurrentProfile=null;try{localStorage.removeItem(OFFLINE_PROFILE_KEY)}catch(e){}lockSATApp('You have signed out.','success');}
+async function satSignOut(){
+ if(!navigator.onLine){alert('Connect to the internet before signing out. Your offline study access will remain available until you reconnect.');return;}
+ if(!satCurrentUser){try{localStorage.removeItem(OFFLINE_PROFILE_KEY)}catch(e){}satCurrentProfile=null;satAppStartedFor=null;lockSATApp('Offline study access has been cleared.','success');return;}
+ try{const {error}=await satSupabase.auth.signOut();if(error)throw error;}catch(err){alert('Sign out failed: '+(err.message||'Unknown error'));return;}
+ satCurrentUser=null;satCurrentProfile=null;satAppStartedFor=null;try{localStorage.removeItem(OFFLINE_PROFILE_KEY)}catch(e){}lockSATApp('You have signed out.','success');
+}
 async function initSATAuthentication(){try{if(!window.supabase||!window.supabase.createClient){if(unlockOfflineStudent())return;lockSATApp('The sign-in service could not load. Connect to the internet and refresh this page.','error');return;}satSupabase=window.supabase.createClient(SAT_SUPABASE_URL,SAT_SUPABASE_PUBLISHABLE_KEY);const {data:{session},error}=await satSupabase.auth.getSession();if(error)throw error;await checkSATUser(session?.user||null);satSupabase.auth.onAuthStateChange((_event,newSession)=>{setTimeout(()=>checkSATUser(newSession?.user||null),0);});}catch(err){console.error('Authentication initialization failed:',err);if(unlockOfflineStudent())return;lockSATApp('Could not initialize sign in. Check your connection and refresh. '+(err.message||''),'error');}}
 initSATAuthentication();
 </script>
