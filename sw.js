@@ -1,4 +1,6 @@
-const CACHE_NAME = 'sat-excellence-shell-v237';
+const CACHE_SCOPE_KEY = self.registration.scope.replace(/[^a-z0-9]/gi, '-');
+const CACHE_PREFIX = 'sat-excellence-shell-' + CACHE_SCOPE_KEY + '-';
+const CACHE_NAME = CACHE_PREFIX + 'v237';
 const APP_SHELL = [
   './',
   './index.html',
@@ -29,7 +31,7 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter(key => key.startsWith('sat-excellence-shell-') && key !== CACHE_NAME).map(key => caches.delete(key)));
+    await Promise.all(keys.filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME).map(key => caches.delete(key)));
     await self.clients.claim();
   })());
 });

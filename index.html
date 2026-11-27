@@ -1057,24 +1057,30 @@ document.getElementById('importFile').addEventListener('change',async e=>{
  try{
   const raw=await file.text();let items,backupData=null;
   if(file.name.toLowerCase().endsWith('.csv'))items=parseCSV(raw);
-  else{backupData=JSON.parse(raw);items=Array.isArray(backupData)?backupData:backupData.questions;}
+  else{backupData=JSON.parse(raw);items=Array.isArray(backupData)?backupData:(Array.isArray(backupData.questions)?backupData.questions:[]);}
   if(!Array.isArray(items))throw new Error('The file must contain a list of questions.');
   const isYearBackup=!!(backupData&&!Array.isArray(backupData)&&backupData.backupType==='year-questions');
   const isFullBackup=!!(backupData&&!Array.isArray(backupData)&&backupData.app==='SAT EXCELLENCE'&&!isYearBackup);
   if(isYearBackup||isFullBackup){
    const plan=buildImportPlan(items,backupData);
-   if(!plan.items.length&&!((backupData?.collections&&Object.keys(backupData.collections).length)||(backupData?.collection&&backupData?.year)))throw new Error('No question rows or annual collection drafts were found in this file.');
+   const privateItems=isFullBackup&&Array.isArray(backupData.privateQuestions)?backupData.privateQuestions:[];
+   if(privateItems.length&&(!satCan('add_questions')||!satSupabase||!satCurrentUser||!navigator.onLine))throw new Error('Restoring private questions requires an authorized administrator and an internet connection. No backup data was changed.');
+   if(!plan.items.length&&!privateItems.length&&!((backupData?.collections&&Object.keys(backupData.collections).length)||(backupData?.collection&&backupData?.year)))throw new Error('No question rows, private questions, or annual collection drafts were found in this file.');
    if(!showImportPreview(plan,file.name)){document.getElementById('importStatus').textContent='Restore cancelled. No saved data was changed.';return;}
-   applyImportPlan(plan);
-   if(isFullBackup&&Array.isArray(backupData.privateQuestions)){
-    try{
-     const restored=await restorePrivateQuestionsFromBackup(backupData.privateQuestions);
-     const note=restored.inserted+' private question(s) restored; '+restored.duplicates+' private duplicate(s) skipped.';
-     document.getElementById('importStatus').textContent+=' '+note;
-    }catch(privateError){
-     document.getElementById('importStatus').textContent+=' Official and local backup records were restored, but private-question restore failed: '+privateError.message;
-     alert('The official/local backup records were restored, but private questions could not be restored: '+privateError.message);
+   let restoredPrivate=null;
+   if(privateItems.length)restoredPrivate=await restorePrivateQuestionsFromBackup(privateItems);
+   try{applyImportPlan(plan);}
+   catch(localError){
+    if(restoredPrivate?.insertedIds?.length){
+     const {error:rollbackError}=await satSupabase.from('private_questions').delete().eq('owner_id',satCurrentUser.id).in('id',restoredPrivate.insertedIds);
+     if(rollbackError)throw new Error(localError.message+' Private questions were added but automatic rollback failed; keep a backup and review your Private Questions list. '+rollbackError.message);
     }
+    throw localError;
+   }
+   if(restoredPrivate){
+    const note=restoredPrivate.inserted+' private question(s) restored; '+restoredPrivate.duplicates+' private duplicate(s) skipped.'+(restoredPrivate.invalid?' '+restoredPrivate.invalid+' invalid private row(s) skipped.':'');
+    document.getElementById('importStatus').textContent+=' '+note;
+    if(!restoredPrivate.refreshed)privateQuestionMessage('Private questions were saved, but the list could not refresh. Reopen this tab while online.');
    }
   }else{
    const preview=normalizePrivateImport(items);
@@ -1140,12 +1146,15 @@ async function savePrivateQuestions(items){
   rows.push({owner_id:satCurrentUser.id,question_data:q});
   if(key)seen.add(key);
  }
+ let insertedIds=[];
  if(rows.length){
-  const {error}=await satSupabase.from('private_questions').insert(rows);
+  const {data:insertedRows,error}=await satSupabase.from('private_questions').insert(rows).select('id');
   if(error)throw error;
+  insertedIds=(insertedRows||[]).map(row=>row.id).filter(Boolean);
+  if(insertedIds.length!==rows.length)throw new Error('The database did not confirm every inserted private question. Check the Private Questions list before retrying.');
  }
- await loadPrivateQuestions();
- return {inserted:rows.length,duplicates:valid.length-rows.length};
+ const refreshed=await loadPrivateQuestions();
+ return {inserted:rows.length,duplicates:valid.length-rows.length,invalid:items.length-valid.length,insertedIds,refreshed};
 }
 async function restorePrivateQuestionsFromBackup(items){
  if(!Array.isArray(items)||!items.length)return {inserted:0,duplicates:0};
@@ -1449,12 +1458,12 @@ async function changeAdditionalAdminRole(profile,makeAdmin){
 }
 document.getElementById('refreshAdminManagement')?.addEventListener('click',loadAdminManagement);
 const OFFLINE_PROFILE_KEY='sat_excellence_offline_student_profile_v1';
-function unlockOfflineStudent(){
+async function unlockOfflineStudent(){
  let cached=null;try{cached=JSON.parse(localStorage.getItem(OFFLINE_PROFILE_KEY)||'null')}catch(e){}
  if(!cached||cached.Status!=='approved'||cached.role!=='student'||!cached.id)return false;
  satCurrentUser=null;satCurrentProfile={...cached,role:'student',Status:'approved',Permissions:{}};
  applySATRoleUI(satCurrentProfile);document.body.classList.remove('auth-locked');document.getElementById('authUserBar').style.display='flex';document.getElementById('signedInLabel').textContent=(cached.full_name||cached.Username||'Student')+' • offline study mode';
- startSATApp();return true;
+ await startSATApp();return true;
 }
 async function unlockSATApp(profile,user){
  satCurrentUser=user;satCurrentProfile=profile;
@@ -1464,7 +1473,7 @@ async function unlockSATApp(profile,user){
 async function loadSATProfile(user){const {data,error}=await satSupabase.from('profiles').select('id,Username,full_name,role,Status,Permissions').eq('id',user.id).maybeSingle();if(error)throw error;return data;}
 async function checkSATUser(user){
  const generation=++satAuthCheckGeneration;
- if(!user){satAppStartedFor=null;satCurrentUser=null;satCurrentProfile=null;if(!navigator.onLine&&unlockOfflineStudent())return;if(navigator.onLine){try{localStorage.removeItem(OFFLINE_PROFILE_KEY)}catch(e){}}lockSATApp();return;}
+ if(!user){satAppStartedFor=null;satCurrentUser=null;satCurrentProfile=null;if(!navigator.onLine&&await unlockOfflineStudent())return;if(navigator.onLine){try{localStorage.removeItem(OFFLINE_PROFILE_KEY)}catch(e){}}lockSATApp();return;}
  satCurrentUser=user;
  try{
   const profile=await loadSATProfile(user);
@@ -1473,7 +1482,7 @@ async function checkSATUser(user){
   if(profile.Status!=='approved'){const msg=profile.Status==='pending'?'Your student account is waiting for Main Admin approval. Please try signing in again after approval.':profile.Status==='rejected'?'Your registration was not approved. Please contact the Main Admin if you need help.':'Your account is not currently active. Please contact the Main Admin.';satCurrentUser=user;satCurrentProfile=profile;lockSATApp(msg,'info');return;}
   if(!['student','main_admin','additional_admin'].includes(profile.role)){lockSATApp('This account does not have an allowed SAT EXCELLENCE role. Contact the Main Admin.','error');return;}
   await unlockSATApp(profile,user);
- }catch(err){if(generation!==satAuthCheckGeneration)return;console.error('Profile check failed:',err);if(!navigator.onLine&&unlockOfflineStudent())return;lockSATApp('We could not verify your account profile. Check your internet connection and try again. Details: '+(err.message||'Unknown error'),'error');}
+ }catch(err){if(generation!==satAuthCheckGeneration)return;console.error('Profile check failed:',err);if(!navigator.onLine&&await unlockOfflineStudent())return;lockSATApp('We could not verify your account profile. Check your internet connection and try again. Details: '+(err.message||'Unknown error'),'error');}
 }
 window.satResumeOnlineSession=async function(){
  if(!navigator.onLine||!satSupabase)return false;
